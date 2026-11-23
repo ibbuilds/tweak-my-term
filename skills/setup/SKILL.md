@@ -141,3 +141,5 @@ times before/after, and anything that couldn't be done with the closest alternat
 - Generated or user-owned images only. Third-party screenshots are linked; download one
   only as the user's anchor, kept local.
 - Never print secrets from existing configs (tokens in rc files, env exports).
+- No shell access (can't run `tmt`)? Say so, change nothing, and give the exact `tmt`
+  commands. If you also offer hand edits, put "copy the file first" (backup) as step 1.
