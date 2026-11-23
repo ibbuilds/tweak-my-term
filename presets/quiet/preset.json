@@ -1,0 +1,50 @@
+{
+  "$schema": "../../schemas/preset.schema.json",
+  "name": "quiet",
+  "title": "Quiet",
+  "description": "Calm cool-dark WezTerm + starship look, identical on Windows, macOS and Linux. No background image, one-line prompt, nothing heavy at shell start.",
+  "look": "look.json",
+  "os": {
+    "windows": {
+      "verified": "docs",
+      "requires": ["wezterm", "starship"],
+      "files": [
+        { "kind": "write", "from": "files/wezterm/wezterm.lua", "to": "~/.config/wezterm/wezterm.lua" },
+        { "kind": "write", "from": "files/starship.toml", "to": "~/.config/starship.toml" },
+        { "kind": "block", "from": "files/blocks/ps-profile.ps1", "to": "{ps-profile}" },
+        { "kind": "block", "from": "files/blocks/bashrc", "to": "~/.bashrc" }
+      ],
+      "installs": [
+        { "manager": "auto", "id": "wezterm", "tool": "wezterm" },
+        { "manager": "auto", "id": "starship", "tool": "starship" }
+      ],
+      "checks": [["powershell", "-NoProfile", "-Command", "if (Get-Command starship -ErrorAction SilentlyContinue) { starship print-config *> $null; exit $LASTEXITCODE }"]]
+    },
+    "macos": {
+      "verified": "docs",
+      "requires": ["wezterm", "starship"],
+      "files": [
+        { "kind": "write", "from": "files/wezterm/wezterm.lua", "to": "~/.config/wezterm/wezterm.lua" },
+        { "kind": "write", "from": "files/starship.toml", "to": "~/.config/starship.toml" },
+        { "kind": "block", "from": "files/blocks/zshrc", "to": "~/.zshrc" }
+      ],
+      "installs": [
+        { "manager": "auto", "id": "wezterm", "tool": "wezterm" },
+        { "manager": "auto", "id": "starship", "tool": "starship" }
+      ]
+    },
+    "linux": {
+      "verified": "docs",
+      "requires": ["wezterm", "starship"],
+      "files": [
+        { "kind": "write", "from": "files/wezterm/wezterm.lua", "to": "~/.config/wezterm/wezterm.lua" },
+        { "kind": "write", "from": "files/starship.toml", "to": "~/.config/starship.toml" },
+        { "kind": "block", "from": "files/blocks/bashrc", "to": "~/.bashrc" }
+      ],
+      "installs": [
+        { "manager": "auto", "id": "wezterm", "tool": "wezterm" },
+        { "manager": "auto", "id": "starship", "tool": "starship" }
+      ]
+    }
+  }
+}
