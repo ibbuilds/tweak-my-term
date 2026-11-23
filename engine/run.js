@@ -162,7 +162,7 @@ function propose(kind, abs, before, staged) {
   // nothing to change: keep the user's bytes (and their formatting and comments)
   if (before && JSON.stringify(merged) === JSON.stringify(base)) return before;
   const eol = cur.text && cur.text.includes('\r\n') ? '\r\n' : '\n';
-  const out = jsonc.stringify(merged, jsonc.styleOf(cur.text)).replace(/\n/g, eol) + eol;
+  const out = jsonc.stringify(merged, jsonc.styleOf(cur.text), jsonc.indentOf(cur.text)).replace(/\n/g, eol) + eol;
   return text.encode(out, before ? cur.enc : 'utf8');
 }
 

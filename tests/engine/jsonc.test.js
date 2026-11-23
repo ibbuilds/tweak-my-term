@@ -49,3 +49,11 @@ test('merge matches list items by a key that is unique in the list (WT keybindin
   assert.deepStrictEqual(merge(base, frag).keybindings, [
     { id: 'User.copy', keys: 'ctrl+c' }, { id: 'User.copy', keys: 'ctrl+shift+c' }, { id: 'User.y', keys: 'alt+x' }]);
 });
+
+test('indentOf reads the indent a file already uses', () => {
+  const jsonc = require('../../engine/jsonc');
+  assert.strictEqual(jsonc.indentOf('{\n  "a": 1\n}'), '  ');
+  assert.strictEqual(jsonc.indentOf('{\n\t"a": 1\n}'), '\t');
+  assert.strictEqual(jsonc.indentOf('{\n    "a": {\n        "b": 1\n    }\n}'), '    ');
+  assert.strictEqual(jsonc.indentOf('{"a":1}'), '    ');
+});

@@ -84,8 +84,14 @@ function styleOf(text) {
   return text && /"\s*:\s*\r?\n\s*[[{]/.test(text) ? 'split' : 'inline';
 }
 
+/** The indent unit of the first indented line (default 4 spaces, Windows Terminal's). */
+function indentOf(text) {
+  const m = text && /\n([ \t]+)\S/.exec(text);
+  return m ? m[1] : '    ';
+}
+
 function stringify(value, style = 'inline', indent = '    ') {
-  if (style !== 'split') return JSON.stringify(value, null, indent.length);
+  if (style !== 'split') return JSON.stringify(value, null, indent);
   const ser = (v, pad) => {
     const inner = pad + indent;
     if (Array.isArray(v)) {
@@ -106,4 +112,4 @@ function stringify(value, style = 'inline', indent = '    ') {
   return ser(value, '');
 }
 
-module.exports = { strip, parse, merge, styleOf, stringify };
+module.exports = { strip, parse, merge, styleOf, indentOf, stringify };
