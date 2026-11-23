@@ -1,0 +1,51 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "ripgrep",
+  "name": "ripgrep",
+  "category": "tool",
+  "summary": "Fast recursive grep that respects .gitignore. Output colors for paths, line numbers and matches are set with --colors, persisted in a config file named by RIPGREP_CONFIG_PATH.",
+  "homepage": "https://github.com/BurntSushi/ripgrep",
+  "docs": "https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md",
+  "license": "Unlicense OR MIT",
+  "configFormat": "one flag per line in a file pointed to by RIPGREP_CONFIG_PATH (no default location)",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "BurntSushi.ripgrep.MSVC" },
+        { "manager": "scoop", "id": "ripgrep" }
+      ],
+      "detect": ["rg", "--version"],
+      "config": ["~/.ripgreprc"],
+      "notes": "ripgrep reads no config file unless RIPGREP_CONFIG_PATH is set; ~/.ripgreprc is the conventional name."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "ripgrep" }],
+      "detect": ["rg", "--version"],
+      "config": ["~/.ripgreprc"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "ripgrep" },
+        { "manager": "dnf", "id": "ripgrep" },
+        { "manager": "pacman", "id": "ripgrep" }
+      ],
+      "detect": ["rg", "--version"],
+      "config": ["~/.ripgreprc"]
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "theme": { "support": "yes", "recipe": "recipes/theme.md", "notes": "--colors path/line/column/match/highlight with fg, bg, style; 24-bit via r,g,b." },
+    "integration": { "support": "yes", "recipe": "recipes/integration.md", "notes": "fzf live grep, delta/bat as viewers." },
+    "config": { "support": "yes", "recipe": "recipes/config.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "15.2.0", "how": "machine" },
+  "sources": [
+    "https://github.com/BurntSushi/ripgrep#installation",
+    "https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file",
+    "https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#colors"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "delta",
+  "name": "delta",
+  "category": "tool",
+  "summary": "Syntax-highlighting pager for git diff, show, log -p and grep output, with line numbers, side-by-side view and full style control from the git config.",
+  "homepage": "https://github.com/dandavison/delta",
+  "docs": "https://dandavison.github.io/delta/",
+  "license": "MIT",
+  "configFormat": "[delta] and [delta \"feature\"] sections in a git config file (~/.gitconfig, or an included file)",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "dandavison.delta" },
+        { "manager": "scoop", "id": "delta" }
+      ],
+      "detect": ["delta", "--version"],
+      "config": ["~/.gitconfig", "~/.config/git/config"],
+      "validate": ["delta", "--show-config"],
+      "notes": "Needs a recent less.exe on PATH (docs recommend https://github.com/jftuga/less-Windows/releases/latest); an old less shows wrong colors and odd characters. Git for Windows' own less works."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "git-delta", "notes": "Package is git-delta, the binary is delta. Install less from Homebrew for a current version." }],
+      "detect": ["delta", "--version"],
+      "config": ["~/.gitconfig", "~/.config/git/config"],
+      "validate": ["delta", "--show-config"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "pacman", "id": "git-delta" },
+        { "manager": "dnf", "id": "git-delta" },
+        { "manager": "apt", "id": "git-delta", "notes": "Debian 13 has 0.18.2, Ubuntu 24.04 has 0.16.5. Newer: the .deb on the GitHub releases page (`dpkg -i`)." }
+      ],
+      "detect": ["delta", "--version"],
+      "config": ["~/.gitconfig", "~/.config/git/config"],
+      "validate": ["delta", "--show-config"]
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "theme": { "support": "yes", "recipe": "recipes/theme.md", "notes": "syntax-theme ansi follows the terminal; diff backgrounds as hex styles; features group a look." },
+    "integration": { "support": "yes", "recipe": "recipes/integration.md", "notes": "git pager, interactive.diffFilter, lazygit, jj." },
+    "config": { "support": "yes", "recipe": "recipes/config.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "0.21.2", "how": "machine" },
+  "sources": [
+    "https://dandavison.github.io/delta/configuration.html",
+    "https://dandavison.github.io/delta/installation.html",
+    "https://dandavison.github.io/delta/custom-themes.html",
+    "https://dandavison.github.io/delta/features-named-groups-of-settings.html",
+    "https://dandavison.github.io/delta/tips-and-tricks/using-delta-on-windows.html"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "zoxide",
+  "name": "zoxide",
+  "category": "tool",
+  "summary": "Smarter cd: learns the directories you visit and jumps with `z <partial>`; `zi` opens an fzf picker.",
+  "homepage": "https://github.com/ajeetdsouza/zoxide",
+  "docs": "https://github.com/ajeetdsouza/zoxide#getting-started",
+  "license": "MIT",
+  "configFormat": "environment variables read at `zoxide init` time; database file",
+  "startupCostMs": "Measured 2026-11-23, Windows 11, zoxide 0.10.0 via scoop shim, median of 10: `zoxide init bash` 32 ms and `zoxide init powershell` 32 ms (empty `cmd /c rem` is 23 ms), so about one process spawn per shell start. The generated script is then parsed by the shell. Cache the output to a file and source it to skip the spawn.",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "ajeetdsouza.zoxide" },
+        { "manager": "scoop", "id": "zoxide" }
+      ],
+      "detect": ["zoxide", "--version"],
+      "config": ["{localappdata}/zoxide"],
+      "notes": "Works in PowerShell (verified in Windows PowerShell 5.1) and in Git Bash/MSYS2/Cygwin bash. Database dir is %LOCALAPPDATA%\\zoxide."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "zoxide" }],
+      "detect": ["zoxide", "--version"],
+      "config": ["~/Library/Application Support/zoxide"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "pacman", "id": "zoxide" },
+        { "manager": "dnf", "id": "zoxide" },
+        { "manager": "apt", "id": "zoxide", "notes": "Debian/Ubuntu packages are old (Debian 13: 0.9.7, Ubuntu 24.04: 0.9.3); the README recommends the install script there." },
+        { "manager": "script", "id": "curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh", "notes": "Official installer, installs to ~/.local/bin." }
+      ],
+      "detect": ["zoxide", "--version"],
+      "config": ["{xdg-data}/zoxide"]
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "integration": { "support": "yes", "recipe": "recipes/integration.md", "notes": "cd replacement, fzf picker, yazi/other tools that read the database." },
+    "config": { "support": "yes", "recipe": "recipes/config.md" },
+    "theme": { "support": "partial", "notes": "No theme of its own. The `zi` picker is fzf: color it through FZF_DEFAULT_OPTS or _ZO_FZF_OPTS (see the fzf theme recipe)." }
+  },
+  "verified": { "date": "2026-11-23", "version": "0.10.0", "how": "machine" },
+  "sources": [
+    "https://github.com/ajeetdsouza/zoxide#installation",
+    "https://github.com/ajeetdsouza/zoxide#configuration",
+    "https://github.com/ajeetdsouza/zoxide/blob/main/man/man1/zoxide-init.1"
+  ]
+}

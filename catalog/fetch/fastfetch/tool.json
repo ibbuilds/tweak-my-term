@@ -1,0 +1,58 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "fastfetch",
+  "name": "fastfetch",
+  "category": "fetch",
+  "summary": "Fast system-information tool (neofetch successor) with a JSONC config: custom logo (ASCII file, raw, or an image over sixel/kitty/iterm/chafa), module list, per-module format strings and colors.",
+  "homepage": "https://github.com/fastfetch-cli/fastfetch",
+  "docs": "https://github.com/fastfetch-cli/fastfetch/wiki/Configuration",
+  "license": "MIT",
+  "configFormat": "JSONC (config.jsonc) with a JSON schema; presets via -c <name>",
+  "startupCostMs": "Measured 2026-11-23, Windows 11, fastfetch 2.71.0 via scoop shim, median of 10 runs: default config 41 ms; a 3-module custom config 34 ms; `fastfetch --version` 47 ms; an empty `cmd /c rem` 23 ms. A working 11-module dossier config in the Eclipse preset is documented at ~55 ms. Slow modules are network ones (PublicIp, Weather, Wifi, LocalIp) and GPU/Packages on some systems: leave them out of a shell-start config.",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "Fastfetch-cli.Fastfetch" },
+        { "manager": "scoop", "id": "fastfetch" }
+      ],
+      "detect": ["fastfetch", "--version"],
+      "config": ["~/.config/fastfetch/config.jsonc"],
+      "validate": ["fastfetch", "-c", "{file}", "--show-errors"],
+      "notes": "Search paths printed by `fastfetch --list-config-paths` on Windows 11 (2.71.0): ~/.config/fastfetch/, ~/fastfetch/, <Git>/mingw64/etc/fastfetch/ (if Git for Windows is installed), %PROGRAMDATA%/fastfetch/, %APPDATA%/fastfetch/, %LOCALAPPDATA%/fastfetch/. In JSONC paths use %ENVVAR% syntax; ~ expansion needs v2.41.0+. Image logos use the platform image framework (WIC), no ImageMagick."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "fastfetch" }],
+      "detect": ["fastfetch", "--version"],
+      "config": ["~/.config/fastfetch/config.jsonc"],
+      "validate": ["fastfetch", "-c", "{file}", "--show-errors"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "fastfetch", "notes": "Debian 13+ and Ubuntu 25.04+ only (README); not in Ubuntu 24.04 (use the project's release .deb or a PPA)." },
+        { "manager": "dnf", "id": "fastfetch" },
+        { "manager": "pacman", "id": "fastfetch" }
+      ],
+      "detect": ["fastfetch", "--version"],
+      "config": ["{xdg-config}/fastfetch/config.jsonc"],
+      "validate": ["fastfetch", "-c", "{file}", "--show-errors"],
+      "notes": "Image logos (sixel, kitty, chafa) need fastfetch built with ImageMagick and/or chafa support; check `fastfetch --list-features`."
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md", "notes": "Install, config path, run on shell start with a quiet-variable guard." },
+    "logo": { "support": "yes", "recipe": "recipes/logo.md", "notes": "ASCII/ANSI text file with $1..$9 color slots, raw files, images via sixel/kitty/kitty-direct/iterm/chafa." },
+    "modules": { "support": "yes", "recipe": "recipes/modules.md" },
+    "theme": { "support": "yes", "recipe": "recipes/theme.md", "notes": "Key/title/separator colors and bar/percent colors; hex or ANSI names." }
+  },
+  "verified": { "date": "2026-11-23", "version": "2.71.0", "how": "machine" },
+  "sources": [
+    "https://github.com/fastfetch-cli/fastfetch#installation",
+    "https://github.com/fastfetch-cli/fastfetch/wiki/Configuration",
+    "https://github.com/fastfetch-cli/fastfetch/wiki/Logo-options",
+    "https://github.com/fastfetch-cli/fastfetch/wiki/Color-Format-Specification",
+    "https://github.com/fastfetch-cli/fastfetch/wiki/Format-String-Guide"
+  ]
+}

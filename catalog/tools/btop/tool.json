@@ -1,0 +1,51 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "btop",
+  "name": "btop",
+  "category": "tool",
+  "summary": "Resource monitor TUI (CPU, memory, disks, network, processes) with full-color gradient themes in .theme files. Windows uses the separate btop4win port.",
+  "homepage": "https://github.com/aristocratos/btop",
+  "docs": "https://github.com/aristocratos/btop#themes",
+  "license": "Apache-2.0",
+  "configFormat": "btop.conf (key = value, auto generated) plus <name>.theme files (theme[key]=\"#hex\")",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "aristocratos.btop4win", "notes": "btop4win 1.0.5, a separate Windows port (not btop 1.4.x)." },
+        { "manager": "scoop", "id": "btop", "notes": "Scoop's `btop` is btop4win; `btop-lhm` adds LibreHardwareMonitor sensors." }
+      ],
+      "detect": ["btop", "--version"],
+      "config": ["btop4win install folder (next to btop4win.exe): btop.conf, themes/"],
+      "notes": "Not installed on the verification machine: facts from the btop4win README. Config, logs and the themes folder sit in the same folder as btop4win.exe, so a scoop upgrade may replace them; check scoop's persist rules before relying on edits. Graphs default to the TTY symbol set on Windows for font compatibility; Cascadia Code or a Nerd Font gives braille."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "btop" }],
+      "detect": ["btop", "--version"],
+      "config": ["~/.config/btop/btop.conf", "~/.config/btop/themes"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "btop" },
+        { "manager": "dnf", "id": "btop" },
+        { "manager": "pacman", "id": "btop" }
+      ],
+      "detect": ["btop", "--version"],
+      "config": ["{xdg-config}/btop/btop.conf", "{xdg-config}/btop/themes"]
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "theme": { "support": "yes", "recipe": "recipes/theme.md" },
+    "config": { "support": "yes", "recipe": "recipes/config.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "1.4.8", "how": "docs" },
+  "sources": [
+    "https://github.com/aristocratos/btop#themes",
+    "https://github.com/aristocratos/btop#configurability",
+    "https://github.com/aristocratos/btop4win#themes",
+    "https://github.com/aristocratos/btop/tree/main/themes"
+  ]
+}

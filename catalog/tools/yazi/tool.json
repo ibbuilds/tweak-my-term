@@ -1,0 +1,55 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "yazi",
+  "name": "yazi",
+  "category": "tool",
+  "summary": "Fast terminal file manager with image previews, plugins and flavors (themes). Config in TOML: yazi.toml, keymap.toml, theme.toml.",
+  "homepage": "https://yazi-rs.github.io/",
+  "docs": "https://yazi-rs.github.io/docs/configuration/overview",
+  "license": "MIT",
+  "configFormat": "TOML (yazi.toml, keymap.toml, theme.toml), Lua (init.lua), flavors as folders",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "sxyazi.yazi" },
+        { "manager": "scoop", "id": "yazi" }
+      ],
+      "detect": ["yazi", "--version"],
+      "config": ["{appdata}/yazi/config/yazi.toml", "{appdata}/yazi/config/theme.toml", "{appdata}/yazi/config/keymap.toml", "{appdata}/yazi/config/flavors"],
+      "notes": "Not installed on the verification machine: facts are from the official docs. Needs file(1): use file.exe from Git for Windows and set YAZI_FILE_ONE to it (docs: the only recommended way)."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "yazi" }],
+      "detect": ["yazi", "--version"],
+      "config": ["~/.config/yazi/yazi.toml", "~/.config/yazi/theme.toml", "~/.config/yazi/keymap.toml", "~/.config/yazi/flavors"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "pacman", "id": "yazi" },
+        { "manager": "apt", "id": "yazi", "notes": "From the official APT repo (yazi-rs.github.io/builds), not the distro archive; see install-init recipe." },
+        { "manager": "dnf", "id": "yazi", "notes": "Unofficial COPR lihaohong/yazi: `dnf copr enable lihaohong/yazi`." }
+      ],
+      "detect": ["yazi", "--version"],
+      "config": ["~/.config/yazi/yazi.toml", "~/.config/yazi/theme.toml", "~/.config/yazi/keymap.toml", "~/.config/yazi/flavors"]
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "theme": { "support": "yes", "recipe": "recipes/theme.md", "notes": "Flavors (ya pkg add) or a theme.toml with hex colors; tmTheme for code preview." },
+    "integration": { "support": "yes", "recipe": "recipes/integration.md", "notes": "`y` wrapper that changes directory on exit, optional dependencies." },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "config": { "support": "yes", "recipe": "recipes/config.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "26.9.1", "how": "docs" },
+  "sources": [
+    "https://yazi-rs.github.io/docs/installation",
+    "https://yazi-rs.github.io/docs/configuration/overview",
+    "https://yazi-rs.github.io/docs/configuration/theme",
+    "https://yazi-rs.github.io/docs/flavors/overview",
+    "https://yazi-rs.github.io/docs/quick-start",
+    "https://github.com/yazi-rs/flavors"
+  ]
+}

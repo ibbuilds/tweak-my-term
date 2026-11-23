@@ -1,0 +1,55 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "bat",
+  "name": "bat",
+  "category": "tool",
+  "summary": "cat with syntax highlighting, line numbers and git markers. Themes are Sublime .tmTheme files; the built-in ansi and base16 themes follow the terminal palette.",
+  "homepage": "https://github.com/sharkdp/bat",
+  "docs": "https://github.com/sharkdp/bat#customization",
+  "license": "MIT OR Apache-2.0",
+  "configFormat": "plain list of command-line arguments, one per line (config file) plus BAT_* env vars; themes as .tmTheme files",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "sharkdp.bat" },
+        { "manager": "scoop", "id": "bat" }
+      ],
+      "detect": ["bat", "--version"],
+      "config": ["{appdata}/bat/config", "{appdata}/bat/themes"],
+      "validate": ["bat", "--list-themes", "--color=never"],
+      "notes": "Default config path verified on Windows 11 (`bat --config-file` with BAT_CONFIG_PATH unset): %APPDATA%\\bat\\config. BAT_CONFIG_PATH / BAT_CONFIG_DIR override it (scoop's bat package may set BAT_CONFIG_DIR). Needs the VC++ redistributable and a less.exe for paging (otherwise use --paging=never)."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "bat" }],
+      "detect": ["bat", "--version"],
+      "config": ["{xdg-config}/bat/config", "{xdg-config}/bat/themes"],
+      "validate": ["bat", "--list-themes", "--color=never"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "bat", "notes": "On older Debian/Ubuntu the executable is `batcat`; symlink: ln -s /usr/bin/batcat ~/.local/bin/bat." },
+        { "manager": "dnf", "id": "bat" },
+        { "manager": "pacman", "id": "bat" }
+      ],
+      "detect": ["bat", "--version"],
+      "config": ["{xdg-config}/bat/config", "{xdg-config}/bat/themes"],
+      "validate": ["bat", "--list-themes", "--color=never"]
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "theme": { "support": "yes", "recipe": "recipes/theme.md", "notes": "Built-in ansi/base16 follow the terminal; custom palettes via a generated .tmTheme + `bat cache --build`." },
+    "integration": { "support": "yes", "recipe": "recipes/integration.md", "notes": "fzf preview, MANPAGER, git, cat alias, delta." },
+    "config": { "support": "yes", "recipe": "recipes/config.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "0.26.1", "how": "machine" },
+  "sources": [
+    "https://github.com/sharkdp/bat#customization",
+    "https://github.com/sharkdp/bat#adding-new-themes",
+    "https://github.com/sharkdp/bat#configuration-file",
+    "https://github.com/sharkdp/bat#using-bat-on-windows"
+  ]
+}

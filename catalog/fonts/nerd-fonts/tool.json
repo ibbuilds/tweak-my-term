@@ -1,0 +1,56 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "nerd-fonts",
+  "name": "Nerd Fonts",
+  "category": "font",
+  "summary": "Programming fonts patched with thousands of icon glyphs (Powerline, Font Awesome, Devicons, Material, Codicons). Needed by eza --icons, lazygit nerdFontsVersion, yazi, starship and most rice prompts.",
+  "homepage": "https://www.nerdfonts.com/",
+  "docs": "https://github.com/ryanoasis/nerd-fonts#font-installation",
+  "license": "Patcher MIT; each font keeps its own license (mostly OFL-1.1)",
+  "configFormat": "none (font files; the terminal config names the family)",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "scoop", "id": "nerd-fonts/JetBrainsMono-NF", "notes": "Needs `scoop bucket add nerd-fonts`. Pattern is nerd-fonts/<ZipName>-NF; also -NF-Mono and -NF-Propo manifests. Installs per user (HKCU) on Windows 10 1809+." },
+        { "manager": "choco", "id": "nerd-fonts-hack", "notes": "Pattern nerd-fonts-<name>; machine-wide, needs admin." },
+        { "manager": "zip", "id": "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip", "notes": "No admin: copy TTFs to {localappdata}/Microsoft/Windows/Fonts and register under HKCU. See recipes/install.md." }
+      ],
+      "detect": ["powershell", "-NoProfile", "-Command", "Add-Type -AssemblyName System.Drawing; (New-Object System.Drawing.Text.InstalledFontCollection).Families | Where-Object Name -match 'Nerd Font| NF' | ForEach-Object Name"],
+      "config": ["{localappdata}/Microsoft/Windows/Fonts"],
+      "notes": "Per-user fonts are visible to the user's apps after the app restarts. Packaged apps (Windows Terminal from the Store) need ALL APPLICATION PACKAGES read access on the Fonts folder, see recipes/install.md."
+    },
+    "macos": {
+      "supported": true,
+      "install": [
+        { "manager": "brew", "id": "font-jetbrains-mono-nerd-font", "notes": "Cask: `brew install --cask`. Pattern font-<name>-nerd-font; cask names follow the patched name (hasklug, sauce-code-pro, blex-mono...), see fonts.json." },
+        { "manager": "zip", "id": "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip", "notes": "Copy fonts to ~/Library/Fonts." }
+      ],
+      "detect": ["sh", "-c", "ls ~/Library/Fonts /Library/Fonts 2>/dev/null | grep -i NerdFont"],
+      "config": ["~/Library/Fonts"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "pacman", "id": "ttf-jetbrains-mono-nerd", "notes": "Arch extra repo: ttf-<name>-nerd; symbols fallback is ttf-nerd-fonts-symbols-mono." },
+        { "manager": "brew", "id": "font-jetbrains-mono-nerd-font", "notes": "Linuxbrew needs `brew install --cask`." },
+        { "manager": "tar.xz", "id": "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz", "notes": "Smaller than .zip, same contents. Extract to ~/.local/share/fonts/<Name> then fc-cache -f." }
+      ],
+      "detect": ["fc-list", ":", "family"],
+      "config": ["{xdg-data}/fonts", "{xdg-config}/fontconfig/conf.d"],
+      "notes": "No apt or dnf packages carry the patched fonts; use the release archive or the repo's install.sh."
+    }
+  },
+  "capabilities": {
+    "install": { "support": "yes", "recipe": "recipes/install.md" },
+    "configure": { "support": "yes", "recipe": "recipes/configure.md" },
+    "nerd-glyphs": { "support": "yes", "recipe": "recipes/nerd-glyphs.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "3.5.1", "how": "machine" },
+  "sources": [
+    "https://github.com/ryanoasis/nerd-fonts#font-installation",
+    "https://github.com/ryanoasis/nerd-fonts/releases/tag/v3.5.1",
+    "https://github.com/matthewjberger/scoop-nerd-fonts",
+    "https://formulae.brew.sh/cask/font-jetbrains-mono-nerd-font"
+  ]
+}

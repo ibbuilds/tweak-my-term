@@ -1,0 +1,53 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "eza",
+  "name": "eza",
+  "category": "tool",
+  "summary": "Modern ls replacement with icons, git status, tree view and a theme.yml file for colors and icons.",
+  "homepage": "https://github.com/eza-community/eza",
+  "docs": "https://github.com/eza-community/eza#readme",
+  "license": "EUPL-1.2",
+  "configFormat": "theme.yml (colors, icons) plus flags/aliases and env vars (EZA_COLORS, LS_COLORS, EZA_ICON_SPACING)",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "eza-community.eza" },
+        { "manager": "scoop", "id": "eza" }
+      ],
+      "detect": ["eza", "--version"],
+      "config": ["{xdg-config}/eza/theme.yml"],
+      "notes": "Verified on Windows 11 with eza 0.23.5: EZA_CONFIG_DIR=<dir> loaded <dir>/theme.yml and applied hex colors. The default dir is $XDG_CONFIG_HOME/eza per the docs; set EZA_CONFIG_DIR explicitly on Windows (the default location was not confirmed). On Windows the mode column shows file attribute flags, not Unix permissions."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "eza" }],
+      "detect": ["eza", "--version"],
+      "config": ["{xdg-config}/eza/theme.yml"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "pacman", "id": "eza" },
+        { "manager": "dnf", "id": "eza" },
+        { "manager": "apt", "id": "eza", "notes": "Debian 13 has 0.21.0, Ubuntu 24.04 has 0.18.2 which predates theme.yml; newer builds from the project's deb repo (deb.gierens.de, see INSTALL.md)." }
+      ],
+      "detect": ["eza", "--version"],
+      "config": ["{xdg-config}/eza/theme.yml"]
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "theme": { "support": "yes", "recipe": "recipes/theme.md", "notes": "theme.yml with hex colors (needs a theme.yml-capable eza, 0.19+), or EZA_COLORS / LS_COLORS." },
+    "integration": { "support": "yes", "recipe": "recipes/integration.md" },
+    "config": { "support": "yes", "recipe": "recipes/config.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "0.23.5", "how": "machine" },
+  "sources": [
+    "https://github.com/eza-community/eza#custom-themes",
+    "https://github.com/eza-community/eza/blob/main/man/eza_colors-explanation.5.md",
+    "https://github.com/eza-community/eza/blob/main/man/eza.1.md",
+    "https://github.com/eza-community/eza-themes",
+    "https://github.com/eza-community/eza/blob/main/INSTALL.md"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "fzf",
+  "name": "fzf",
+  "category": "tool",
+  "summary": "General-purpose fuzzy finder. Shell integration adds Ctrl-T (files), Ctrl-R (history), Alt-C (cd) and ** completion; fully themeable with --color.",
+  "homepage": "https://github.com/junegunn/fzf",
+  "docs": "https://github.com/junegunn/fzf#readme",
+  "license": "MIT",
+  "configFormat": "command-line options in env vars (FZF_DEFAULT_OPTS) or an options file (FZF_DEFAULT_OPTS_FILE); no config file by default",
+  "startupCostMs": "Measured 2026-11-23, Windows 11, fzf 0.75.0 via scoop shim, median of 10: `fzf --bash` 37 ms vs `fzf --version` 34 ms vs an empty `cmd /c rem` 23 ms, so the init itself is ~3 ms and the cost is process spawn. Running `eval \"$(fzf --bash)\"` adds that spawn plus parsing ~1000 lines of shell on every shell start; cache the output to a file and `source` it (regenerate when the fzf binary is newer) to avoid the spawn.",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "junegunn.fzf" },
+        { "manager": "scoop", "id": "fzf" }
+      ],
+      "detect": ["fzf", "--version"],
+      "notes": "fzf ships key bindings for bash, zsh, fish only. In Git Bash/MSYS2 bash they work. In PowerShell use the PSFzf module (PowerShell Gallery, MIT). cmd.exe has no integration."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "fzf" }],
+      "detect": ["fzf", "--version"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "fzf", "notes": "Ubuntu 24.04 ships 0.44.1, which has no `fzf --bash/--zsh` (added in 0.48.0); Debian 13 ships 0.60.3. On older distros install the release binary or source the scripts from the package examples directory (path unverified)." },
+        { "manager": "dnf", "id": "fzf" },
+        { "manager": "pacman", "id": "fzf" }
+      ],
+      "detect": ["fzf", "--version"]
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "theme": { "support": "yes", "recipe": "recipes/theme.md", "notes": "--color with hex or ANSI names, or the base16 scheme to follow the terminal palette." },
+    "integration": { "support": "yes", "recipe": "recipes/integration.md", "notes": "fd as the walker, bat/eza previews, per-shell wiring." },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "config": { "support": "yes", "recipe": "recipes/config.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "0.75.0", "how": "machine" },
+  "sources": [
+    "https://github.com/junegunn/fzf#setting-up-shell-integration",
+    "https://github.com/junegunn/fzf/blob/master/man/man1/fzf.1",
+    "https://github.com/junegunn/fzf/blob/master/CHANGELOG.md",
+    "https://github.com/kelleyma49/PSFzf"
+  ]
+}

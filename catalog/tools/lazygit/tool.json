@@ -1,0 +1,53 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "lazygit",
+  "name": "lazygit",
+  "category": "tool",
+  "summary": "Terminal UI for git. Themeable borders and selection colors, Nerd Font icons, custom keybindings and pluggable diff renderers (delta).",
+  "homepage": "https://github.com/jesseduffield/lazygit",
+  "docs": "https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md",
+  "license": "MIT",
+  "configFormat": "YAML (config.yml); repo overrides in <repo>/.git/lazygit.yml and .lazygit.yml in parent dirs",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "JesseDuffield.lazygit" },
+        { "manager": "scoop", "id": "lazygit", "notes": "In the extras bucket: scoop bucket add extras." }
+      ],
+      "detect": ["lazygit", "--version"],
+      "config": ["{localappdata}/lazygit/config.yml", "{xdg-config}/lazygit/config.yml"],
+      "notes": "Docs default: %LOCALAPPDATA%\\lazygit\\config.yml (also found in %APPDATA%\\lazygit\\config.yml). Observed on Windows 11 with XDG_CONFIG_HOME set: `lazygit --print-config-dir` returned <XDG_CONFIG_HOME>/lazygit, so ask lazygit for the directory before writing."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "lazygit" }],
+      "detect": ["lazygit", "--version"],
+      "config": ["~/Library/Application Support/lazygit/config.yml", "{xdg-config}/lazygit/config.yml"],
+      "notes": "Docs: default is ~/Library/Application Support/lazygit/config.yml; export XDG_CONFIG_HOME=\"$HOME/.config\" to use ~/.config/lazygit."
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "pacman", "id": "lazygit" },
+        { "manager": "apt", "id": "lazygit", "notes": "Debian 13+ and Ubuntu 25.10+ (README); older releases: download the release tarball (README gives a curl/tar snippet)." },
+        { "manager": "dnf", "id": "lazygit", "notes": "Fedora 43 has 0.66.3 in the main repo; older Fedora needs a copr (README: dnf copr enable dejan/lazygit)." }
+      ],
+      "detect": ["lazygit", "--version"],
+      "config": ["{xdg-config}/lazygit/config.yml"]
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "theme": { "support": "yes", "recipe": "recipes/theme.md" },
+    "integration": { "support": "yes", "recipe": "recipes/integration.md", "notes": "delta diff renderer, editor, Nerd Font icons, shell alias." },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "config": { "support": "yes", "recipe": "recipes/config.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "0.66.3", "how": "machine" },
+  "sources": [
+    "https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md",
+    "https://github.com/jesseduffield/lazygit/blob/master/docs/Custom_DiffRenderers.md",
+    "https://github.com/jesseduffield/lazygit#installation"
+  ]
+}

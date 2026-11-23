@@ -1,0 +1,62 @@
+[
+  {
+    "id": "iterm2-color-schemes",
+    "name": "iTerm2-Color-Schemes (mbadolato)",
+    "url": "https://github.com/mbadolato/iTerm2-Color-Schemes",
+    "format": "itermcolors source (schemes/*.itermcolors) with generated ports; the easiest to parse are windowsterminal/*.json and ghostty/<Name> (flat key = value)",
+    "count": 1003,
+    "license": "MIT for the repo; each scheme has its own SPDX license (or unknown / nonfree) in licenses.yml at the repo root",
+    "howToFetch": "One scheme: https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/windowsterminal/<Name>.json (URL-encode spaces as %20). List names: GET https://api.github.com/repos/mbadolato/iTerm2-Color-Schemes/git/trees/master?recursive=1 and filter paths under windowsterminal/. Everything at once: the latest release asset all-terminal-themes.tgz (also per-terminal archives such as alacritty-themes.tgz).",
+    "notes": "Largest and most current collection (verified 2026-11-23: 1003 .itermcolors, 912 generated ports per terminal format; a few newer schemes may lack a port, then read the .itermcolors). Windows Terminal JSON uses purple/brightPurple for magenta and cursorColor for cursor. Read licenses.yml before copying a scheme into a published preset: redistribute only entries with an open SPDX id. Most popular named themes (Dracula, Nord, Gruvbox, Tokyo Night, Solarized, One Dark, Catppuccin) are in here. Some themes set a light selectionBackground meant to be used with selectionForeground; keep both."
+  },
+  {
+    "id": "tinted-schemes",
+    "name": "tinted-theming/schemes (base16, base24, tinted8)",
+    "url": "https://github.com/tinted-theming/schemes",
+    "format": "YAML: system, name, author, variant (dark|light), palette: base00..base0F (base16) or base00..base17 (base24)",
+    "count": 626,
+    "license": "MIT for the repo; authors are credited per scheme",
+    "howToFetch": "Default branch is spec-0.11 (not main). One scheme: https://raw.githubusercontent.com/tinted-theming/schemes/spec-0.11/base16/<slug>.yaml (also base24/). List: GET https://api.github.com/repos/tinted-theming/schemes/git/trees/spec-0.11?recursive=1 and filter base16/ and base24/. Slugs are lowercase-with-dashes (catppuccin-mocha, gruvbox-dark-hard).",
+    "notes": "Verified 2026-11-23: 373 base16 + 253 base24 + 11 tinted8 files. Base16 has 8 shades + 8 accents and no dedicated ANSI slots; the mapping to 16 ANSI colors is a convention (see README.md here), so bright accents equal the normal accents. Base24 adds true bright colors (base12 to base17) and two darker backgrounds."
+  },
+  {
+    "id": "catppuccin",
+    "name": "Catppuccin",
+    "url": "https://github.com/catppuccin/palette",
+    "format": "JSON: palette.json with 4 flavors (latte, frappe, macchiato, mocha); each has 26 named colors and ansiColors (16 ANSI entries with normal/bright hex)",
+    "count": 4,
+    "license": "MIT",
+    "howToFetch": "https://raw.githubusercontent.com/catppuccin/palette/main/palette.json (verified keys: version, latte, frappe, macchiato, mocha; each flavor has name, emoji, order, dark, colors, ansiColors). Use <flavor>.ansiColors.<black|red|...>.normal.hex and .bright.hex.",
+    "notes": "One design system with four moods (latte is the light flavor). Per-app ports exist as github.com/catppuccin/<app> (verified: bat, delta, lazygit, btop, fzf, yazi, eza); yazi-rs/flavors also has catppuccin-*.yazi and eza-community/eza-themes has catppuccin-*.yml. Terminal convention used by the iTerm2 collection: background=base, foreground=text, cursor=rosewater."
+  },
+  {
+    "id": "gogh",
+    "name": "Gogh",
+    "url": "https://github.com/Gogh-Co/Gogh",
+    "format": "YAML per theme (themes/<Name>.yml) with color_01..color_16 (ANSI 0 to 15 in order), background, foreground, cursor, variant; aggregated in data/themes.json",
+    "count": 1257,
+    "license": "Dual MIT or Apache-2.0 (repo); individual theme authors are credited in each file",
+    "howToFetch": "All: https://raw.githubusercontent.com/Gogh-Co/Gogh/master/data/themes.json (array of objects with name, author, variant, color_01..color_16, background, foreground, cursor). One: https://raw.githubusercontent.com/Gogh-Co/Gogh/master/themes/<Name>.yml (URL-encode spaces).",
+    "notes": "Verified 2026-11-23: 1257 entries in data/themes.json. Has no selection color, derive it. Overlaps heavily with the iTerm2 collection but adds many original themes. ANSI order is the standard 0 black, 1 red, 2 green, 3 yellow, 4 blue, 5 magenta, 6 cyan, 7 white, then 8 to 15 bright."
+  },
+  {
+    "id": "alacritty-theme",
+    "name": "alacritty-theme",
+    "url": "https://github.com/alacritty/alacritty-theme",
+    "format": "TOML: [colors.primary] background/foreground, [colors.normal], [colors.bright], optional [colors.cursor] and [colors.selection]",
+    "count": 179,
+    "license": "Apache-2.0",
+    "howToFetch": "https://raw.githubusercontent.com/alacritty/alacritty-theme/master/themes/<name>.toml (lowercase, underscores; list via the GitHub contents API for themes/).",
+    "notes": "Verified 2026-11-23: 179 files under themes/. Smaller and curated, maintained by the Alacritty project. Colors are named, so mapping to the look spec is direct (normal.black to ansi.black, bright.black to ansi.brightBlack). Selection and cursor are optional in the files."
+  },
+  {
+    "id": "kitty-themes",
+    "name": "kitty-themes",
+    "url": "https://github.com/kovidgoyal/kitty-themes",
+    "format": "kitty .conf files: foreground, background, cursor, selection_foreground, selection_background, color0..color15",
+    "count": 447,
+    "license": "GPL-3.0 for the repo; individual themes carry their own notices",
+    "howToFetch": "https://raw.githubusercontent.com/kovidgoyal/kitty-themes/master/themes/<Name>.conf. List via GET https://api.github.com/repos/kovidgoyal/kitty-themes/git/trees/master?recursive=1 and filter themes/*.conf. `kitten themes` inside kitty browses them.",
+    "notes": "Verified 2026-11-23: 447 .conf files. Copyleft repo license: read colors as data to build a look spec, do not copy files into a differently licensed preset. Flat key/value format makes it trivial to parse (colorN is the ANSI index)."
+  }
+]

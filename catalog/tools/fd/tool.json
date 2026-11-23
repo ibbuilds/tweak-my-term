@@ -1,0 +1,51 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "fd",
+  "name": "fd",
+  "category": "tool",
+  "summary": "Fast, friendly find alternative that respects .gitignore. The default file lister behind fzf, yazi and many editors; colors come from LS_COLORS.",
+  "homepage": "https://github.com/sharkdp/fd",
+  "docs": "https://github.com/sharkdp/fd#readme",
+  "license": "MIT OR Apache-2.0",
+  "configFormat": "no config file; global ignore file and LS_COLORS env var; options via aliases",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "sharkdp.fd" },
+        { "manager": "scoop", "id": "fd" }
+      ],
+      "detect": ["fd", "--version"],
+      "config": ["{appdata}/fd/ignore"],
+      "notes": "LS_COLORS is not set on Windows by default, so fd prints uncolored paths until it is (README)."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "fd" }],
+      "detect": ["fd", "--version"],
+      "config": ["{xdg-config}/fd/ignore"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "fd-find", "notes": "The binary is installed as `fdfind`; add ~/.local/bin/fd symlink. Debian 13: 10.2.0, Ubuntu 24.04: 9.0.0." },
+        { "manager": "dnf", "id": "fd-find" },
+        { "manager": "pacman", "id": "fd" }
+      ],
+      "detect": ["fd", "--version"],
+      "config": ["{xdg-config}/fd/ignore"]
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "theme": { "support": "yes", "recipe": "recipes/theme.md", "notes": "Colors from LS_COLORS only; generate it from palette tokens." },
+    "integration": { "support": "yes", "recipe": "recipes/integration.md", "notes": "fzf, yazi, ripgrep." },
+    "config": { "support": "yes", "recipe": "recipes/config.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "10.5.2", "how": "machine" },
+  "sources": [
+    "https://github.com/sharkdp/fd#installation",
+    "https://github.com/sharkdp/fd#colorized-output",
+    "https://github.com/sharkdp/fd#excluding-specific-files-or-directories"
+  ]
+}

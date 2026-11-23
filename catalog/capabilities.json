@@ -1,0 +1,3281 @@
+{
+  "generated": "node tools/catalog.js build",
+  "tools": {
+    "fastfetch": {
+      "name": "fastfetch",
+      "category": "fetch",
+      "path": "catalog/fetch/fastfetch",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "2.71.0",
+        "how": "machine"
+      }
+    },
+    "nerd-fonts": {
+      "name": "Nerd Fonts",
+      "category": "font",
+      "path": "catalog/fonts/nerd-fonts",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "3.5.1",
+        "how": "machine"
+      }
+    },
+    "atuin": {
+      "name": "Atuin",
+      "category": "line-editing",
+      "path": "catalog/line-editing/atuin",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "18.25.1",
+        "how": "docs"
+      }
+    },
+    "ble.sh": {
+      "name": "ble.sh (Bash Line Editor)",
+      "category": "line-editing",
+      "path": "catalog/line-editing/ble.sh",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "0.4.0-devel3 / nightly (stable 0.3.4)",
+        "how": "machine"
+      }
+    },
+    "psreadline": {
+      "name": "PSReadLine",
+      "category": "line-editing",
+      "path": "catalog/line-editing/psreadline",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "2.4.5 (latest on PSGallery); 5.1 ships 2.0.0",
+        "how": "machine"
+      }
+    },
+    "zsh-autosuggestions": {
+      "name": "zsh-autosuggestions",
+      "category": "line-editing",
+      "path": "catalog/line-editing/zsh-autosuggestions",
+      "os": [
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "0.7.1",
+        "how": "docs"
+      }
+    },
+    "zsh-syntax-highlighting": {
+      "name": "zsh-syntax-highlighting",
+      "category": "line-editing",
+      "path": "catalog/line-editing/zsh-syntax-highlighting",
+      "os": [
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "0.8.0",
+        "how": "docs"
+      }
+    },
+    "tmux": {
+      "name": "tmux",
+      "category": "multiplexer",
+      "path": "catalog/multiplexers/tmux",
+      "os": [
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "3.8",
+        "how": "docs"
+      }
+    },
+    "zellij": {
+      "name": "Zellij",
+      "category": "multiplexer",
+      "path": "catalog/multiplexers/zellij",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "0.46.0",
+        "how": "docs"
+      }
+    },
+    "oh-my-posh": {
+      "name": "Oh My Posh",
+      "category": "prompt",
+      "path": "catalog/prompts/oh-my-posh",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "33.2.0",
+        "how": "docs"
+      }
+    },
+    "starship": {
+      "name": "Starship",
+      "category": "prompt",
+      "path": "catalog/prompts/starship",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "1.27.0",
+        "how": "docs"
+      }
+    },
+    "bash": {
+      "name": "Bash (incl. Git Bash on Windows)",
+      "category": "shell",
+      "path": "catalog/shells/bash",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "GNU bash 5.3.9 (Git for Windows 2.54.0.windows.1)",
+        "how": "machine"
+      }
+    },
+    "fish": {
+      "name": "fish",
+      "category": "shell",
+      "path": "catalog/shells/fish",
+      "os": [
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "fish 4.9.3 docs",
+        "how": "docs"
+      }
+    },
+    "nushell": {
+      "name": "Nushell",
+      "category": "shell",
+      "path": "catalog/shells/nushell",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "Nushell 0.117.0 docs",
+        "how": "docs"
+      }
+    },
+    "powershell": {
+      "name": "PowerShell (Windows PowerShell 5.1 and PowerShell 7+)",
+      "category": "shell",
+      "path": "catalog/shells/powershell",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "Windows PowerShell 5.1.26100 + PSReadLine 2.0.0/2.4.5 (machine); PowerShell 7.6 docs",
+        "how": "machine"
+      }
+    },
+    "zsh": {
+      "name": "Zsh",
+      "category": "shell",
+      "path": "catalog/shells/zsh",
+      "os": [
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "zsh 5.9 (docs)",
+        "how": "docs"
+      }
+    },
+    "alacritty": {
+      "name": "Alacritty",
+      "category": "terminal",
+      "path": "catalog/terminals/alacritty",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "0.17.0",
+        "how": "docs"
+      }
+    },
+    "foot": {
+      "name": "foot",
+      "category": "terminal",
+      "path": "catalog/terminals/foot",
+      "os": [
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "1.28.0",
+        "how": "docs"
+      }
+    },
+    "ghostty": {
+      "name": "Ghostty",
+      "category": "terminal",
+      "path": "catalog/terminals/ghostty",
+      "os": [
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "1.4.0",
+        "how": "docs"
+      }
+    },
+    "iterm2": {
+      "name": "iTerm2",
+      "category": "terminal",
+      "path": "catalog/terminals/iterm2",
+      "os": [
+        "macos"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "3.7.9",
+        "how": "docs"
+      }
+    },
+    "kitty": {
+      "name": "kitty",
+      "category": "terminal",
+      "path": "catalog/terminals/kitty",
+      "os": [
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "0.51.1",
+        "how": "docs"
+      }
+    },
+    "wezterm": {
+      "name": "WezTerm",
+      "category": "terminal",
+      "path": "catalog/terminals/wezterm",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "20240203-110809-5046fc22",
+        "how": "docs"
+      }
+    },
+    "windows-terminal": {
+      "name": "Windows Terminal",
+      "category": "terminal",
+      "path": "catalog/terminals/windows-terminal",
+      "os": [
+        "windows"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "1.25.3131.0",
+        "how": "docs"
+      }
+    },
+    "bat": {
+      "name": "bat",
+      "category": "tool",
+      "path": "catalog/tools/bat",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "0.26.1",
+        "how": "machine"
+      }
+    },
+    "btop": {
+      "name": "btop",
+      "category": "tool",
+      "path": "catalog/tools/btop",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "1.4.8",
+        "how": "docs"
+      }
+    },
+    "delta": {
+      "name": "delta",
+      "category": "tool",
+      "path": "catalog/tools/delta",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "0.21.2",
+        "how": "machine"
+      }
+    },
+    "eza": {
+      "name": "eza",
+      "category": "tool",
+      "path": "catalog/tools/eza",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "0.23.5",
+        "how": "machine"
+      }
+    },
+    "fd": {
+      "name": "fd",
+      "category": "tool",
+      "path": "catalog/tools/fd",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "10.5.2",
+        "how": "machine"
+      }
+    },
+    "fzf": {
+      "name": "fzf",
+      "category": "tool",
+      "path": "catalog/tools/fzf",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "0.75.0",
+        "how": "machine"
+      }
+    },
+    "lazygit": {
+      "name": "lazygit",
+      "category": "tool",
+      "path": "catalog/tools/lazygit",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "0.66.3",
+        "how": "machine"
+      }
+    },
+    "ripgrep": {
+      "name": "ripgrep",
+      "category": "tool",
+      "path": "catalog/tools/ripgrep",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "15.2.0",
+        "how": "machine"
+      }
+    },
+    "yazi": {
+      "name": "yazi",
+      "category": "tool",
+      "path": "catalog/tools/yazi",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "26.9.1",
+        "how": "docs"
+      }
+    },
+    "zoxide": {
+      "name": "zoxide",
+      "category": "tool",
+      "path": "catalog/tools/zoxide",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "0.10.0",
+        "how": "machine"
+      }
+    }
+  },
+  "capabilities": {
+    "install-init": {
+      "fastfetch": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/fetch/fastfetch/recipes/install-init.md",
+        "notes": "Install, config path, run on shell start with a quiet-variable guard."
+      },
+      "atuin": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/atuin/recipes/install-init.md"
+      },
+      "ble.sh": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/ble.sh/recipes/install-init.md"
+      },
+      "psreadline": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/psreadline/recipes/install-init.md"
+      },
+      "zsh-autosuggestions": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/zsh-autosuggestions/recipes/install-init.md"
+      },
+      "zsh-syntax-highlighting": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/zsh-syntax-highlighting/recipes/install-init.md"
+      },
+      "tmux": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/multiplexers/tmux/recipes/install-init.md"
+      },
+      "zellij": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/multiplexers/zellij/recipes/install-init.md"
+      },
+      "oh-my-posh": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/prompts/oh-my-posh/recipes/install-init.md"
+      },
+      "starship": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/prompts/starship/recipes/install-init.md"
+      },
+      "bat": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/bat/recipes/install-init.md"
+      },
+      "btop": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/btop/recipes/install-init.md"
+      },
+      "delta": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/delta/recipes/install-init.md"
+      },
+      "eza": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/eza/recipes/install-init.md"
+      },
+      "fd": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/fd/recipes/install-init.md"
+      },
+      "fzf": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/fzf/recipes/install-init.md"
+      },
+      "lazygit": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/lazygit/recipes/install-init.md"
+      },
+      "ripgrep": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/ripgrep/recipes/install-init.md"
+      },
+      "yazi": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/yazi/recipes/install-init.md"
+      },
+      "zoxide": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/zoxide/recipes/install-init.md"
+      }
+    },
+    "logo": {
+      "fastfetch": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/fetch/fastfetch/recipes/logo.md",
+        "notes": "ASCII/ANSI text file with $1..$9 color slots, raw files, images via sixel/kitty/kitty-direct/iterm/chafa."
+      }
+    },
+    "modules": {
+      "fastfetch": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/fetch/fastfetch/recipes/modules.md"
+      }
+    },
+    "theme": {
+      "fastfetch": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/fetch/fastfetch/recipes/theme.md",
+        "notes": "Key/title/separator colors and bar/percent colors; hex or ANSI names."
+      },
+      "bat": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/bat/recipes/theme.md",
+        "notes": "Built-in ansi/base16 follow the terminal; custom palettes via a generated .tmTheme + `bat cache --build`."
+      },
+      "btop": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/btop/recipes/theme.md"
+      },
+      "delta": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/delta/recipes/theme.md",
+        "notes": "syntax-theme ansi follows the terminal; diff backgrounds as hex styles; features group a look."
+      },
+      "eza": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/eza/recipes/theme.md",
+        "notes": "theme.yml with hex colors (needs a theme.yml-capable eza, 0.19+), or EZA_COLORS / LS_COLORS."
+      },
+      "fd": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/fd/recipes/theme.md",
+        "notes": "Colors from LS_COLORS only; generate it from palette tokens."
+      },
+      "fzf": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/fzf/recipes/theme.md",
+        "notes": "--color with hex or ANSI names, or the base16 scheme to follow the terminal palette."
+      },
+      "lazygit": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/lazygit/recipes/theme.md"
+      },
+      "ripgrep": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/ripgrep/recipes/theme.md",
+        "notes": "--colors path/line/column/match/highlight with fg, bg, style; 24-bit via r,g,b."
+      },
+      "yazi": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/yazi/recipes/theme.md",
+        "notes": "Flavors (ya pkg add) or a theme.toml with hex colors; tmTheme for code preview."
+      },
+      "zoxide": {
+        "support": "partial",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "notes": "No theme of its own. The `zi` picker is fzf: color it through FZF_DEFAULT_OPTS or _ZO_FZF_OPTS (see the fzf theme recipe)."
+      }
+    },
+    "install": {
+      "nerd-fonts": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/fonts/nerd-fonts/recipes/install.md"
+      }
+    },
+    "configure": {
+      "nerd-fonts": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/fonts/nerd-fonts/recipes/configure.md"
+      }
+    },
+    "nerd-glyphs": {
+      "nerd-fonts": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/fonts/nerd-fonts/recipes/nerd-glyphs.md"
+      }
+    },
+    "suggestions": {
+      "atuin": {
+        "support": "no",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "notes": "Interactive search, not inline ghost-text suggestions."
+      },
+      "ble.sh": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/ble.sh/recipes/suggestions.md",
+        "notes": "auto-complete, bash 4.0+."
+      },
+      "psreadline": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/psreadline/recipes/suggestions.md",
+        "notes": "Predictive IntelliSense: inline or list view; needs PSReadLine 2.1+ (2.2+ for list view and plugins)."
+      },
+      "zsh-autosuggestions": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/zsh-autosuggestions/recipes/suggestions.md"
+      },
+      "zsh-syntax-highlighting": {
+        "support": "no",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "notes": "Use zsh-autosuggestions."
+      }
+    },
+    "highlighting": {
+      "atuin": {
+        "support": "partial",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "notes": "Only syntax-highlights commands inside its search results (ui.syntax_highlight); not the command line you type."
+      },
+      "ble.sh": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/ble.sh/recipes/highlighting.md"
+      },
+      "psreadline": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/psreadline/recipes/highlighting.md"
+      },
+      "zsh-autosuggestions": {
+        "support": "no",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "notes": "Use zsh-syntax-highlighting."
+      },
+      "zsh-syntax-highlighting": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/zsh-syntax-highlighting/recipes/highlighting.md"
+      }
+    },
+    "history-search": {
+      "atuin": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/atuin/recipes/history-search.md"
+      },
+      "ble.sh": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/ble.sh/recipes/history-search.md"
+      },
+      "psreadline": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/psreadline/recipes/history-search.md"
+      },
+      "zsh-autosuggestions": {
+        "support": "partial",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "notes": "Suggests from history as you type; no search UI. Use atuin or fzf for Ctrl-R."
+      },
+      "zsh-syntax-highlighting": {
+        "support": "no",
+        "os": [
+          "macos",
+          "linux"
+        ]
+      }
+    },
+    "keybindings": {
+      "atuin": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/atuin/recipes/keybindings.md"
+      },
+      "ble.sh": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/ble.sh/recipes/keybindings.md"
+      },
+      "psreadline": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/psreadline/recipes/keybindings.md"
+      },
+      "zsh-autosuggestions": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/zsh-autosuggestions/recipes/keybindings.md"
+      },
+      "zsh-syntax-highlighting": {
+        "support": "no",
+        "os": [
+          "macos",
+          "linux"
+        ]
+      },
+      "tmux": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/multiplexers/tmux/recipes/keybindings.md"
+      },
+      "zellij": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/multiplexers/zellij/recipes/keybindings.md"
+      },
+      "bash": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/bash/recipes/keybindings.md"
+      },
+      "fish": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/fish/recipes/keybindings.md"
+      },
+      "nushell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/nushell/recipes/keybindings.md"
+      },
+      "powershell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/powershell/recipes/keybindings.md"
+      },
+      "zsh": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/zsh/recipes/keybindings.md"
+      },
+      "alacritty": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/alacritty/recipes/keybindings.md"
+      },
+      "foot": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/foot/recipes/keybindings.md"
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/keybindings.md"
+      },
+      "iterm2": {
+        "support": "partial",
+        "os": [
+          "macos"
+        ],
+        "notes": "Key mappings live in Settings > Keys (global) and Profiles > Keys (per profile, stored in the profile as a key map). The serialized format was not verified; set once in the UI and export the profile JSON, or use the Python API."
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/keybindings.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/keybindings.md"
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/keybindings.md"
+      },
+      "fzf": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/fzf/recipes/keybindings.md"
+      },
+      "lazygit": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/lazygit/recipes/keybindings.md"
+      },
+      "yazi": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/yazi/recipes/keybindings.md"
+      }
+    },
+    "colors": {
+      "atuin": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/atuin/recipes/colors.md"
+      },
+      "ble.sh": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/ble.sh/recipes/colors.md"
+      },
+      "psreadline": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/psreadline/recipes/colors.md"
+      },
+      "zsh-autosuggestions": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/zsh-autosuggestions/recipes/colors.md"
+      },
+      "zsh-syntax-highlighting": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/zsh-syntax-highlighting/recipes/colors.md"
+      },
+      "bash": {
+        "support": "partial",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/bash/recipes/colors.md",
+        "notes": "No syntax highlighting in plain readline; LS_COLORS drives ls and completion colors."
+      },
+      "fish": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/fish/recipes/colors.md"
+      },
+      "nushell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/nushell/recipes/colors.md"
+      },
+      "powershell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/powershell/recipes/colors.md",
+        "notes": "PSReadLine -Colors; $PSStyle only in PowerShell 7.2+."
+      },
+      "zsh": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/zsh/recipes/colors.md"
+      }
+    },
+    "performance": {
+      "atuin": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/atuin/recipes/performance.md"
+      },
+      "ble.sh": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/ble.sh/recipes/performance.md",
+        "notes": "Documents the cost; this is the tool's main drawback on Windows."
+      },
+      "psreadline": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/psreadline/recipes/performance.md"
+      },
+      "zsh-autosuggestions": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/zsh-autosuggestions/recipes/performance.md"
+      },
+      "zsh-syntax-highlighting": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/line-editing/zsh-syntax-highlighting/recipes/performance.md"
+      },
+      "oh-my-posh": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/prompts/oh-my-posh/recipes/performance.md"
+      },
+      "starship": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/prompts/starship/recipes/performance.md"
+      }
+    },
+    "palette": {
+      "tmux": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/multiplexers/tmux/recipes/palette.md"
+      },
+      "zellij": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/multiplexers/zellij/recipes/palette.md"
+      },
+      "oh-my-posh": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/prompts/oh-my-posh/recipes/palette.md",
+        "notes": "palette / palettes with p:<key> references."
+      },
+      "starship": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/prompts/starship/recipes/palette.md",
+        "notes": "palettes + palette keys; named colors usable in any style string."
+      },
+      "alacritty": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/alacritty/recipes/palette.md"
+      },
+      "foot": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/foot/recipes/palette.md"
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/palette.md"
+      },
+      "iterm2": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/iterm2/recipes/palette.md"
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/palette.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/palette.md"
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/palette.md"
+      }
+    },
+    "statusbar": {
+      "tmux": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/multiplexers/tmux/recipes/statusbar.md"
+      },
+      "zellij": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/multiplexers/zellij/recipes/statusbar.md"
+      }
+    },
+    "layouts": {
+      "tmux": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/multiplexers/tmux/recipes/layouts.md"
+      },
+      "zellij": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/multiplexers/zellij/recipes/layouts.md"
+      }
+    },
+    "plugins": {
+      "tmux": {
+        "support": "plugin",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/multiplexers/tmux/recipes/plugins.md",
+        "notes": "TPM (tmux plugin manager) installs git-hosted plugins."
+      },
+      "zellij": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/multiplexers/zellij/recipes/plugins.md",
+        "notes": "WASM/WASI plugins, Rust officially; built-in UI is itself plugins."
+      }
+    },
+    "segments": {
+      "oh-my-posh": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/prompts/oh-my-posh/recipes/segments.md"
+      },
+      "starship": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/prompts/starship/recipes/segments.md"
+      }
+    },
+    "transient": {
+      "oh-my-posh": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/prompts/oh-my-posh/recipes/transient.md",
+        "notes": "nu, fish, zsh, PowerShell, cmd; bash needs ble.sh."
+      },
+      "starship": {
+        "support": "partial",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/prompts/starship/recipes/transient.md",
+        "notes": "Native in PowerShell, fish and cmd/Clink; bash needs ble.sh; zsh and nushell are not built in."
+      }
+    },
+    "right-prompt": {
+      "oh-my-posh": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/prompts/oh-my-posh/recipes/right-prompt.md",
+        "notes": "rprompt block: bash (ble.sh), zsh, PowerShell, cmd, nu, fish."
+      },
+      "starship": {
+        "support": "partial",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/prompts/starship/recipes/right-prompt.md",
+        "notes": "right_format works in elvish, fish, zsh, xonsh, cmd, nushell and bash (with ble.sh or Flyline); not listed for PowerShell."
+      }
+    },
+    "multiline": {
+      "oh-my-posh": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/prompts/oh-my-posh/recipes/multiline.md"
+      },
+      "starship": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/prompts/starship/recipes/multiline.md"
+      }
+    },
+    "startup-file": {
+      "bash": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/bash/recipes/startup-file.md"
+      },
+      "fish": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/fish/recipes/startup-file.md"
+      },
+      "nushell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/nushell/recipes/startup-file.md"
+      },
+      "powershell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/powershell/recipes/startup-file.md"
+      },
+      "zsh": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/zsh/recipes/startup-file.md"
+      }
+    },
+    "prompt": {
+      "bash": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/bash/recipes/prompt.md",
+        "notes": "PS1 + PROMPT_COMMAND; no native transient or right prompt."
+      },
+      "fish": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/fish/recipes/prompt.md",
+        "notes": "fish_prompt / fish_right_prompt functions; fish_config prompt picks sample prompts."
+      },
+      "nushell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/nushell/recipes/prompt.md",
+        "notes": "PROMPT_COMMAND / PROMPT_COMMAND_RIGHT closures and native TRANSIENT_PROMPT_* variables."
+      },
+      "powershell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/powershell/recipes/prompt.md",
+        "notes": "function prompt {}; transient prompt via a PSReadLine Enter handler."
+      },
+      "zsh": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/zsh/recipes/prompt.md",
+        "notes": "PROMPT/RPROMPT with %-escapes, precmd hooks; transient prompt via ZLE hooks (starship/p10k provide it)."
+      }
+    },
+    "line-editing": {
+      "bash": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/bash/recipes/line-editing.md",
+        "notes": "GNU Readline via ~/.inputrc; no built-in autosuggestions or syntax highlighting (ble.sh adds them, slow on Windows)."
+      },
+      "fish": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/fish/recipes/line-editing.md",
+        "notes": "Autosuggestions, syntax highlighting, pager and abbreviations are built in."
+      },
+      "nushell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/nushell/recipes/line-editing.md",
+        "notes": "reedline: emacs/vi/helix, history hints, completion menus; syntax highlighting built in."
+      },
+      "powershell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/powershell/recipes/line-editing.md",
+        "notes": "PSReadLine. 5.1 ships 2.0.0 (no predictions); install >= 2.2 for prediction list view."
+      },
+      "zsh": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/zsh/recipes/line-editing.md",
+        "notes": "ZLE built in; autosuggestions and syntax highlighting via zsh-autosuggestions / zsh-syntax-highlighting plugins."
+      }
+    },
+    "history": {
+      "bash": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/bash/recipes/history.md"
+      },
+      "fish": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/fish/recipes/history.md"
+      },
+      "nushell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/nushell/recipes/history.md"
+      },
+      "powershell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/powershell/recipes/history.md"
+      },
+      "zsh": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/zsh/recipes/history.md"
+      }
+    },
+    "completion": {
+      "bash": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/bash/recipes/completion.md"
+      },
+      "fish": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/fish/recipes/completion.md"
+      },
+      "nushell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/nushell/recipes/completion.md",
+        "notes": "Built-in plus external completer closure (carapace, fish)."
+      },
+      "powershell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/powershell/recipes/completion.md"
+      },
+      "zsh": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/zsh/recipes/completion.md"
+      }
+    },
+    "startup-speed": {
+      "bash": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/bash/recipes/startup-speed.md"
+      },
+      "fish": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/fish/recipes/startup-speed.md"
+      },
+      "nushell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/nushell/recipes/startup-speed.md"
+      },
+      "powershell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/powershell/recipes/startup-speed.md"
+      },
+      "zsh": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/zsh/recipes/startup-speed.md"
+      }
+    },
+    "env": {
+      "bash": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/bash/recipes/env.md"
+      },
+      "fish": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/fish/recipes/env.md"
+      },
+      "nushell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/nushell/recipes/env.md"
+      },
+      "powershell": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/powershell/recipes/env.md"
+      },
+      "zsh": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/shells/zsh/recipes/env.md"
+      }
+    },
+    "font": {
+      "alacritty": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/alacritty/recipes/font.md"
+      },
+      "foot": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/foot/recipes/font.md"
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/font.md"
+      },
+      "iterm2": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/iterm2/recipes/font.md"
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/font.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/font.md",
+        "notes": "JetBrains Mono and Nerd Font Symbols are bundled."
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/font.md"
+      }
+    },
+    "ligatures": {
+      "alacritty": {
+        "support": "no",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "notes": "Alacritty renders one glyph at a time and has no ligature support (maintainer statement in issue #50). Use WezTerm or Windows Terminal for ligatures."
+      },
+      "foot": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "The foot.ini(5) man page read has no ligature option (only `grapheme-shaping` under [tweak], for grapheme clusters). Foot is widely documented as not supporting ligatures, but that statement was not found in the pages fetched. Use kitty, Ghostty or iTerm2 for ligatures."
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/ligatures.md"
+      },
+      "iterm2": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/iterm2/recipes/ligatures.md",
+        "notes": "Enabling ligatures disables the GPU renderer."
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/ligatures.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/ligatures.md"
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/ligatures.md"
+      }
+    },
+    "font-fallback": {
+      "alacritty": {
+        "support": "partial",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/alacritty/recipes/font-fallback.md",
+        "notes": "No fallback list option. Missing glyphs come from OS font fallback, so use a patched Nerd Font as the main family."
+      },
+      "foot": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/foot/recipes/font-fallback.md"
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/font-fallback.md"
+      },
+      "iterm2": {
+        "support": "partial",
+        "os": [
+          "macos"
+        ],
+        "notes": "Profiles > Text has a Non-ASCII font and Special Exceptions (range remap, with an Install Nerd Font Bundle option). Exact Dynamic Profile key names for these were not confirmed; configure once in the UI and export the profile as JSON to read them. Simplest path: use a Nerd Font as Normal Font."
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/font-fallback.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/font-fallback.md"
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/font-fallback.md",
+        "notes": "A comma-separated face list works; the docs describe face as a single name, so this relies on the verified Eclipse preset behaviour."
+      }
+    },
+    "line-height": {
+      "alacritty": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/alacritty/recipes/line-height.md",
+        "notes": "Only as an integer pixel offset (font.offset.y)."
+      },
+      "foot": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/foot/recipes/line-height.md"
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/line-height.md"
+      },
+      "iterm2": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/iterm2/recipes/line-height.md"
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/line-height.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/line-height.md"
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/line-height.md"
+      }
+    },
+    "opacity": {
+      "alacritty": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/alacritty/recipes/opacity.md"
+      },
+      "foot": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/foot/recipes/opacity.md"
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/opacity.md"
+      },
+      "iterm2": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/iterm2/recipes/opacity.md"
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/opacity.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/opacity.md"
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/opacity.md",
+        "notes": "Unblurred opacity needs Windows 11."
+      }
+    },
+    "blur": {
+      "alacritty": {
+        "support": "partial",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/alacritty/recipes/blur.md",
+        "notes": "window.blur works on macOS and KDE Wayland only; not on Windows or X11."
+      },
+      "foot": {
+        "support": "partial",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/foot/recipes/blur.md",
+        "notes": "1.26.0+, needs a build against wayland-protocols 1.45+ and a compositor with ext-background-effect-v1."
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/blur.md"
+      },
+      "iterm2": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/iterm2/recipes/blur.md"
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/blur.md",
+        "notes": "macOS and Wayland only (compositor-dependent)."
+      },
+      "wezterm": {
+        "support": "partial",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/blur.md",
+        "notes": "Windows (Acrylic, Mica, Tabbed) and macOS work on stable; Wayland blur needs nightly; no blur on X11."
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/blur.md",
+        "notes": "Acrylic per profile, Mica via a theme (Windows 11 build 22621+)."
+      }
+    },
+    "background-image": {
+      "alacritty": {
+        "support": "no",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "notes": "Not supported and not planned (maintainers closed the requests). Use WezTerm or Windows Terminal, or draw the art in a separate window layer."
+      },
+      "foot": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "Not available; the config reference has no image option. Use alpha with a compositor-drawn wallpaper, or kitty/Ghostty/iTerm2 for images."
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/background-image.md",
+        "notes": "PNG/JPEG only, since 1.2.0."
+      },
+      "iterm2": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/iterm2/recipes/background-image.md"
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/background-image.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/background-image.md"
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/background-image.md",
+        "notes": "Images are cached by path: a regenerated image needs a new file name."
+      }
+    },
+    "background-animated": {
+      "alacritty": {
+        "support": "no",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "notes": "No image or animation support. Use WezTerm or Windows Terminal."
+      },
+      "foot": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No images or shaders. Use kitty (custom_shaders) or Ghostty (custom-shader)."
+      },
+      "ghostty": {
+        "support": "partial",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/background-animated.md",
+        "notes": "No animated image formats; animate through a custom shader."
+      },
+      "iterm2": {
+        "support": "no",
+        "os": [
+          "macos"
+        ],
+        "notes": "Only a static image (or a rotating folder of images) is documented for backgrounds. Use another terminal (Ghostty, kitty) for shader-driven animation."
+      },
+      "kitty": {
+        "support": "partial",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/background-animated.md",
+        "notes": "Via bundled or custom shaders (0.49+); animated image files are not documented."
+      },
+      "wezterm": {
+        "support": "partial",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/background-animated.md",
+        "notes": "Animated GIF or PNG layers animate only while the window has focus; costs GPU and VRAM. No video backgrounds."
+      },
+      "windows-terminal": {
+        "support": "partial",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/background-animated.md",
+        "notes": "backgroundImage accepts .gif but animated playback is not confirmed by the docs; a time-driven pixel shader (Time constant) is the reliable route."
+      }
+    },
+    "shader": {
+      "alacritty": {
+        "support": "no",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "notes": "No custom shader option. Windows Terminal (experimental.pixelShaderPath) supports shaders."
+      },
+      "foot": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No shader support. Use Ghostty or kitty."
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/shader.md"
+      },
+      "iterm2": {
+        "support": "no",
+        "os": [
+          "macos"
+        ],
+        "notes": "No custom shader support. Use Ghostty or kitty for shaders."
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/shader.md",
+        "notes": "custom_shaders, official since 0.49. Slang shaders, not GLSL."
+      },
+      "wezterm": {
+        "support": "no",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "notes": "No user shader hook is documented. Approximate with background layers (gradients plus image hsb dimming), or use Windows Terminal experimental.pixelShaderPath on Windows."
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/shader.md",
+        "notes": "Experimental: experimental.pixelShaderPath (HLSL). Continued existence is not guaranteed by Microsoft."
+      }
+    },
+    "padding": {
+      "alacritty": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/alacritty/recipes/padding.md",
+        "notes": "Only symmetric x/y padding."
+      },
+      "foot": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/foot/recipes/padding.md"
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/padding.md"
+      },
+      "iterm2": {
+        "support": "partial",
+        "os": [
+          "macos"
+        ],
+        "notes": "No padding setting in the Window profile docs. iTerm2 has Advanced settings for side and top/bottom margins (TerminalMargin, TerminalVMargin via `defaults write com.googlecode.iterm2`); names unverified here, check Settings > Advanced and search 'margin'."
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/padding.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/padding.md"
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/padding.md"
+      }
+    },
+    "cursor": {
+      "alacritty": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/alacritty/recipes/cursor.md"
+      },
+      "foot": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/foot/recipes/cursor.md"
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/cursor.md"
+      },
+      "iterm2": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/iterm2/recipes/cursor.md"
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/cursor.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/cursor.md"
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/cursor.md"
+      }
+    },
+    "tabs": {
+      "alacritty": {
+        "support": "no",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "notes": "No tabs on Windows or Linux by design; use tmux or zellij. macOS has native tab actions only."
+      },
+      "foot": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No tabs. Use tmux/zellij, or one window per task under a tiling compositor."
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/tabs.md"
+      },
+      "iterm2": {
+        "support": "partial",
+        "os": [
+          "macos"
+        ],
+        "notes": "Tab bar position and visibility are global preferences (Settings > Appearance > Tabs), not profile keys, so Dynamic Profiles cannot set them. A per-profile tab color exists (Colors tab) as `tab_color` in the Python API."
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/tabs.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/tabs.md"
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/tabs.md"
+      }
+    },
+    "titlebar": {
+      "alacritty": {
+        "support": "partial",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/alacritty/recipes/titlebar.md",
+        "notes": "Full or None everywhere; Transparent and Buttonless are macOS only. No integrated tab bar."
+      },
+      "foot": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/foot/recipes/titlebar.md"
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/titlebar.md"
+      },
+      "iterm2": {
+        "support": "partial",
+        "os": [
+          "macos"
+        ],
+        "notes": "Window style (normal, no title bar, full screen, ...) is the Style option in Settings > Profiles > Window; the Dynamic Profile key is `Window Type` (enum-backed number, values not confirmed). Export a profile to read the value for the style you want."
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/titlebar.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/titlebar.md"
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/titlebar.md"
+      }
+    },
+    "splits": {
+      "alacritty": {
+        "support": "no",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "notes": "No splits by design; use tmux or zellij."
+      },
+      "foot": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No built-in splits. Use tmux/zellij or compositor tiling."
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/splits.md"
+      },
+      "iterm2": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/iterm2/recipes/splits.md"
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/splits.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/splits.md"
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/splits.md"
+      }
+    },
+    "quake": {
+      "alacritty": {
+        "support": "no",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "notes": "No drop-down mode. Use an OS-level launcher or window-manager rule, or Windows Terminal (quakeMode) on Windows."
+      },
+      "foot": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No drop-down mode. Set `app-id` and use a compositor scratchpad or window rule (compositor-specific, unverified), or use kitty's quick-access-terminal."
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/quake.md",
+        "notes": "Quick terminal. Linux needs Wayland + wlr-layer-shell."
+      },
+      "iterm2": {
+        "support": "partial",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/iterm2/recipes/quake.md",
+        "notes": "Hotkey window is created through the UI; Dynamic Profile keys for hotkeys were not confirmed."
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/quake.md"
+      },
+      "wezterm": {
+        "support": "no",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "notes": "No built-in drop-down or quake window is documented. Use an OS-level launcher or window-manager rule, or Windows Terminal (quakeMode action) on Windows."
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/quake.md"
+      }
+    },
+    "shell-integration": {
+      "alacritty": {
+        "support": "no",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "notes": "No OSC 133 prompt marks or directory tracking features. Use WezTerm or Windows Terminal."
+      },
+      "foot": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/foot/recipes/shell-integration.md"
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/shell-integration.md"
+      },
+      "iterm2": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/iterm2/recipes/shell-integration.md"
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/shell-integration.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/shell-integration.md"
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/shell-integration.md"
+      }
+    },
+    "startup-layout": {
+      "alacritty": {
+        "support": "no",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "notes": "Single window, single shell. Run tmux or zellij with a layout file as the shell command (see default-shell recipe)."
+      },
+      "foot": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No sessions or layouts. Start a multiplexer layout with `shell=`/command, or set `initial-window-size-chars`."
+      },
+      "ghostty": {
+        "support": "no",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "notes": "No session or layout file. Use tmux/zellij for pane layouts, `window-width`/`window-height` for size, or the macOS AppleScript dictionary (listed on the features page) to script windows and tabs."
+      },
+      "iterm2": {
+        "support": "partial",
+        "os": [
+          "macos"
+        ],
+        "notes": "Window arrangements (Window > Save Window Arrangement; restore at launch via Settings > General > Startup) and the Python/AppleScript APIs. Not expressible as a plain config file; format not verified."
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/startup-layout.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/startup-layout.md"
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/startup-layout.md"
+      }
+    },
+    "inline-images": {
+      "alacritty": {
+        "support": "no",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "notes": "No Sixel, iTerm2 or Kitty image protocol. Use WezTerm or Windows Terminal (Sixel)."
+      },
+      "foot": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/foot/recipes/inline-images.md",
+        "notes": "Sixel. The kitty and iTerm2 image protocols are not documented."
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/inline-images.md",
+        "notes": "Kitty graphics protocol. Sixel is not documented."
+      },
+      "iterm2": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/iterm2/recipes/inline-images.md"
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/inline-images.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/inline-images.md",
+        "notes": "iTerm2 image protocol (wezterm imgcat) is documented. Sixel and Kitty graphics support level is not confirmed here."
+      },
+      "windows-terminal": {
+        "support": "partial",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/inline-images.md",
+        "notes": "Sixel only; no iTerm2 or Kitty image protocols."
+      }
+    },
+    "profiles": {
+      "alacritty": {
+        "support": "no",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "notes": "No profiles. Run alacritty --config-file <file> or -o 'key=value' per use case, or import shared files with general.import."
+      },
+      "foot": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No profiles. Use `foot -c <file>`, `include=` in foot.ini, or `-o section.key=value` per launch."
+      },
+      "ghostty": {
+        "support": "no",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "notes": "One config, no profile concept. Use `config-file = ?other` includes or launch with a different `--config-file`."
+      },
+      "iterm2": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/iterm2/recipes/profiles.md"
+      },
+      "kitty": {
+        "support": "no",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "notes": "No profile concept. Use `include other.conf` plus `kitty --config <file>` or `-o key=value` per launch, and session files for tab/window setups."
+      },
+      "wezterm": {
+        "support": "partial",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/profiles.md",
+        "notes": "No profile concept. launch_menu entries and domains (WSL, SSH) fill the role."
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/profiles.md"
+      }
+    },
+    "default-shell": {
+      "alacritty": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/alacritty/recipes/default-shell.md"
+      },
+      "foot": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/foot/recipes/default-shell.md"
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/default-shell.md"
+      },
+      "iterm2": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/iterm2/recipes/default-shell.md"
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/default-shell.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/default-shell.md"
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/default-shell.md"
+      }
+    },
+    "config-reload": {
+      "alacritty": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/alacritty/recipes/config-reload.md"
+      },
+      "foot": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No live reload; restart foot (in server mode restart the server). Runtime color theme switching works: key bindings color-theme-switch-dark / color-theme-switch-light / color-theme-toggle, or SIGUSR1/SIGUSR2 to the foot process."
+      },
+      "ghostty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ghostty/recipes/config-reload.md"
+      },
+      "iterm2": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/iterm2/recipes/config-reload.md"
+      },
+      "kitty": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/kitty/recipes/config-reload.md"
+      },
+      "wezterm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/terminals/wezterm/recipes/config-reload.md"
+      },
+      "windows-terminal": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/terminals/windows-terminal/recipes/config-reload.md"
+      }
+    },
+    "integration": {
+      "bat": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/bat/recipes/integration.md",
+        "notes": "fzf preview, MANPAGER, git, cat alias, delta."
+      },
+      "delta": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/delta/recipes/integration.md",
+        "notes": "git pager, interactive.diffFilter, lazygit, jj."
+      },
+      "eza": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/eza/recipes/integration.md"
+      },
+      "fd": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/fd/recipes/integration.md",
+        "notes": "fzf, yazi, ripgrep."
+      },
+      "fzf": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/fzf/recipes/integration.md",
+        "notes": "fd as the walker, bat/eza previews, per-shell wiring."
+      },
+      "lazygit": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/lazygit/recipes/integration.md",
+        "notes": "delta diff renderer, editor, Nerd Font icons, shell alias."
+      },
+      "ripgrep": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/ripgrep/recipes/integration.md",
+        "notes": "fzf live grep, delta/bat as viewers."
+      },
+      "yazi": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/yazi/recipes/integration.md",
+        "notes": "`y` wrapper that changes directory on exit, optional dependencies."
+      },
+      "zoxide": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/zoxide/recipes/integration.md",
+        "notes": "cd replacement, fzf picker, yazi/other tools that read the database."
+      }
+    },
+    "config": {
+      "bat": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/bat/recipes/config.md"
+      },
+      "btop": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/btop/recipes/config.md"
+      },
+      "delta": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/delta/recipes/config.md"
+      },
+      "eza": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/eza/recipes/config.md"
+      },
+      "fd": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/fd/recipes/config.md"
+      },
+      "fzf": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/fzf/recipes/config.md"
+      },
+      "lazygit": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/lazygit/recipes/config.md"
+      },
+      "ripgrep": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/ripgrep/recipes/config.md"
+      },
+      "yazi": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/yazi/recipes/config.md"
+      },
+      "zoxide": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/zoxide/recipes/config.md"
+      }
+    }
+  }
+}
