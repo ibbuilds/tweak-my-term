@@ -26,8 +26,24 @@ function load(name) {
   return { p, dir };
 }
 
+const BIN = { apt: 'apt-get', psgallery: 'powershell', 'pwsh-gallery': 'pwsh' };
+const hasManager = (m) => Boolean(require('./sys').which(BIN[m] || m));
+
+/**
+ * Pick how to install a catalog tool here: the preferred manager if it is available, else
+ * the first catalog entry whose manager exists and that needs no extra repo set up first.
+ */
+function resolveInstall(toolId, osName, { has = hasManager, prefer = process.env.CLAUDE_PLUGIN_OPTION_PACKAGE_MANAGER } = {}) {
+  const t = require('./catalog').get(toolId);
+  const list = (t && t.os && t.os[osName] && t.os[osName].install) || [];
+  const usable = list.filter((i) => has(i.manager));
+  const pick = (prefer && usable.find((i) => i.manager === prefer))
+    || usable.find((i) => !/^needs\b/i.test(i.notes || ''));
+  return pick ? { manager: pick.manager, id: pick.id } : null;
+}
+
 /** Stage everything a preset needs for the run's OS into the open run. */
-function stage(name, { osName } = {}) {
+function stage(name, { osName, has } = {}) {
   const { p, dir } = load(name);
   const st = run.current();
   const target = osName || (st && st.os);
@@ -37,10 +53,17 @@ function stage(name, { osName } = {}) {
   }
   run.setLook(path.join(dir, p.look));
   for (const f of plan.files) run.stageFile(f.kind, f.to, path.join(dir, f.from), { os: target });
-  for (const i of plan.installs || []) run.stageInstall(i.manager, i.id);
+  const unresolved = [];
+  let installs = 0;
+  for (const i of plan.installs || []) {
+    const r = i.manager === 'auto' ? resolveInstall(i.tool || i.id, target, { has }) : i;
+    if (!r) { unresolved.push(i.tool || i.id); continue; }
+    run.stageInstall(r.manager, r.id);
+    installs++;
+  }
   for (const font of plan.fonts || []) run.stageFont(font);
   for (const c of plan.checks || []) run.stageCheck(c);
-  return { name, os: target, files: plan.files.length, installs: (plan.installs || []).length, fonts: (plan.fonts || []).length, checks: (plan.checks || []).length };
+  return { name, os: target, files: plan.files.length, installs, unresolved, fonts: (plan.fonts || []).length, checks: (plan.checks || []).length };
 }
 
-module.exports = { list, load, stage, ROOT };
+module.exports = { list, load, stage, resolveInstall, ROOT };

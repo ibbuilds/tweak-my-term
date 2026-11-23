@@ -17,7 +17,7 @@
     "allow_installs": {
       "type": "boolean",
       "title": "Allow package installs",
-      "description": "Let tmt apply run the approved winget/brew/apt installs. Off: it prints them for you to run.",
+      "description": "Let tmt apply run the installs in an approved plan without asking again. Off: the agent must get your yes and pass --allow-installs.",
       "default": false
     },
     "package_manager": {

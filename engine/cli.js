@@ -129,7 +129,7 @@ async function main() {
       else if (sub === 'check') { const i = pos.indexOf('--'); r = run.stageCheck(i >= 0 ? pos.slice(i + 1) : rest); }
       else if (sub === 'shell') r = run.stageShell(rest[0]);
       else if (sub === 'look') r = run.setLook(path.resolve(rest[0]));
-      else if (sub === 'preset') { const s = require('./presets').stage(rest[0], { osName: flags.os }); return out(s, json, (x) => `Staged preset ${x.name} for ${x.os}: ${x.files} files, ${x.installs} installs, ${x.fonts} fonts, ${x.checks} checks.\nNext: tmt plan`); }
+      else if (sub === 'preset') { const s = require('./presets').stage(rest[0], { osName: flags.os }); return out(s, json, (x) => `Staged preset ${x.name} for ${x.os}: ${x.files} files, ${x.installs} installs, ${x.fonts} fonts, ${x.checks} checks.${x.unresolved.length ? `\nNo package manager here for: ${x.unresolved.join(', ')}. See \`tmt catalog show <id>\`; install it another way or stage one with \`tmt stage install\`.` : ''}\nNext: tmt plan`); }
       else throw new run.GateError('usage: tmt stage write|block|merge-json|install|font|check|shell|look|preset ...');
       return out(run.status(), json, (s) => `Staged. ${s.staged.files} files, ${s.staged.installs} installs, ${s.staged.fonts} fonts, ${s.staged.checks} checks. Next: ${s.next}`);
     }
