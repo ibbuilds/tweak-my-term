@@ -103,7 +103,9 @@
       "properties": {
         "multiplexer": { "enum": ["none", "tmux", "zellij", "native"] },
         "panes": { "type": "string", "description": "Startup pane layout, in words or a tool layout file." },
-        "quake": { "type": "boolean", "description": "Drop-down window." }
+        "quake": { "type": "boolean", "description": "Drop-down window." },
+        "gap": { "type": "integer", "minimum": 0, "maximum": 64, "description": "Space between panes or windows in px; 0 = shared 1px dividers." },
+        "arrangement": { "$ref": "#/$defs/pane", "description": "Pane tree the preview draws and the configs build: a split { split, sizes, panes } or a leaf { run, focus }." }
       }
     },
     "prompt": {
@@ -170,6 +172,17 @@
   },
   "$defs": {
     "hex": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$" },
+    "pane": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "split": { "enum": ["row", "column"] },
+        "sizes": { "type": "array", "items": { "type": "number", "minimum": 1 }, "minItems": 2 },
+        "panes": { "type": "array", "items": { "$ref": "#/$defs/pane" }, "minItems": 2 },
+        "run": { "type": "string", "description": "What runs in the pane: shell, nvim, btop, lazygit, yazi, fastfetch, ..." },
+        "focus": { "type": "boolean" }
+      }
+    },
     "target": {
       "type": "object",
       "additionalProperties": false,

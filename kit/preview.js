@@ -140,6 +140,82 @@ function session(prompt) {
   return L.join('\n');
 }
 
+// ------------------------------------------------------------------ panes
+// look.layout.arrangement: { split: 'row'|'column', sizes?: [n...], panes: [node...] } or a leaf { run, focus? }.
+// Each pane shows a small mock of what runs in it, so the user can judge the arrangement before configs exist.
+
+function checkArrangement(node, at = 'layout.arrangement') {
+  if (!node || typeof node !== 'object') throw new Error(`${at}: a pane must be an object`);
+  const isSplit = node.split !== undefined || node.panes !== undefined;
+  if (isSplit && node.run !== undefined) throw new Error(`${at}: a pane is either a split or runs something, not both`);
+  if (!isSplit) return;
+  if (node.split !== 'row' && node.split !== 'column') throw new Error(`${at}: split must be row or column`);
+  if (!Array.isArray(node.panes) || node.panes.length < 2) throw new Error(`${at}: a split needs at least 2 panes`);
+  if (node.sizes !== undefined && (!Array.isArray(node.sizes) || node.sizes.length !== node.panes.length || node.sizes.some((n) => !(n > 0)))) {
+    throw new Error(`${at}: sizes must have one number per pane, each above 0`);
+  }
+  node.panes.forEach((p, i) => checkArrangement(p, `${at}.panes[${i}]`));
+}
+
+function describeArrangement(node, depth = 0) {
+  if (!node.panes) return String(node.run || 'shell');
+  return `${node.split}${node.sizes ? ' ' + node.sizes.join('/') : ''}: ${node.panes.map((p) => describeArrangement(p, depth + 1)).join(depth ? ', ' : ' | ')}`;
+}
+
+const SHELLS_RUN = /^(shell|sh|bash|zsh|fish|pwsh|powershell|nu|nushell|cmd|terminal)?$/i;
+function paneBody(run, prompt) {
+  const r = String(run || '').toLowerCase();
+  const L = [];
+  if (SHELLS_RUN.test(r)) {
+    const ph = promptHtml(prompt, true, false);
+    for (const h of ph.head) L.push(h);
+    L.push(ph.last + '<span class="a2 b">git</span> log --oneline -2');
+    L.push('<span class="a3">4eda6be</span> docs: design guide');
+    L.push('<span class="a3">a7dced9</span> feat(catalog): window managers');
+    const pc = promptHtml(prompt, true, true);
+    for (const h of pc.head) L.push(h);
+    L.push(pc.last + pc.cur);
+  } else if (/vim|nvim|hx|helix|editor|code|emacs|micro/.test(r)) {
+    const code = [
+      '<span class="a5">function</span> <span class="a4">fit</span>(img, w, h) {',
+      '  <span class="a5">const</span> s = Math.<span class="a4">max</span>(w / img.width, h / img.height);',
+      '  <span class="a8">// cover: crop the overflow</span>',
+      '  <span class="a5">return</span> <span class="a4">resize</span>(img, s, <span class="a2">&#39;cover&#39;</span>);',
+      '}',
+    ];
+    code.forEach((c, i) => L.push(`<span class="a8">${String(i + 1).padStart(3)}</span>  ${c}`));
+  } else if (/btop|htop|top|monitor|bottom|glances/.test(r)) {
+    const bar = (n, cls) => `<span class="${cls}">${'█'.repeat(n)}</span><span class="a8">${'░'.repeat(20 - n)}</span>`;
+    L.push(`<span class="a8">cpu</span>  ${bar(7, 'a2')}  34%`);
+    L.push(`<span class="a8">mem</span>  ${bar(12, 'a3')}  61%`);
+    L.push(`<span class="a8">gpu</span>  ${bar(16, 'a1')}  82%`);
+    L.push(`<span class="a8">net</span>  <span class="a6">↓ 2.1 MB/s</span>  <span class="a5">↑ 180 kB/s</span>`);
+  } else if (/git|lazygit|tig/.test(r)) {
+    L.push('<span class="a8">Commits</span>');
+    L.push('<span class="sel"><span class="a3">4eda6be</span> docs: design guide </span>');
+    L.push('<span class="a3">71ee89f</span> feat(kit): layout search');
+    L.push('<span class="a8">Files</span>  <span class="a1">M</span> kit/preview.js');
+  } else if (/yazi|ranger|lf|nnn|files|broot|mc/.test(r)) {
+    L.push('<span class="a4 b">catalog/</span>');
+    L.push('<span class="sel"><span class="a4 b">kit/</span>         </span>');
+    L.push('package.json');
+    L.push('<span class="a2 b">build.sh</span>');
+  } else if (/fetch|neofetch|fastfetch/.test(r)) {
+    for (const [k, v] of [['os', 'Linux'], ['shell', 'zsh'], ['term', 'wezterm'], ['font', 'JetBrains Mono']]) L.push(`<span class="a8">${k.padEnd(6)}</span><span class="a4">${v}</span>`);
+  } else {
+    L.push(`<span class="a8">${esc(run)}</span>`);
+  }
+  return L.join('\n');
+}
+
+function panesHtml(node, prompt, gap, depth = 0) {
+  if (!node.panes) {
+    return `<div class="pane${node.focus ? ' focus' : ''}" data-run="${esc(node.run || 'shell')}"><pre class="term pt" aria-label="${esc(node.run || 'shell')} pane">${paneBody(node.run, prompt)}</pre></div>`;
+  }
+  const cells = node.panes.map((p, i) => `<div class="cell" style="flex:${node.sizes ? node.sizes[i] : 1} 1 0">${panesHtml(p, prompt, gap, depth + 1)}</div>`);
+  return `<div class="split ${node.split}" style="gap:${gap}px">\n${cells.join('\n')}\n</div>`;
+}
+
 // ------------------------------------------------------------------ html
 
 function html({ look, palette, background, prompt } = {}) {
@@ -148,6 +224,9 @@ function html({ look, palette, background, prompt } = {}) {
   const bg = backgroundInfo(look, background);
   const pr = prompt || look.prompt || {};
   const win = look.window || {};
+  const lay = look.layout || {};
+  if (lay.arrangement) checkArrangement(lay.arrangement);
+  const gap = Number.isInteger(lay.gap) && lay.gap >= 0 ? lay.gap : 0;
   const font = look.font || {};
   const name = look.name || 'look';
   const pad = (win.padding && win.padding.length ? win.padding : [12, 16, 12, 16]);
@@ -180,6 +259,7 @@ function html({ look, palette, background, prompt } = {}) {
     fact('Background', [look.background.image || 'image', `${bg ? bg.fit : look.background.fit || ''}`, `opacity ${bg ? bg.opacity : look.background.opacity ?? 1}`, (look.background.treatment || []).join(' + ')].filter(Boolean).join(', '));
   }
   fact('Prompt', [pr.engine, pr.style, pr.lines ? `${pr.lines} line${pr.lines > 1 ? 's' : ''}` : '', (pr.segments || []).join(' ')].filter(Boolean).join(', '));
+  if (lay.arrangement) fact('Layout', `${describeArrangement(lay.arrangement)}${gap ? `; gap ${gap}px` : ''}`);
   fact('Shells', (look.shells || []).map((s) => s.id + (s.default ? ' (default)' : '')).join(', '));
   fact('On start', look.onStart ? [look.onStart.fetch, look.onStart.art].filter(Boolean).join(', ') : '');
   fact('Tools', (look.tools || []).join(', '));
@@ -223,6 +303,13 @@ pre.term{position:relative;z-index:1;margin:0;padding:${pt}px ${pr_}px ${pb}px $
 ${ansiCss}.b{font-weight:bold}
 .sel{background:var(--sel);color:var(--fg)}
 .cur{${cursorCss};display:inline-block;width:.6em}
+.layout{position:relative;z-index:1;display:flex;min-height:300px;padding:${gap}px}
+.layout>.split,.cell{display:flex;flex:1 1 0;min-width:0;min-height:0}
+.split{display:flex;flex:1 1 0;min-width:0;min-height:0}.split.row{flex-direction:row}.split.column{flex-direction:column}
+.pane{flex:1 1 0;min-width:0;overflow:hidden;${screenBg};border:1px solid ${C.mix(pal.background, pal.foreground, 0.14)};border-radius:${gap ? 8 : 0}px}
+.pane.focus{border-color:var(--accent)}
+.pane:not(.focus) pre{opacity:.72}
+pre.pt{overflow:hidden;font-size:clamp(10px,2.4vw,${fontPx}px)}
 .pl{display:inline-block;background:var(--sb);color:var(--st);padding:0 .9em 0 .6em;clip-path:polygon(0 0,calc(100% - .5em) 0,100% 50%,calc(100% - .5em) 100%,0 100%)}
 .pl.n{padding-left:1.1em;margin-left:-.45em;clip-path:polygon(0 0,calc(100% - .5em) 0,100% 50%,calc(100% - .5em) 100%,0 100%,.5em 50%)}
 .pill{display:inline-block;background:var(--sb);color:var(--st);border-radius:999px;padding:0 .7em}
@@ -247,7 +334,7 @@ ${desc}${mood}
 <section aria-label="Terminal preview">
 <div class="win" style="${vars}">
 <div class="bar">${title}${tabBar}</div>
-<div class="screen">${bgLayer}<pre class="term" aria-label="Sample terminal session">${session(pr)}</pre></div>
+<div class="screen">${bgLayer}${lay.arrangement ? `<div class="layout">${panesHtml(lay.arrangement, pr, gap)}</div>` : `<pre class="term" aria-label="Sample terminal session">${session(pr)}</pre>`}</div>
 </div>
 </section>
 <section aria-label="Palette">

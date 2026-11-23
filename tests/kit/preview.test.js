@@ -147,3 +147,42 @@ test('swatch: chips for 5 base colors and 16 ANSI colors, in a fixed layout, wit
   const decoded = png.decode(png.encode(img));
   assert.strictEqual(px(decoded, 138, 130), p.ansi.red.toUpperCase());
 });
+
+// ---- layout ----------------------------------------------------------------------------------
+// The user approves the arrangement in the preview, before any config is written.
+
+const THREE = {
+  gap: 12,
+  arrangement: { split: 'row', sizes: [60, 40], panes: [
+    { run: 'nvim', focus: true },
+    { split: 'column', panes: [{ run: 'shell' }, { run: 'btop' }] },
+  ] },
+};
+const withLayout = (layout) => ({ ...LOOK, layout });
+
+test('html: a pane arrangement draws one box per pane, sized and nested as specified', () => {
+  const page = V.html({ look: withLayout(THREE) });
+  const panes = page.match(/<div class="pane[^"]*" data-run="[^"]*"/g) || [];
+  assert.deepStrictEqual(panes.map((p) => /data-run="([^"]*)"/.exec(p)[1]), ['nvim', 'shell', 'btop']);
+  assert.match(page, /class="split row" style="gap:12px">\s*<div class="cell" style="flex:60 1 0">/);
+  assert.match(page, /class="split column" style="gap:12px">/);
+  assert.match(page, /class="pane focus" data-run="nvim"/);
+  assert.strictEqual((page.match(/class="pane focus"/g) || []).length, 1);
+  assert.match(page, /\.pane\.focus\{[^}]*var\(--accent\)/, 'focus border uses the accent');
+  assert.ok(/data-run="shell"[\s\S]*?<span class="cur">/.test(page), 'the shell pane shows the prompt');
+  assert.match(page, /Layout<\/dt><dd>row 60\/40: nvim \| column: shell, btop; gap 12px<\/dd>/);
+});
+
+test('html: without an arrangement the preview is one window, as before', () => {
+  const page = V.html({ look: LOOK });
+  assert.ok(!/class="pane/.test(page));
+  assert.match(page, /<pre class="term" aria-label="Sample terminal session">/);
+});
+
+test('html: bad arrangements fail clearly', () => {
+  const bad = (arrangement, re) => assert.throws(() => V.html({ look: withLayout({ arrangement }) }), re);
+  bad({ split: 'row', panes: [{ run: 'a' }] }, /a split needs at least 2 panes/);
+  bad({ split: 'row', sizes: [1], panes: [{ run: 'a' }, { run: 'b' }] }, /sizes must have one number per pane/);
+  bad({ run: 'a', split: 'row', panes: [{ run: 'b' }, { run: 'c' }] }, /a pane is either a split or runs something/);
+  bad({ split: 'diagonal', panes: [{ run: 'a' }, { run: 'b' }] }, /split must be row or column/);
+});
