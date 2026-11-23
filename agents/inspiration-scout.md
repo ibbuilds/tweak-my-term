@@ -10,8 +10,10 @@ don't modify anything outside the folder you are given for screenshots.
 Input from the caller: the brief (what the user asked for, mood, OS, terminal, shells,
 must-haves) and a folder for screenshots (inside the run folder).
 
-1. Search with the brief's words and what they imply (mood, scheme, layout, terminal):
-   2-3 searches with different words, `tmt inspire <words> --os <os> --limit 12 --json`.
+1. Search with the brief's words and what they imply. Style and layout are separate:
+   style words (mood, scheme, terminal) as the query, layout as
+   `--layout tiling|floating|panes|dashboard|scrolling`. 2-3 searches,
+   `tmt inspire <words> [--layout x] --os <os> --limit 12 --json`.
    Add `--sort random --seed <n>` for a fresh draw, `--sort new` for current styles.
 2. Download the shortlist's screenshots: `--save all <folder>`. Open every image.
    Screenshots usually show a whole desktop; find the terminal window(s) and judge only

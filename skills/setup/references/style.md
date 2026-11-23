@@ -32,15 +32,15 @@ Kanagawa, Solarized): use the official ports listed in
   dense), Fira Code (friendly), Hack / DejaVu Sans Mono (classic), IBM Plex Mono
   (corporate), Monaspace (texture), VT323 / Departure Mono / Terminus (retro, pixel),
   Maple Mono / Victor Mono (cursive italics).
-- Size 11-13 pt, line height 1.0-1.2. Ligatures only if the user likes them.
+- Size 11-14 pt, line height 1.2-1.3 (see design.md). Ligatures only if the user likes them.
 - `tmt stage font <Name>` installs per-user from the Nerd Fonts release.
 
 ## Layout and chrome
 
 Decide and record in look.json: padding (8-24 px), opacity (1.0 unless the anchor is the
 desktop itself), acrylic/blur (OS-dependent), title bar and tabs (hidden/integrated),
-scrollbar (hidden), cursor shape and blink, window size, split panes (multiplexer or
-native), bell (visual).
+scrollbar (hidden), cursor shape and blink, window size, bell (visual). Panes and
+startup arrangement: [layout.md](layout.md).
 
 ## Prompt
 

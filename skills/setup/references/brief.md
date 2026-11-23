@@ -11,8 +11,10 @@ keeps their aliases, functions, keybindings and env.
 
 ## What to ask (max 3 questions, only if unknown and it changes the result)
 
-1. **The look**: an image, a rice, a named theme, or words ("calm", "hacker", "warm
-   paper"). If they have nothing: offer Inspire.
+1. **The look and the layout**: an image, a rice, a named theme, or words ("calm",
+   "hacker", "warm paper"); and how they want things arranged (one window, splits, a
+   dashboard). They are separate: a request can change one and keep the other. If they
+   have nothing: offer Inspire.
 2. **Where**: which terminal app and shell(s) they actually use daily. If they use
    several (e.g. Git Bash + PowerShell in Windows Terminal), the look covers all of them.
 3. **Limits**: may we install things (terminal, fonts, prompt tool, CLI tools)? Is speed
@@ -26,7 +28,10 @@ style. Decide, then show in the preview.
 ```markdown
 # Brief: <run id>
 Request (user's words): "..."
+Style (look and feel): ...   (palette, mood, type, art, prompt)
+Layout (arrangement): ...   (single window | panes: n, what runs where | tiling | dashboard | dropdown)
 Anchor: <user image | rice #n | generate: description | none yet>
+Examples taken: style from <links> | layout from <links>
 Must have: ...            (e.g. image background, two-line prompt, git status, icons)
 Must keep: ...            (aliases, keybindings, PSReadLine history, tools they use)
 Terminal(s): ...  Shell(s): ...  OS: ...
@@ -40,9 +45,10 @@ Out of scope: ...
 |---|---|
 | "make it look like this" + image | the image is the anchor; match palette, mood and layout, not pixels |
 | "like <rice link>" | its screenshot is the anchor, its dotfiles repo the reference configs |
+| "splits / tmux / editor + logs" | a layout request: see [layout.md](layout.md) |
 | "clean / minimal" | few colors, no background image, single-line prompt, generous padding |
-| "hacker / matrix / retro" | mono green or amber, CRT treatments (scanlines, glow), blocky font |
+| "hacker / matrix / retro" | mono green or amber, blocky or pixel font; CRT feel in the art or as a toggle, never at the cost of readable text |
 | "cozy / warm" | warm low-contrast dark (gruvbox, everforest, rose-pine), soft accent |
-| "cyberpunk / neon" | dark bg, saturated magenta/cyan accents, glow; scene preset `synthwave` |
+| "cyberpunk / neon" | dark bg, saturated magenta/cyan accents, glow; generated scene `synthwave` |
 | "fast" / "it's slow" | measure first; drop framework loaders, use compiled prompt, lazy-load |
 | "fancy prompt" | starship / oh-my-posh (Windows PowerShell) with Nerd Font icons |

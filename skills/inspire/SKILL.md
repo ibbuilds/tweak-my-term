@@ -12,10 +12,12 @@ Inspiration is the reference for what a great terminal looks like. Metadata (sch
 WM, tools) can't tell you that; the screenshots can. So you search, then you look.
 
 1. `tmt detect` (skip if already done this session) to know the OS, terminal and shells.
-2. Turn the request into searches. Use the user's own words plus what they imply: mood
-   ("calm", "retro", "dense"), scheme, terminal, layout ("tiling", "single floating
-   terminal", "splits", "transparent over wallpaper"). Run 2-3 searches with different
-   words; results are varied by design (no repeated scheme, WM or author).
+2. Turn the request into searches. Style (how it looks) and layout (how it is arranged)
+   are separate axes; search each one the user cares about. Style: the user's words plus
+   what they imply (mood, scheme, terminal, "transparent over wallpaper"). Layout:
+   `--layout tiling|floating|panes|dashboard|scrolling` (inferred from WM and tools, so
+   confirm it on the screenshot; see ../setup/references/layout.md). Run 2-3 searches;
+   results are varied by design (no repeated scheme, WM or author).
    `tmt inspire <words> --os <os> --limit 12 --json`. For a fresh draw instead of the most
    upvoted: `--sort random --seed <n>`; for current styles: `--sort new`.
    `tmt inspire --facets` shows which schemes and terminals exist.
@@ -23,8 +25,9 @@ WM, tools) can't tell you that; the screenshots can. So you search, then you loo
    downloads them (local reference only). Open each image and find the terminal
    window(s). Most screenshots are whole desktops: bars, docks, wallpaper, browsers, music
    widgets. Judge only what lives inside the terminal window, plus how the window sits on
-   the screen if the user wants that too. Skip shots where the terminal is tiny, hidden, or
-   not the point. For each one you keep, note:
+   the screen if the user wants that too. Judge layout examples on arrangement only and
+   style examples on look only. Skip shots where the terminal is tiny, hidden, or not the
+   point. For each one you keep, note:
    - layout: single window, splits/panes, tabs, multiplexer, how much empty space;
    - composition: where the image/art sits vs where text goes, padding, alignment;
    - palette: background tone, accent, how many colors carry weight;
