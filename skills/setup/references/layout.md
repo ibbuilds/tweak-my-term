@@ -47,7 +47,7 @@ Read `catalog/capabilities.json` for the user's terminal before choosing (`split
 | dashboard | panes with one job each: monitor (btop), files (yazi), git (lazygit), fetch, clock | the same tools on every OS; widgets outside the terminal (eww, conky, Rainmeter, Übersicht) are desktop tools, out of scope unless asked |
 | floating single window | window size in columns/rows, padding, hidden title bar/tabs, opacity (terminal recipes) | centering or a fixed position: an OS tool or WM rule |
 | dropdown (quake) | Windows Terminal, kitty, Ghostty, iTerm2 (partial); see the `quake` recipes | a hotkey launcher or WM scratchpad |
-| tiling / scrolling | approximate with splits inside one full-screen terminal | a tiling window manager (`catalog/window-managers/`): Windows GlazeWM (or komorebi: paid license for any commercial or work use), macOS AeroSpace or yabai, Linux Hyprland, sway, i3 or niri; KDE/GNOME have built-in or extension tiling (not cataloged) |
+| tiling / scrolling | approximate with splits inside one full-screen terminal | a tiling window manager (`catalog/window-managers/`): Windows GlazeWM, macOS AeroSpace or yabai, Linux Hyprland, sway, i3 or niri; KDE/GNOME have built-in or extension tiling (not cataloged) |
 
 Rules:
 - Prefer what the user's terminal does natively; a multiplexer adds keybindings to learn,

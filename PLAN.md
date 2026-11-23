@@ -3,7 +3,7 @@
 Status (2026-11-23): M0-M8 verified locally (198 tests, catalog check, privacy scan).
 Added since: layout as its own axis (inspire `--layout`, look `layout.arrangement` drawn in
 the preview and built per tool), a design guide distilled from real rices, and a
-window-manager catalog for all three OSes (AeroSpace, yabai, GlazeWM, komorebi, Hyprland,
+window-manager catalog for all three OSes (AeroSpace, yabai, GlazeWM, Hyprland,
 sway, i3, niri).
 Changed after review: no presets. The repo ships knowledge (design guide, catalog,
 inspiration from real rices, composition-aware tooling), never a terminal to copy; every
@@ -212,7 +212,7 @@ catalog/
   prompts/   starship oh-my-posh powerlevel10k pure hand-rolled
   line-editing/ psreadline ble.sh zsh-autosuggestions zsh-syntax-highlighting atuin
   multiplexers/ tmux zellij
-  window-managers/ aerospace yabai glazewm komorebi hyprland sway i3 niri
+  window-managers/ aerospace yabai glazewm hyprland sway i3 niri
   tools/     fzf zoxide eza bat delta fd ripgrep lazygit yazi fastfetch btop ...
   fonts/     nerd-fonts.json (+ style descriptors)
   palettes/  sources.json

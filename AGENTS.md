@@ -15,6 +15,8 @@ Hard rules:
   `tmt plan`, show the plan, and only after the user says yes: `tmt approve <hash>`,
   `tmt apply`, `tmt verify`, `tmt measure`.
 - Don't install anything the user didn't agree to.
+- Free tools only: open source or free for any use. No paid, subscription or
+  commercial-license tools in the catalog or in a build.
 - Generated or user-owned images only; link third-party screenshots.
 - Never print secrets found in config files.
 

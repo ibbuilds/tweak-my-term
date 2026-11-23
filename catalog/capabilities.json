@@ -575,19 +575,6 @@
         "how": "docs"
       }
     },
-    "komorebi": {
-      "name": "komorebi",
-      "category": "window-manager",
-      "path": "catalog/window-managers/komorebi",
-      "os": [
-        "windows"
-      ],
-      "verified": {
-        "date": "2026-11-23",
-        "version": "v0.1.41",
-        "how": "docs"
-      }
-    },
     "niri": {
       "name": "niri",
       "category": "window-manager",
@@ -836,13 +823,6 @@
           "linux"
         ],
         "recipe": "catalog/window-managers/i3/recipes/install-init.md"
-      },
-      "komorebi": {
-        "support": "yes",
-        "os": [
-          "windows"
-        ],
-        "recipe": "catalog/window-managers/komorebi/recipes/install-init.md"
       },
       "niri": {
         "support": "yes",
@@ -1402,14 +1382,6 @@
         ],
         "recipe": "catalog/window-managers/i3/recipes/keybindings.md"
       },
-      "komorebi": {
-        "support": "partial",
-        "os": [
-          "windows"
-        ],
-        "recipe": "catalog/window-managers/komorebi/recipes/keybindings.md",
-        "notes": "komorebi itself binds no keys: they come from whkd (recommended) or AutoHotkey calling komorebic."
-      },
       "niri": {
         "support": "yes",
         "os": [
@@ -1767,13 +1739,6 @@
           "linux"
         ],
         "recipe": "catalog/window-managers/i3/recipes/layouts.md"
-      },
-      "komorebi": {
-        "support": "yes",
-        "os": [
-          "windows"
-        ],
-        "recipe": "catalog/window-managers/komorebi/recipes/layouts.md"
       },
       "niri": {
         "support": "yes",
@@ -3922,13 +3887,6 @@
         ],
         "recipe": "catalog/window-managers/i3/recipes/config-reload.md"
       },
-      "komorebi": {
-        "support": "yes",
-        "os": [
-          "windows"
-        ],
-        "recipe": "catalog/window-managers/komorebi/recipes/config-reload.md"
-      },
       "niri": {
         "support": "yes",
         "os": [
@@ -4164,13 +4122,6 @@
         ],
         "recipe": "catalog/window-managers/i3/recipes/gaps.md"
       },
-      "komorebi": {
-        "support": "yes",
-        "os": [
-          "windows"
-        ],
-        "recipe": "catalog/window-managers/komorebi/recipes/gaps.md"
-      },
       "niri": {
         "support": "yes",
         "os": [
@@ -4224,13 +4175,6 @@
         ],
         "recipe": "catalog/window-managers/i3/recipes/borders.md",
         "notes": "Width and colors only. Rounded corners need an external X11 compositor."
-      },
-      "komorebi": {
-        "support": "yes",
-        "os": [
-          "windows"
-        ],
-        "recipe": "catalog/window-managers/komorebi/recipes/borders.md"
       },
       "niri": {
         "support": "yes",
@@ -4286,14 +4230,6 @@
         "recipe": "catalog/window-managers/i3/recipes/window-rules.md",
         "notes": "for_window and assign cover float, size, position, border and workspace. There is no opacity command; transparency needs a compositor."
       },
-      "komorebi": {
-        "support": "yes",
-        "os": [
-          "windows"
-        ],
-        "recipe": "catalog/window-managers/komorebi/recipes/window-rules.md",
-        "notes": "Float, ignore, force-manage and workspace rules match by exe, class, title or path. No per-window size or position rule; floating windows can only be centered and resized by an aspect ratio."
-      },
       "niri": {
         "support": "yes",
         "os": [
@@ -4345,13 +4281,6 @@
           "linux"
         ],
         "recipe": "catalog/window-managers/i3/recipes/autostart.md"
-      },
-      "komorebi": {
-        "support": "yes",
-        "os": [
-          "windows"
-        ],
-        "recipe": "catalog/window-managers/komorebi/recipes/autostart.md"
       },
       "niri": {
         "support": "yes",

@@ -19,6 +19,9 @@ way to do that thing with that tool; read it before writing config.
 
 ## Decision order
 
+Only free tools: open source or free to use, with no paid license, subscription or account
+wall for any use. If the only way to get something is paid, say so and give the closest free option.
+
 1. What the user uses today (detect), if it can deliver the look.
 2. Else the smallest change that can: add a prompt tool before switching shells; switch
    terminal only for things the current one can't do (e.g. animated background, shaders).
@@ -49,3 +52,4 @@ scanline shader. WezTerm could animate it; switching costs re-creating your WT p
 
 Research the official docs (current version), write the config, and validate it with the
 tool's own check command via `tmt stage check -- <cmd>`. Tell the user it's unverified.
+Check its license first: free tools only (see Decision order).
