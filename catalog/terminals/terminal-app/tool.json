@@ -1,0 +1,58 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "terminal-app",
+  "name": "Terminal (macOS)",
+  "category": "terminal",
+  "summary": "Apple's built-in macOS Terminal. Appearance lives in profiles (.terminal property lists) with ANSI colors, font, cursor, translucency with blur and a background image. No ligatures, padding, shaders, images or quake mode. Profile files hold NSKeyedArchiver blobs for colors and fonts, so they are generated with plutil rather than typed.",
+  "homepage": "https://support.apple.com/guide/terminal/welcome/mac",
+  "docs": "https://support.apple.com/guide/terminal/welcome/mac",
+  "license": "proprietary (bundled with macOS)",
+  "configFormat": "plist: .terminal profile files and ~/Library/Preferences/com.apple.Terminal.plist",
+  "os": {
+    "windows": { "supported": false, "notes": "macOS only." },
+    "linux": { "supported": false, "notes": "macOS only." },
+    "macos": {
+      "supported": true,
+      "install": [],
+      "detect": ["defaults", "read", "/System/Applications/Utilities/Terminal.app/Contents/Info", "CFBundleShortVersionString"],
+      "config": ["~/Library/Preferences/com.apple.Terminal.plist"],
+      "validate": ["plutil", "-lint", "{file}"],
+      "notes": "Preinstalled; nothing to install. Profiles are NOT separate files on disk: they are dictionaries under 'Window Settings' in ~/Library/Preferences/com.apple.Terminal.plist (a binary plist managed by cfprefsd; do not edit it while Terminal runs). The supported way to add a profile is a .terminal file (an XML plist) imported with Terminal > Settings > Profiles > Action > Import, drag-and-drop onto the profile list (both in the Apple Terminal User Guide), or `open file.terminal` (works in practice per community reports; not in Apple's docs). Scriptable with `defaults` (default and startup profile names) and plutil (build the .terminal file). Colors and fonts inside a profile are base64 NSKeyedArchiver blobs, built with plutil as shown in the palette and font recipes. Apple does not document the profile key names; the ones used here come from exported .terminal files and community dumps, and are flagged where unverified. Safest check after any scripted change: look at the result in Terminal > Settings > Profiles."
+    }
+  },
+  "capabilities": {
+    "palette": { "support": "yes", "recipe": "recipes/palette.md" },
+    "font": { "support": "yes", "recipe": "recipes/font.md" },
+    "ligatures": { "support": "no", "notes": "The User Guide's Text settings list no ligature option. Use iTerm2, kitty, WezTerm or Ghostty." },
+    "font-fallback": { "support": "no", "notes": "No fallback list; macOS substitutes fonts per glyph. Use a Nerd Font as the main font for icons." },
+    "line-height": { "support": "partial", "recipe": "recipes/line-height.md" },
+    "opacity": { "support": "partial", "recipe": "recipes/opacity.md" },
+    "blur": { "support": "partial", "recipe": "recipes/blur.md" },
+    "background-image": { "support": "partial", "recipe": "recipes/background-image.md" },
+    "background-animated": { "support": "no", "notes": "Static images only. Use kitty, Ghostty or WezTerm." },
+    "shader": { "support": "no", "notes": "No shader support. Use Ghostty or kitty." },
+    "padding": { "support": "no", "notes": "No padding setting in the User Guide's Text or Window panes. Use iTerm2 (margins) or another terminal." },
+    "cursor": { "support": "yes", "recipe": "recipes/cursor.md" },
+    "tabs": { "support": "partial", "recipe": "recipes/tabs.md" },
+    "titlebar": { "support": "no", "notes": "Native title bar only. Profiles > Window > Title chooses what the title shows (working directory, path, process name, dimensions...), not the chrome. For a borderless look use another terminal." },
+    "splits": { "support": "no", "notes": "No independent split panes. Terminal has a Shell > Split Pane command, but user reports describe it as a second view of the same session, not a new shell (not confirmed in Apple's docs). Use tabs, tmux or zellij." },
+    "quake": { "support": "no", "notes": "No drop-down mode. Use iTerm2's hotkey window." },
+    "keybindings": { "support": "partial", "recipe": "recipes/keybindings.md" },
+    "shell-integration": { "support": "no", "notes": "No configurable shell integration in the User Guide. Terminal sets TERM_PROGRAM=Apple_Terminal and macOS's zsh startup tracks the working directory for it (community knowledge, not verified here)." },
+    "startup-layout": { "support": "partial", "recipe": "recipes/startup-layout.md" },
+    "inline-images": { "support": "no", "notes": "No inline image protocol is documented. Use iTerm2, kitty or WezTerm." },
+    "profiles": { "support": "yes", "recipe": "recipes/profiles.md" },
+    "default-shell": { "support": "yes", "recipe": "recipes/default-shell.md" },
+    "config-reload": { "support": "partial", "recipe": "recipes/config-reload.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "Terminal User Guide (2026)", "how": "docs" },
+  "sources": [
+    "https://support.apple.com/guide/terminal/profiles-change-terminal-windows-trml107/mac",
+    "https://support.apple.com/guide/terminal/import-and-export-terminal-profiles-trml4299c696/mac",
+    "https://support.apple.com/guide/terminal/default-startup-terminal-window-profiles-trml5856b1f2/mac",
+    "https://support.apple.com/guide/terminal/change-general-settings-trmlstrtup/mac",
+    "https://support.apple.com/en-ca/guide/terminal/trmltxt/mac",
+    "https://support.apple.com/guide/terminal/change-profiles-shell-settings-trmlshll/mac",
+    "https://support.apple.com/guide/terminal/edit-property-lists-apda49a1bb2-577e-4721-8f25-ffc0836f6997/mac"
+  ]
+}

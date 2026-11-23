@@ -1,0 +1,62 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "konsole",
+  "name": "Konsole",
+  "category": "terminal",
+  "summary": "KDE's default terminal. Profiles (.profile) and color schemes (.colorscheme) are plain INI files; tabs, split view, translucency with KWin blur, background wallpaper, Sixel images. No ligatures, shaders or quake mode (Yakuake is the KDE drop-down).",
+  "homepage": "https://konsole.kde.org",
+  "docs": "https://docs.kde.org/stable_kf6/en/konsole/konsole/index.html",
+  "license": "GPL-2.0-or-later",
+  "configFormat": "INI: ~/.local/share/konsole/*.profile and *.colorscheme, ~/.config/konsolerc",
+  "os": {
+    "windows": { "supported": false, "notes": "Konsole is a KDE/Linux app; the source has Windows and macOS code paths but no supported builds were confirmed here." },
+    "macos": { "supported": false, "notes": "See the windows entry." },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "konsole", "notes": "Debian/Ubuntu package name. Unverified here." },
+        { "manager": "dnf", "id": "konsole", "notes": "Fedora. Unverified here." },
+        { "manager": "pacman", "id": "konsole", "notes": "Arch. Unverified here." },
+        { "manager": "flatpak", "id": "org.kde.konsole", "notes": "Flatpak keeps its data under ~/.var/app/org.kde.konsole/, so the paths below are for the native package. Unverified here." }
+      ],
+      "detect": ["konsole", "--version"],
+      "config": ["~/.local/share/konsole/", "~/.config/konsolerc"],
+      "notes": "Profiles and color schemes live in $XDG_DATA_HOME/konsole (default ~/.local/share/konsole); the handbook states profiles are saved there. A profile is NAME.profile, a color scheme is NAME.colorscheme; the profile selects the scheme with ColorScheme=NAME (file basename). The default profile is konsolerc [Desktop Entry] DefaultProfile=NAME.profile. Prefer kwriteconfig6 over hand-editing konsolerc (shared KDE config that a running Konsole may rewrite). There is no config validator; `konsole --list-profiles` lists the profiles Konsole can parse. Konsole 24.02+ is Qt6/KF6; Font strings differ between Qt5 and Qt6 builds (weight 50 vs 400)."
+    }
+  },
+  "capabilities": {
+    "palette": { "support": "yes", "recipe": "recipes/palette.md" },
+    "font": { "support": "yes", "recipe": "recipes/font.md" },
+    "ligatures": { "support": "no", "notes": "No ligature option in the profile keys read from Profile.cpp or in the handbook. Use kitty, WezTerm, Ghostty or iTerm2 for ligatures." },
+    "font-fallback": { "support": "no", "notes": "No fallback list. Konsole uses the system (fontconfig) fallback; the profile has a separate EmojiFont key (Appearance). Unverified that a symbols-only font is picked automatically for Private Use glyphs, so use a patched Nerd Font as the main font." },
+    "line-height": { "support": "yes", "recipe": "recipes/line-height.md" },
+    "opacity": { "support": "yes", "recipe": "recipes/opacity.md" },
+    "blur": { "support": "yes", "recipe": "recipes/blur.md" },
+    "background-image": { "support": "yes", "recipe": "recipes/background-image.md" },
+    "background-animated": { "support": "no", "notes": "Wallpaper is a static image. Use kitty (custom shaders), Ghostty or WezTerm." },
+    "shader": { "support": "no", "notes": "No shader support. Use Ghostty or kitty." },
+    "padding": { "support": "yes", "recipe": "recipes/padding.md" },
+    "cursor": { "support": "yes", "recipe": "recipes/cursor.md" },
+    "tabs": { "support": "yes", "recipe": "recipes/tabs.md" },
+    "titlebar": { "support": "yes", "recipe": "recipes/titlebar.md" },
+    "splits": { "support": "yes", "recipe": "recipes/splits.md" },
+    "quake": { "support": "no", "notes": "Konsole has no drop-down mode. The KDE drop-down terminal is Yakuake, a separate app that embeds Konsole and uses Konsole profiles and color schemes." },
+    "keybindings": { "support": "partial", "recipe": "recipes/keybindings.md" },
+    "shell-integration": { "support": "partial", "recipe": "recipes/shell-integration.md" },
+    "startup-layout": { "support": "partial", "recipe": "recipes/startup-layout.md" },
+    "inline-images": { "support": "yes", "recipe": "recipes/inline-images.md" },
+    "profiles": { "support": "yes", "recipe": "recipes/profiles.md" },
+    "default-shell": { "support": "yes", "recipe": "recipes/default-shell.md" },
+    "config-reload": { "support": "partial", "recipe": "recipes/config-reload.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "26.08", "how": "docs" },
+  "sources": [
+    "https://docs.kde.org/stable_kf6/en/konsole/konsole/index.html",
+    "https://docs.kde.org/stable_kf6/en/konsole/konsole/profiles.html",
+    "https://docs.kde.org/stable_kf6/en/konsole/konsole/command-line-options.html",
+    "https://docs.kde.org/stable_kf6/en/konsole/konsole/commandreference.html",
+    "https://invent.kde.org/utilities/konsole/-/blob/master/src/profile/Profile.cpp",
+    "https://invent.kde.org/utilities/konsole/-/blob/master/src/colorscheme/ColorScheme.cpp",
+    "https://invent.kde.org/utilities/konsole/-/blob/master/src/settings/konsole.kcfg"
+  ]
+}

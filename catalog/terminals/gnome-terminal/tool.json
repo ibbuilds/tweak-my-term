@@ -1,0 +1,57 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "gnome-terminal",
+  "name": "GNOME Terminal",
+  "category": "terminal",
+  "summary": "GNOME's long-time default terminal (VTE, GTK3). Settings live in dconf, not in a file: profiles with palette, font, cursor, line spacing, custom command, and global tab/headerbar options. No opacity, blur, images, splits or padding. Newer distros (Fedora 41+, Ubuntu 25.10+, per distro reports) ship Ptyxis instead.",
+  "homepage": "https://wiki.gnome.org/Apps/Terminal",
+  "docs": "https://help.gnome.org/users/gnome-terminal/stable/",
+  "license": "GPL-3.0-or-later",
+  "configFormat": "dconf/gsettings (schemas org.gnome.Terminal.*), no config file",
+  "os": {
+    "windows": { "supported": false, "notes": "GTK/Linux only." },
+    "macos": { "supported": false, "notes": "GTK/Linux only." },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "gnome-terminal", "notes": "Debian/Ubuntu package name. Unverified here." },
+        { "manager": "dnf", "id": "gnome-terminal", "notes": "Fedora. Unverified here." },
+        { "manager": "pacman", "id": "gnome-terminal", "notes": "Arch. Unverified here." }
+      ],
+      "detect": ["gnome-terminal", "--version"],
+      "notes": "There is NO config file to write: all settings are dconf keys, so the engine's file staging does not apply. Change them with `gsettings set` or `dconf write`/`dconf load`, and only after the user approves the plan. Back up first with `dconf dump /org/gnome/terminal/legacy/ > backup.ini` (restore: `dconf load /org/gnome/terminal/legacy/ < backup.ini`). Profile keys are on a relocatable schema, so every profile command needs the full form: gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:UUID/ KEY VALUE, where UUID comes from `gsettings get org.gnome.Terminal.ProfilesList default` (strip the quotes). Global keys use org.gnome.Terminal.Legacy.Settings. Requires a running dconf/D-Bus session; from SSH or a root shell the commands change nothing for the desktop user. Ptyxis (GNOME's newer terminal, default on recent Fedora/Ubuntu releases) is a different app with schema org.gnome.Ptyxis and its own .palette files; it is NOT covered by this entry (see Ptyxis notes in the profiles capability)."
+    }
+  },
+  "capabilities": {
+    "palette": { "support": "yes", "recipe": "recipes/palette.md" },
+    "font": { "support": "yes", "recipe": "recipes/font.md" },
+    "ligatures": { "support": "no", "notes": "No ligature key in the schema (enable-shaping is Arabic shaping only). Use kitty, WezTerm, Ghostty or iTerm2." },
+    "font-fallback": { "support": "no", "notes": "No fallback list; Pango/fontconfig supplies fallback glyphs. Use a patched Nerd Font as the main font, or install a symbols font system-wide." },
+    "line-height": { "support": "yes", "recipe": "recipes/line-height.md" },
+    "opacity": { "support": "no", "notes": "The profile schema has no transparency key; the GNOME wiki FAQ says the option was removed from Preferences in 3.7. Ptyxis has a per-profile `opacity` key (org.gnome.Ptyxis.Profile, 0.0-1.0), or use kitty/WezTerm/Konsole/Alacritty." },
+    "blur": { "support": "no", "notes": "No blur. Use Konsole, kitty, WezTerm or iTerm2." },
+    "background-image": { "support": "no", "notes": "No background image. Use Konsole, kitty, WezTerm or iTerm2." },
+    "background-animated": { "support": "no", "notes": "Use kitty or Ghostty." },
+    "shader": { "support": "no", "notes": "Use Ghostty or kitty." },
+    "padding": { "support": "no", "notes": "No padding key in the schema. Workaround: GTK CSS in ~/.config/gtk-3.0/gtk.css targeting VteTerminal padding (unverified here), or choose another terminal." },
+    "cursor": { "support": "yes", "recipe": "recipes/cursor.md" },
+    "tabs": { "support": "yes", "recipe": "recipes/tabs.md" },
+    "titlebar": { "support": "partial", "recipe": "recipes/titlebar.md" },
+    "splits": { "support": "no", "notes": "No split panes. Use tmux/zellij, or Ptyxis/Konsole." },
+    "quake": { "support": "no", "notes": "No drop-down mode. GNOME users use the Guake or Tilix terminals, or a Shell extension." },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "shell-integration": { "support": "partial", "recipe": "recipes/shell-integration.md" },
+    "startup-layout": { "support": "no", "notes": "No layout or session file. gnome-terminal(1) accepts per-launch options (such as --tab, --window, --working-directory and profile selection; not re-read here), or use tmux/zellij." },
+    "inline-images": { "support": "partial", "recipe": "recipes/inline-images.md" },
+    "profiles": { "support": "yes", "recipe": "recipes/profiles.md" },
+    "default-shell": { "support": "yes", "recipe": "recipes/default-shell.md" },
+    "config-reload": { "support": "yes", "recipe": "recipes/config-reload.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "3.60.0", "how": "docs" },
+  "sources": [
+    "https://gitlab.gnome.org/GNOME/gnome-terminal/-/blob/master/src/org.gnome.Terminal.gschema.xml",
+    "https://wiki.gnome.org/Apps/Terminal/FAQ",
+    "https://help.gnome.org/users/gnome-terminal/stable/",
+    "https://gitlab.gnome.org/chergert/ptyxis"
+  ]
+}
