@@ -1,0 +1,44 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "yabai",
+  "name": "yabai",
+  "category": "window-manager",
+  "summary": "Tiling window manager for macOS based on binary space partitioning (bsp), with a stack layout and float mode. Configured by a shell script (yabairc) and a message CLI. Hotkeys come from the separate skhd daemon. Works on native macOS Spaces; some features need SIP partially disabled.",
+  "homepage": "https://github.com/asmvik/yabai",
+  "docs": "https://github.com/asmvik/yabai/wiki",
+  "license": "MIT",
+  "configFormat": "shell",
+  "os": {
+    "macos": {
+      "supported": true,
+      "install": [
+        { "manager": "brew", "id": "asmvik/formulae/yabai", "notes": "brew install asmvik/formulae/yabai (tap asmvik/formulae; the project formerly lived under koekeishiya, which redirects)" },
+        { "manager": "brew", "id": "asmvik/formulae/skhd", "notes": "Hotkey daemon, needed for any key bindings. brew install asmvik/formulae/skhd" }
+      ],
+      "detect": ["yabai", "--version"],
+      "config": ["~/.config/yabai/yabairc", "~/.yabairc", "~/.config/skhd/skhdrc", "~/.skhdrc"],
+      "notes": "Needs the Accessibility permission for yabai (asked on 'yabai --start-service') and for skhd (restart skhd after allowing it). yabairc is a shell script run by sh at launch (chmod +x it); the default layout is float, so nothing tiles until 'yabai -m config layout bsp'. Works on native macOS Spaces. SIP: tiling, gaps, stacks, rules (float/tile, app match, grid size), focus and resize work with SIP ON. These need the scripting addition and SIP partially disabled, so do not use them unless the user already disabled SIP: creating, destroying, moving or swapping Spaces, 'display --space', window shadows ('window_shadow', 'window --toggle shadow'), window opacity, window animations, scratchpads, window layers ('--sub-layer'), sticky windows ('--toggle sticky', rule sticky=on), and picture-in-picture ('--toggle pip'). Do not suggest disabling SIP. No built-in window borders in current docs. No validate entry: a yabairc is a shell script; check with 'sh -n <file>'."
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "gaps": { "support": "yes", "recipe": "recipes/gaps.md" },
+    "borders": { "support": "no", "notes": "yabai has no window border option in the current docs. Companion tool: JankyBorders (brew tap FelixKratz/formulae; brew install borders), macOS 14+. Add as the last line of yabairc: borders active_color=0xffRRGGBB inactive_color=0xffRRGGBB width=5.0 &, with active_color = the look's {palette.accent} and inactive_color = {palette.ansi.brightBlack}, each written as 0xff followed by the hex without the #. Colors are 0xAARRGGBB." },
+    "layouts": { "support": "yes", "recipe": "recipes/layouts.md" },
+    "window-rules": { "support": "yes", "recipe": "recipes/window-rules.md" },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "autostart": { "support": "yes", "recipe": "recipes/autostart.md" },
+    "config-reload": { "support": "yes", "recipe": "recipes/config-reload.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "7.1.25", "how": "docs" },
+  "sources": [
+    "https://github.com/asmvik/yabai/wiki/Installing-yabai-(latest-release)",
+    "https://github.com/asmvik/yabai/wiki/Configuration",
+    "https://github.com/asmvik/yabai/wiki/Commands",
+    "https://github.com/asmvik/yabai/wiki/Disabling-System-Integrity-Protection",
+    "https://github.com/asmvik/yabai/blob/master/doc/yabai.asciidoc",
+    "https://github.com/asmvik/yabai/releases/latest",
+    "https://github.com/asmvik/skhd",
+    "https://github.com/FelixKratz/JankyBorders"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "aerospace",
+  "name": "AeroSpace",
+  "category": "window-manager",
+  "summary": "i3-like tiling window manager for macOS. Tree of tiles/accordion containers, its own virtual workspaces instead of native Spaces, plain TOML config and a CLI. Needs no SIP changes. Public beta.",
+  "homepage": "https://github.com/nikitabobko/AeroSpace",
+  "docs": "https://nikitabobko.github.io/AeroSpace/guide",
+  "license": "MIT",
+  "configFormat": "toml",
+  "os": {
+    "macos": {
+      "supported": true,
+      "install": [
+        { "manager": "brew", "id": "cask:nikitabobko/tap/aerospace", "notes": "brew install --cask nikitabobko/tap/aerospace. The cask removes the quarantine flag (the app is not notarized). Needs macOS 13+." }
+      ],
+      "detect": ["aerospace", "--version"],
+      "config": ["~/.aerospace.toml", "{xdg-config}/aerospace/aerospace.toml", "~/.config/aerospace/aerospace.toml"],
+      "notes": "Grant AeroSpace.app the Accessibility permission (System Settings, Privacy and Security) on first launch; it is asked again after an update that changes the code-sign certificate. There is no config file until you create one: copy /Applications/AeroSpace.app/Contents/Resources/default-config.toml to ~/.aerospace.toml. Uses its own virtual workspaces, so macOS Spaces and Mission Control swipes do not map to AeroSpace workspaces; keep one macOS Space. With 'Displays have separate Spaces' on, multi-monitor behavior is less stable (docs recommend turning it off, logout needed). Native fullscreen windows create their own Space and escape tiling. No built-in borders, shadows, opacity or animations (by design). No validate entry: 'aerospace reload-config --dry-run --no-gui' checks the active config at its normal path, not a draft file, so run it after staging."
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "gaps": { "support": "yes", "recipe": "recipes/gaps.md" },
+    "borders": { "support": "no", "notes": "AeroSpace deliberately has no window borders. Companion tool: JankyBorders (brew tap FelixKratz/formulae; brew install borders), macOS 14+. Start it from AeroSpace by adding to ~/.aerospace.toml: after-startup-command = ['exec-and-forget borders active_color=0xffRRGGBB inactive_color=0xffRRGGBB width=5.0'], with active_color = the look's {palette.accent} and inactive_color = {palette.ansi.brightBlack}, each written as 0xff followed by the hex without the #. Colors are 0xAARRGGBB." },
+    "layouts": { "support": "yes", "recipe": "recipes/layouts.md" },
+    "window-rules": { "support": "yes", "recipe": "recipes/window-rules.md" },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "autostart": { "support": "yes", "recipe": "recipes/autostart.md" },
+    "config-reload": { "support": "yes", "recipe": "recipes/config-reload.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "0.21.3-Beta", "how": "docs" },
+  "sources": [
+    "https://nikitabobko.github.io/AeroSpace/guide",
+    "https://nikitabobko.github.io/AeroSpace/commands",
+    "https://nikitabobko.github.io/AeroSpace/goodies",
+    "https://github.com/nikitabobko/AeroSpace",
+    "https://github.com/nikitabobko/AeroSpace/releases",
+    "https://github.com/nikitabobko/homebrew-tap/blob/main/Casks/aerospace.rb",
+    "https://github.com/FelixKratz/JankyBorders"
+  ]
+}
