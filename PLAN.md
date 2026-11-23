@@ -1,6 +1,11 @@
 # tweak-my-term: plan
 
-Status: in development (started 2026-11-23). No release until the "done" checks at the end
+Status (2026-11-23): M0-M6 done and verified locally (181 tests, catalog check, privacy
+scan, plugin validate, fake-home image -> look -> apply -> verify -> measure -> restore).
+M7: trigger and behavior evals pass 6/6; the e2e eval needs a shell sandbox (WSL2 or
+Linux/macOS). M8: CI written, runs after the first push. Open: Eclipse art rebuilt through
+the kit is a generic scene (no figure), so no pixel-diff match; for-text treatment is
+conservative on images with a bright spot. No release until the "done" checks at the end
 pass.
 
 ## 1. Goal
