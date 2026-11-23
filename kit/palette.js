@@ -311,4 +311,4 @@ function fromScheme(obj, format) {
   return fn(obj);
 }
 
-module.exports = { extract, scheme, fromScheme, ANSI_NAMES, BRIGHT_NAMES };
+module.exports = { extract, scheme, fromScheme, fromParts: (p, source = 'config') => finish(p, source), ANSI_NAMES, BRIGHT_NAMES };

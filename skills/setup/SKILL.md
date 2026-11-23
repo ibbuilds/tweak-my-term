@@ -21,9 +21,16 @@ stage them with `tmt stage`, and let `tmt apply` write them after the user appro
 tmt status            # an unfinished run? finish it or ask
 tmt new --note "<one line of the request>"
 tmt detect            # facts: OS, terminals, shells, tools, fonts, existing configs
+tmt capture           # copies their configs (and files the rc files source) + current.json
+tmt audit             # audit.md: what to keep, improve, or add, judged by the design rules
 ```
 
-Read the detect output before asking anything. Don't ask what you can detect.
+Read the detect output and `audit.md` before asking anything. Don't ask what you can
+detect. You are improving the user's terminal, not replacing it: everything under **Keep**
+stays (palette, prompt, aliases, keybindings) unless the request is to change it; the
+**Improve** and **Missing** lines are where the new look starts; **Facts** (layout, shader,
+fetch, multiplexer) are what the new layout builds on. Read `current.json` for exact
+values (hexes, font, padding) and reuse them in look.json for whatever you keep.
 
 ## 1. Brief → `brief.md` in the run folder
 
@@ -34,9 +41,12 @@ questions, only for what changes the result. If the user is vague or says "surpr
 go to Inspire.
 
 Record style and layout separately, and the scope: a layout-only request keeps the
-user's palette, font and prompt and skips the anchor and palette work (`tmt capture`
-copies their configs; `tmt art scheme <their theme file>` or the hexes from their config go in look.json
-for the preview); a style-only request keeps their arrangement.
+user's palette, font and prompt and skips the anchor and palette work (the palette in
+`current.json` goes in look.json for the preview); a style-only request keeps their
+arrangement. "Better", "more complex", "upgrade it" with nothing else: keep every Keep line,
+fix every Improve/Missing line, and raise the layout one step with inspiration (single
+window → 2-3 panes with a job each; panes → a dashboard). Write the audit's Keep list
+into the brief's "Must keep".
 
 ## 2. Inspire: real examples that match the request
 

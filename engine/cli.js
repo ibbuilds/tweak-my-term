@@ -14,7 +14,9 @@ Run
   tmt status                               where the current run is and the next step
   tmt runs                                 list runs
   tmt detect                               OS, terminals, shells, tools, fonts, configs (saved in the run)
-  tmt capture                              copy the user's current terminal configs into the run (read-only)
+  tmt capture                              copy the user's terminal configs (and files their rc files source) into
+                                           the run, read-only, and read today's look into current.json
+  tmt audit [current.json]                 keep / improve / missing for the current look (writes audit.md)
 
 Stage (only into an open run; nothing touches the machine yet)
   tmt stage write <target> <file>          replace a whole file
@@ -109,17 +111,27 @@ async function main() {
     case 'capture': {
       const st = run.current();
       if (!st) throw new run.GateError('start a run first: tmt new');
-      const dest = path.join(run.runDir(st.id), 'captured');
-      const got = [];
-      for (const c of require('./catalog').userConfigs(st.os)) {
-        if (!fs.existsSync(c.abs)) continue;
-        const to = path.join(dest, c.tool, path.basename(c.abs));
-        fs.mkdirSync(path.dirname(to), { recursive: true });
-        if (fs.statSync(c.abs).isDirectory()) fs.cpSync(c.abs, to, { recursive: true, filter: (s) => { try { return !require('./catalog').isPrivate(s) && fs.statSync(s).size < 2e6; } catch { return false; } } });
-        else fs.copyFileSync(c.abs, to);
-        got.push({ tool: c.tool, from: paths.pretty(c.abs), to });
-      }
-      return out({ dir: dest, files: got }, json, (d) => `Captured ${d.files.length} config(s) into ${d.dir}\n${d.files.map((f) => `  ${f.tool}: ${f.from}`).join('\n')}`);
+      const dir = path.join(run.runDir(st.id), 'captured');
+      const got = require('./capture').capture(st.os, dir);
+      const cur = require('../kit/current').readCurrent(dir);
+      fs.writeFileSync(path.join(run.runDir(st.id), 'current.json'), JSON.stringify(cur, null, 2) + '\n');
+      return out({ ...got, current: cur }, json, (d) => [
+        `Captured ${d.files.length} config(s) into ${d.dir}`,
+        ...d.files.map((f) => `  ${f.tool}: ${f.from}${f.sourced ? ' (sourced)' : ''}`),
+        `Current look: current.json (${Object.keys(d.current.terminals).join(', ') || 'no terminal config found'}). Next: tmt audit`,
+      ].join('\n'));
+    }
+    case 'audit': {
+      // tmt audit [current.json]: judge the current look (from tmt capture) against the design rules.
+      const st = run.current();
+      const file = sub ? path.resolve(sub) : st ? path.join(run.runDir(st.id), 'current.json') : null;
+      if (!file || !fs.existsSync(file)) throw new run.GateError('nothing to audit: run tmt capture first (or pass a current.json)');
+      const A = require('../kit/audit');
+      const r = A.audit(JSON.parse(fs.readFileSync(file, 'utf8')));
+      const md = A.format(r);
+      fs.writeFileSync(path.join(path.dirname(file), 'audit.md'), md + '\n');
+      fs.writeFileSync(path.join(path.dirname(file), 'audit.json'), JSON.stringify(r, null, 2) + '\n');
+      return out(r, json, () => `${md}\nSaved: ${path.join(path.dirname(file), 'audit.md')}`);
     }
     case 'stage': {
       let r;
