@@ -11,9 +11,10 @@ There is no installer. These are plain config files: read them, copy what you wa
 
 ## What you get
 
-- **Art**: an original scene (blood moon, a lone swordsman on a hill of grass) painted by
-  [`scene.js`](home/.config/eclipse/art/scene.js) and turned into a pixel/ASCII background
-  by [`build.ps1`](home/.config/eclipse/art/build.ps1). A built image is included.
+- **Art**: an original engraving-style scene (a blood moon, a fallen warrior curled on a
+  hill of red-lit grass) painted by [`scene.js`](home/.config/eclipse/art/scene.js) and
+  turned into a pixel/ASCII background by [`build.ps1`](home/.config/eclipse/art/build.ps1).
+  The built image is included.
 - **Dossier**: on each new tab, an ASCII Templar cross and a short system block, drawn
   first so the tab has content in ~0.3 s ([fastfetch](https://github.com/fastfetch-cli/fastfetch)).
 - **Prompt**: two lines, the same in bash and PowerShell: path, git branch and state, how
@@ -28,7 +29,7 @@ There is no installer. These are plain config files: read them, copy what you wa
   text), tab icons, shell integration (jump between commands, select the last output) and
   a quake drop-down window.
 
-| Startup (one machine) | Typical Git Bash setup | This setup |
+| Startup (measured on one machine) | Stock Git Bash and profile | This setup |
 |---|---|---|
 | Git Bash, first content on screen | ~0.9 s | ~0.35 s |
 | Git Bash, prompt ready | ~1.65 s | ~1.3 s (≈0.95 s of that is ble.sh) |
@@ -78,7 +79,7 @@ Back up your own files first; these replace them.
 
 | Want | Do |
 |---|---|
-| Your own background | `powershell -File ~/.config/eclipse/art/build.ps1 -Base my-picture.png` builds a new image and points Windows Terminal at it. Tune it with `-BaseDim`, `-Pixel`, `-GlyphA` and `-Bloom`. Add `-OutFile art.png` to only write the image. |
+| Your own background | `powershell -File ~/.config/eclipse/art/build.ps1 -Base my-picture.png` (needs Node.js) builds a new image, points Windows Terminal at it and removes the previous build. Tune it with `-BaseDim`, `-Pixel`, `-GlyphA` and `-Bloom`. Add `-OutFile art.png` to only write the image. |
 | Machine-specific paths and aliases | Copy [`local.example.bash`](home/.config/bash/local.example.bash) to `~/.config/bash/local.bash` and keep it out of version control. |
 | A quieter tab | `ECLIPSE_QUIET=1` hides the dossier; `ECLIPSE_NOBLE=1` starts bash without ble.sh. |
 
@@ -90,6 +91,10 @@ home/                      mirrors your home folder
   .config/bash/            env, profile, shell, history, theme, completion, tools,
                            aliases, functions, prompt, ble
   .config/eclipse/         eclipse.ps1 (PowerShell), dossier.jsonc, shaders/, art/
+  .config/git/             eclipse.gitconfig (delta colors), git-prompt.sh (keeps Git's
+                           default prompt out of the way)
+  .config/bat, lazygit     their configs, in the same palette
+  .inputrc                 readline settings for bash
 terminal/settings.json     Windows Terminal example settings
 ```
 
