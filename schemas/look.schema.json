@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "look.schema.json",
+  "title": "Look spec",
+  "description": "What a terminal should look and feel like, independent of OS and tools. Rendered into native configs per tool.",
+  "type": "object",
+  "required": ["name", "palette", "font"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "name": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "description": { "type": "string" },
+    "mood": { "type": "array", "items": { "type": "string" }, "description": "Words that describe the feel, e.g. dark, calm, retro, neon." },
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["user", "rice", "generated", "palette-only", "none"] },
+        "file": { "type": "string", "description": "Path relative to the look file or the run folder." },
+        "source": { "type": "string", "description": "URL or description of where it came from." },
+        "license": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "palette": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["background", "foreground", "ansi"],
+      "properties": {
+        "background": { "$ref": "#/$defs/hex" },
+        "foreground": { "$ref": "#/$defs/hex" },
+        "cursor": { "$ref": "#/$defs/hex" },
+        "cursorText": { "$ref": "#/$defs/hex" },
+        "selectionBackground": { "$ref": "#/$defs/hex" },
+        "selectionForeground": { "$ref": "#/$defs/hex" },
+        "accent": { "$ref": "#/$defs/hex" },
+        "source": { "type": "string", "description": "Named scheme or 'extracted from anchor'." },
+        "ansi": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white",
+                       "brightBlack", "brightRed", "brightGreen", "brightYellow", "brightBlue", "brightMagenta", "brightCyan", "brightWhite"],
+          "properties": {
+            "black": { "$ref": "#/$defs/hex" }, "red": { "$ref": "#/$defs/hex" },
+            "green": { "$ref": "#/$defs/hex" }, "yellow": { "$ref": "#/$defs/hex" },
+            "blue": { "$ref": "#/$defs/hex" }, "magenta": { "$ref": "#/$defs/hex" },
+            "cyan": { "$ref": "#/$defs/hex" }, "white": { "$ref": "#/$defs/hex" },
+            "brightBlack": { "$ref": "#/$defs/hex" }, "brightRed": { "$ref": "#/$defs/hex" },
+            "brightGreen": { "$ref": "#/$defs/hex" }, "brightYellow": { "$ref": "#/$defs/hex" },
+            "brightBlue": { "$ref": "#/$defs/hex" }, "brightMagenta": { "$ref": "#/$defs/hex" },
+            "brightCyan": { "$ref": "#/$defs/hex" }, "brightWhite": { "$ref": "#/$defs/hex" }
+          }
+        }
+      }
+    },
+    "font": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "size"],
+      "properties": {
+        "family": { "type": "string" },
+        "fallback": { "type": "array", "items": { "type": "string" } },
+        "size": { "type": "number", "minimum": 6, "maximum": 40 },
+        "weight": { "type": "string" },
+        "ligatures": { "type": "boolean" },
+        "lineHeight": { "type": "number", "minimum": 0.8, "maximum": 2 }
+      }
+    },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "blur": { "type": "boolean" },
+        "padding": { "type": "array", "items": { "type": "integer", "minimum": 0 }, "minItems": 1, "maxItems": 4, "description": "CSS order: top, right, bottom, left." },
+        "cursorShape": { "enum": ["block", "bar", "underline", "hollow-block"] },
+        "cursorBlink": { "type": "boolean" },
+        "tabs": { "enum": ["always", "auto", "hidden"] },
+        "titlebar": { "enum": ["native", "integrated", "hidden"] },
+        "scrollbar": { "enum": ["visible", "hidden"] },
+        "columns": { "type": "integer" },
+        "rows": { "type": "integer" },
+        "animations": { "type": "boolean" }
+      }
+    },
+    "background": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "image": { "type": "string" },
+        "fit": { "enum": ["fill", "cover", "contain", "center", "tile"] },
+        "align": { "type": "string", "description": "e.g. center, topRight." },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "animated": { "type": "boolean" },
+        "shader": { "type": "string", "description": "Path to a shader file, if the terminal supports one." },
+        "treatment": { "type": "array", "items": { "type": "string" }, "description": "Kit treatments applied to the anchor, in order." }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "multiplexer": { "enum": ["none", "tmux", "zellij", "native"] },
+        "panes": { "type": "string", "description": "Startup pane layout, in words or a tool layout file." },
+        "quake": { "type": "boolean", "description": "Drop-down window." }
+      }
+    },
+    "prompt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "engine": { "type": "string", "description": "starship, oh-my-posh, hand-rolled, pure, ..." },
+        "lines": { "type": "integer", "minimum": 1, "maximum": 3 },
+        "style": { "enum": ["plain", "powerline", "rounded", "minimal", "boxed"] },
+        "segments": { "type": "array", "items": { "type": "string" } },
+        "transient": { "type": "boolean" }
+      }
+    },
+    "shells": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id"],
+        "properties": {
+          "id": { "type": "string" },
+          "default": { "type": "boolean" },
+          "lineEditing": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "onStart": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fetch": { "type": "string", "description": "fastfetch, a custom dossier, none." },
+        "art": { "type": "string", "description": "ASCII/ANSI art file shown on start." },
+        "quietVar": { "type": "string", "description": "Env var that turns the start banner off." }
+      }
+    },
+    "tools": { "type": "array", "items": { "type": "string" } },
+    "keybindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["keys", "action"],
+        "properties": { "keys": { "type": "string" }, "action": { "type": "string" }, "scope": { "type": "string" } }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "shellStartMs": { "type": "integer", "minimum": 50 },
+        "keystrokeMs": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "targets": {
+      "type": "object",
+      "description": "Chosen tools per OS.",
+      "additionalProperties": false,
+      "properties": {
+        "windows": { "$ref": "#/$defs/target" },
+        "macos": { "$ref": "#/$defs/target" },
+        "linux": { "$ref": "#/$defs/target" }
+      }
+    }
+  },
+  "$defs": {
+    "hex": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$" },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["terminal"],
+      "properties": {
+        "terminal": { "type": "string" },
+        "shells": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

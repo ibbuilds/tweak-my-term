@@ -1,9 +1,9 @@
 # Your own artwork and generated builds stay local; the repo ships only its original scene.
-home/.config/eclipse/art/eclipse-base.*
-home/.config/eclipse/art/eclipse-art-v*.png
-!home/.config/eclipse/art/eclipse-art-v1.png
+presets/eclipse/files/home/.config/eclipse/art/eclipse-base.*
+presets/eclipse/files/home/.config/eclipse/art/eclipse-art-v*.png
+!presets/eclipse/files/home/.config/eclipse/art/eclipse-art-v1.png
 # Machine-specific environment
-home/.config/bash/local.bash
+presets/eclipse/files/home/.config/bash/local.bash
 
 # Local scratch
 tmp/

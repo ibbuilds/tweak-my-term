@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tool.schema.json",
+  "title": "Catalog tool",
+  "type": "object",
+  "required": ["id", "name", "category", "homepage", "os", "verified"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$" },
+    "name": { "type": "string" },
+    "category": { "enum": ["terminal", "shell", "prompt", "line-editing", "multiplexer", "tool", "font", "fetch"] },
+    "summary": { "type": "string" },
+    "homepage": { "type": "string" },
+    "docs": { "type": "string" },
+    "license": { "type": "string" },
+    "configFormat": { "type": "string" },
+    "startupCostMs": { "type": "string", "description": "Measured or documented cost added to shell start, with context." },
+    "os": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "windows": { "$ref": "#/$defs/osEntry" },
+        "macos": { "$ref": "#/$defs/osEntry" },
+        "linux": { "$ref": "#/$defs/osEntry" }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["support"],
+        "properties": {
+          "support": { "enum": ["yes", "partial", "no", "plugin"] },
+          "recipe": { "type": "string" },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "verified": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["date", "how"],
+      "properties": {
+        "date": { "type": "string", "pattern": "^\d{4}-\d{2}-\d{2}$" },
+        "version": { "type": "string" },
+        "how": { "enum": ["docs", "machine"] }
+      }
+    },
+    "sources": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "osEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supported"],
+      "properties": {
+        "supported": { "type": "boolean" },
+        "install": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["manager", "id"],
+            "properties": { "manager": { "type": "string" }, "id": { "type": "string" }, "notes": { "type": "string" } }
+          }
+        },
+        "detect": { "type": "array", "items": { "type": "string" }, "description": "Command (argv) that prints the version." },
+        "config": { "type": "array", "items": { "type": "string" }, "description": "Config paths with tokens." },
+        "validate": { "type": "array", "items": { "type": "string" }, "description": "Command (argv) that checks the config; {file} is replaced." },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

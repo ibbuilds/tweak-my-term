@@ -1,0 +1,19 @@
+{
+  "$comment": "Allowed capability ids per tool category. Recipes are named recipes/<capability>.md.",
+  "terminal": [
+    "palette", "font", "ligatures", "font-fallback", "line-height", "opacity", "blur",
+    "background-image", "background-animated", "shader", "padding", "cursor", "tabs", "titlebar",
+    "splits", "quake", "keybindings", "shell-integration", "startup-layout", "inline-images",
+    "profiles", "default-shell", "config-reload"
+  ],
+  "shell": [
+    "startup-file", "prompt", "line-editing", "history", "completion", "keybindings", "colors",
+    "startup-speed", "env"
+  ],
+  "prompt": ["install-init", "palette", "segments", "transient", "right-prompt", "multiline", "performance"],
+  "line-editing": ["install-init", "suggestions", "highlighting", "history-search", "keybindings", "colors", "performance"],
+  "multiplexer": ["install-init", "palette", "statusbar", "layouts", "keybindings", "plugins"],
+  "tool": ["install-init", "theme", "integration", "keybindings", "config"],
+  "fetch": ["install-init", "logo", "modules", "theme"],
+  "font": ["install", "configure", "nerd-glyphs"]
+}
