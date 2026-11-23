@@ -1,0 +1,53 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "zsh-syntax-highlighting",
+  "name": "zsh-syntax-highlighting",
+  "category": "line-editing",
+  "summary": "Fish-like syntax highlighting for the zsh command line: colours commands, options, strings and paths as you type, red for unknown tokens.",
+  "homepage": "https://github.com/zsh-users/zsh-syntax-highlighting",
+  "docs": "https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md",
+  "license": "BSD-3-Clause",
+  "configFormat": "zsh variables (ZSH_HIGHLIGHT_HIGHLIGHTERS, ZSH_HIGHLIGHT_STYLES) in ~/.zshrc",
+  "startupCostMs": "One sourced file; cost per keystroke grows with command-line length (cap with ZSH_HIGHLIGHT_MAXLENGTH). Not measured here: no zsh on the Windows machine, and zsh is not part of Git Bash.",
+  "os": {
+    "windows": {
+      "supported": false,
+      "notes": "Needs zsh. Git for Windows does not ship zsh; only WSL (use the Linux entry) or MSYS2. On native Windows PSReadLine colours tokens natively."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "zsh-syntax-highlighting", "notes": "0.8.0; source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh at the END of ~/.zshrc." }],
+      "detect": ["zsh", "-c", "[[ -r $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && echo installed"],
+      "config": ["~/.zshrc"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "zsh-syntax-highlighting", "notes": "Debian/Ubuntu; source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" },
+        { "manager": "dnf", "id": "zsh-syntax-highlighting", "notes": "Fedora 24+; same path as Debian." },
+        { "manager": "pacman", "id": "zsh-syntax-highlighting", "notes": "Arch extra 0.8.0; source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" },
+        { "manager": "git", "id": "https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting", "notes": "Manual clone; source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" }
+      ],
+      "detect": ["zsh", "-c", "[[ -r ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh || -r /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh || -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && echo installed"],
+      "config": ["~/.zshrc"],
+      "notes": "The source line must be the LAST line of ~/.zshrc (after compinit, widgets and other plugins). Oh My Zsh: clone into ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting and put it last in plugins=(...)."
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "suggestions": { "support": "no", "notes": "Use zsh-autosuggestions." },
+    "highlighting": { "support": "yes", "recipe": "recipes/highlighting.md" },
+    "history-search": { "support": "no" },
+    "keybindings": { "support": "no" },
+    "colors": { "support": "yes", "recipe": "recipes/colors.md" },
+    "performance": { "support": "yes", "recipe": "recipes/performance.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "0.8.0", "how": "docs" },
+  "sources": [
+    "https://raw.githubusercontent.com/zsh-users/zsh-syntax-highlighting/master/INSTALL.md",
+    "https://raw.githubusercontent.com/zsh-users/zsh-syntax-highlighting/master/docs/highlighters.md",
+    "https://raw.githubusercontent.com/zsh-users/zsh-syntax-highlighting/master/docs/highlighters/main.md",
+    "https://formulae.brew.sh/api/formula/zsh-syntax-highlighting.json",
+    "https://archlinux.org/packages/search/json/?name=zsh-syntax-highlighting"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "psreadline",
+  "name": "PSReadLine",
+  "category": "line-editing",
+  "summary": "PowerShell's command-line editor: token colouring, predictive IntelliSense (inline or list), history search, emacs/vi/windows key modes and custom key handlers.",
+  "homepage": "https://github.com/PowerShell/PSReadLine",
+  "docs": "https://learn.microsoft.com/powershell/module/psreadline/about/about_psreadline",
+  "license": "BSD-2-Clause",
+  "configFormat": "PowerShell code in the profile ($PROFILE): Set-PSReadLineOption / Set-PSReadLineKeyHandler",
+  "startupCostMs": "Measured on this Windows 11 machine (Windows PowerShell 5.1, median of 5, `powershell -NoProfile -Command \"Import-Module PSReadLine -RequiredVersion X\"` minus a bare `-Command 1` baseline of ~170 ms): 2.0.0 adds ~50 ms, 2.4.5 adds ~67 ms. Per-keystroke cost is negligible (compiled .NET).",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "psgallery", "id": "PSReadLine", "notes": "Windows PowerShell 5.1: Install-Module PSReadLine -Scope CurrentUser -Force (the engine adds -AllowClobber). If PowerShellGet complains about the publisher/signature of the built-in 2.0.0, add -SkipPublisherCheck (not needed on this machine)." },
+        { "manager": "pwsh-gallery", "id": "PSReadLine", "notes": "PowerShell 7 ships a recent PSReadLine already; update only if you need a newer one." }
+      ],
+      "detect": ["powershell", "-NoProfile", "-Command", "(Get-Module PSReadLine -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1).Version.ToString()"],
+      "config": ["{ps-profile}", "{pwsh-profile}"],
+      "notes": "Windows PowerShell 5.1 ships PSReadLine 2.0.0: no prediction colours, no -PredictionViewStyle/ListView; predictions need >= 2.1 (HistoryAndPlugin and ListView need >= 2.2). Check `(Get-Module PSReadLine).Version` first. Machine check: with 2.4.5 in the CurrentUser module path (Documents\\WindowsPowerShell\\Modules) and 2.0.0 in Program Files, `Import-Module PSReadLine` loads 2.4.5. Setting -PredictionSource fails with 'console output doesn't support virtual terminal processing or it's redirected' when run non-interactively. PowerShell 7 profile path is {pwsh-profile}; 5.1 is {ps-profile}. History file: %APPDATA%\\Microsoft\\Windows\\PowerShell\\PSReadLine\\ConsoleHost_history.txt."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "pwsh-gallery", "id": "PSReadLine", "notes": "Only to update past the version bundled with PowerShell 7 (brew install --cask powershell)." }],
+      "detect": ["pwsh", "-NoProfile", "-Command", "(Get-Module PSReadLine -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1).Version.ToString()"],
+      "config": ["{pwsh-profile}"],
+      "notes": "Part of PowerShell 7 on every OS. EditMode defaults to Emacs on non-Windows. History: $HOME/.local/share/powershell/PSReadLine/ConsoleHost_history.txt (or $XDG_DATA_HOME)."
+    },
+    "linux": {
+      "supported": true,
+      "install": [{ "manager": "pwsh-gallery", "id": "PSReadLine", "notes": "Only to update past the bundled version." }],
+      "detect": ["pwsh", "-NoProfile", "-Command", "(Get-Module PSReadLine -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1).Version.ToString()"],
+      "config": ["{pwsh-profile}"],
+      "notes": "Part of PowerShell 7. EditMode defaults to Emacs."
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "suggestions": { "support": "yes", "recipe": "recipes/suggestions.md", "notes": "Predictive IntelliSense: inline or list view; needs PSReadLine 2.1+ (2.2+ for list view and plugins)." },
+    "highlighting": { "support": "yes", "recipe": "recipes/highlighting.md" },
+    "history-search": { "support": "yes", "recipe": "recipes/history-search.md" },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "colors": { "support": "yes", "recipe": "recipes/colors.md" },
+    "performance": { "support": "yes", "recipe": "recipes/performance.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "2.4.5 (latest on PSGallery); 5.1 ships 2.0.0", "how": "machine" },
+  "sources": [
+    "https://learn.microsoft.com/powershell/module/psreadline/about/about_psreadline",
+    "https://learn.microsoft.com/powershell/module/psreadline/set-psreadlineoption",
+    "https://learn.microsoft.com/powershell/module/psreadline/set-psreadlinekeyhandler",
+    "Get-Module/Find-Module/Set-PSReadLineOption run on this machine (Windows PowerShell 5.1.26100, 2026-11-23)"
+  ]
+}

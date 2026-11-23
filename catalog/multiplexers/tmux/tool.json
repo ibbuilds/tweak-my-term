@@ -1,0 +1,56 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "tmux",
+  "name": "tmux",
+  "category": "multiplexer",
+  "summary": "Terminal multiplexer: persistent sessions, windows and split panes, a scriptable status line, key tables and a plugin ecosystem via TPM.",
+  "homepage": "https://github.com/tmux/tmux",
+  "docs": "https://github.com/tmux/tmux/wiki",
+  "license": "ISC",
+  "configFormat": "tmux command file (~/.tmux.conf or ~/.config/tmux/tmux.conf)",
+  "startupCostMs": "Server start is a few ms on Linux/macOS; it adds one pane process layer. Status line formats that call `#(shell command)` run every status-interval seconds, so keep them cheap. Not measurable on this Windows machine (no native tmux).",
+  "os": {
+    "windows": {
+      "supported": false,
+      "notes": "No official or native Windows build (tmux needs a POSIX pty). Options: run it inside WSL (use the Linux entry) or use Zellij, which has native Windows builds since 0.44. A third-party tmux-style multiplexer for Windows exists (psmux: winget `marlocarlo.psmux` 3.4.0, scoop `psmux`, ships a tmux.exe alias); it is not tmux, and config/plugin (TPM) compatibility was not verified here."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "tmux", "notes": "3.8 on 2026-11-23. MacPorts: port install tmux." }],
+      "detect": ["tmux", "-V"],
+      "config": ["~/.tmux.conf", "{xdg-config}/tmux/tmux.conf"],
+      "validate": ["tmux", "-L", "tmt-validate", "-f", "/dev/null", "new-session", "-d", ";", "source-file", "-n", "{file}", ";", "kill-server"],
+      "notes": "validate parses the file without executing it (`source-file -n`, per the tmux wiki) on a throwaway socket; the argv was not run here (no tmux on this machine) and the exit code on a parse error is unverified. Needs `tmux-256color` terminfo: if tmux says 'missing or unsuitable terminal', `brew install ncurses` or fall back to screen-256color."
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "tmux", "notes": "Debian trixie 3.5a, forky 3.8." },
+        { "manager": "dnf", "id": "tmux" },
+        { "manager": "pacman", "id": "tmux", "notes": "Arch extra 3.8." }
+      ],
+      "detect": ["tmux", "-V"],
+      "config": ["~/.tmux.conf", "{xdg-config}/tmux/tmux.conf"],
+      "validate": ["tmux", "-L", "tmt-validate", "-f", "/dev/null", "new-session", "-d", ";", "source-file", "-n", "{file}", ";", "kill-server"],
+      "notes": "tmux reads /etc/tmux.conf, then ~/.tmux.conf, ~/.config/tmux/tmux.conf (XDG path since 3.2). Prebuilt static binaries: https://github.com/tmux/tmux-builds. After upgrading tmux run `tmux kill-server` (the protocol version changes between releases)."
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "palette": { "support": "yes", "recipe": "recipes/palette.md" },
+    "statusbar": { "support": "yes", "recipe": "recipes/statusbar.md" },
+    "layouts": { "support": "yes", "recipe": "recipes/layouts.md" },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "plugins": { "support": "plugin", "recipe": "recipes/plugins.md", "notes": "TPM (tmux plugin manager) installs git-hosted plugins." }
+  },
+  "verified": { "date": "2026-11-23", "version": "3.8", "how": "docs" },
+  "sources": [
+    "https://github.com/tmux/tmux/wiki/Installing",
+    "https://github.com/tmux/tmux/wiki/Getting-Started",
+    "https://github.com/tmux/tmux/wiki/Advanced-Use",
+    "https://github.com/tmux/tmux/wiki/FAQ",
+    "https://raw.githubusercontent.com/tmux-plugins/tpm/master/README.md",
+    "https://formulae.brew.sh/api/formula/tmux.json",
+    "winget show --id marlocarlo.psmux (machine, 2026-11-23)"
+  ]
+}

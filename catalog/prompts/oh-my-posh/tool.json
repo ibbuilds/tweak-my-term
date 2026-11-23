@@ -1,0 +1,60 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "oh-my-posh",
+  "name": "Oh My Posh",
+  "category": "prompt",
+  "summary": "Cross-shell prompt engine (Go binary) with JSON/YAML/TOML themes made of blocks and segments, Go-template text, palettes, transient and right prompts.",
+  "homepage": "https://ohmyposh.dev",
+  "docs": "https://ohmyposh.dev/docs",
+  "license": "MIT",
+  "configFormat": "json (also yaml/toml); no default path, passed with --config to `oh-my-posh init <shell>`",
+  "startupCostMs": "Prompt render is ~10-120 ms (oh-my-posh debug: e.g. 12 ms, 85 ms with git). Cold-start cost is dominated by PowerShell parsing the generated init script: ~1.9 s extra reported on Windows with PowerShell 7.6 and v29.14.0 (upstream issue #7539, 2026-05); a hand-cached init script still costs ~250 ms. Fixes: `async: true` in the theme, `streaming`, cache the init script. Each extra process on Windows also costs 10-60 ms (measured on this machine).",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "JanDeDobbeleer.OhMyPosh", "notes": "Docs command: winget install JanDeDobbeleer.OhMyPosh --source winget (33.2.0 in the winget source on 2026-11-23)." },
+        { "manager": "scoop", "id": "oh-my-posh", "notes": "Verified in the scoop main bucket (33.2.0); docs themselves list winget, manual and chocolatey." }
+      ],
+      "detect": ["oh-my-posh", "--version"],
+      "config": ["~/.config/oh-my-posh/config.omp.json"],
+      "notes": "The config path is a catalog convention: Oh My Posh has no default file, you point init at one with --config (local path, theme name, or URL; local file is fastest). Works in PowerShell 5.1/7 (`init pwsh`), Git Bash, cmd (Clink), nushell, fish and zsh. No config validator command is documented: use the JSON schema (https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json) in an editor, and `oh-my-posh print primary --config <file> --shell uni` to render once."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "jandedobbeleer/oh-my-posh/oh-my-posh", "notes": "Documented tap formula; a homebrew-core formula `oh-my-posh` (33.3.1) also exists." }],
+      "detect": ["oh-my-posh", "--version"],
+      "config": ["~/.config/oh-my-posh/config.omp.json"],
+      "notes": "macOS /bin/bash is 3.2; if you see 'conditional binary operator expected' install a newer bash (docs troubleshooting)."
+    },
+    "linux": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "oh-my-posh", "notes": "Linuxbrew; homebrew-core formula 33.3.1." }],
+      "detect": ["oh-my-posh", "--version"],
+      "config": ["~/.config/oh-my-posh/config.omp.json"],
+      "notes": "Official script (needs curl, unzip, realpath, dirname): `curl -s https://ohmyposh.dev/install.sh | bash -s` installs to ~/bin or ~/.local/bin; `-d <dir>` picks another. Not in the Arch/Fedora/Debian main repos as far as checked (pacman: not found in extra)."
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "palette": { "support": "yes", "recipe": "recipes/palette.md", "notes": "palette / palettes with p:<key> references." },
+    "segments": { "support": "yes", "recipe": "recipes/segments.md" },
+    "transient": { "support": "yes", "recipe": "recipes/transient.md", "notes": "nu, fish, zsh, PowerShell, cmd; bash needs ble.sh." },
+    "right-prompt": { "support": "yes", "recipe": "recipes/right-prompt.md", "notes": "rprompt block: bash (ble.sh), zsh, PowerShell, cmd, nu, fish." },
+    "multiline": { "support": "yes", "recipe": "recipes/multiline.md" },
+    "performance": { "support": "yes", "recipe": "recipes/performance.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "33.2.0", "how": "docs" },
+  "sources": [
+    "https://ohmyposh.dev/docs/installation/windows",
+    "https://ohmyposh.dev/docs/installation/prompt",
+    "https://ohmyposh.dev/docs/installation/customize",
+    "https://ohmyposh.dev/docs/configuration/general",
+    "https://ohmyposh.dev/docs/configuration/colors",
+    "https://ohmyposh.dev/docs/configuration/block",
+    "https://ohmyposh.dev/docs/configuration/transient",
+    "https://ohmyposh.dev/docs/configuration/streaming",
+    "https://github.com/JanDeDobbeleer/oh-my-posh/issues/7539",
+    "winget show --id JanDeDobbeleer.OhMyPosh (machine, 2026-11-23)"
+  ]
+}

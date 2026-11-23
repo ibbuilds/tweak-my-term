@@ -1,0 +1,60 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "atuin",
+  "name": "Atuin",
+  "category": "line-editing",
+  "summary": "SQLite-backed shell history with a fuzzy Ctrl-R/Up search UI, per-directory/session/host filters, optional end-to-end-encrypted sync and a background daemon.",
+  "homepage": "https://atuin.sh",
+  "docs": "https://docs.atuin.sh",
+  "license": "MIT",
+  "configFormat": "toml (~/.atuin/config.toml in current docs; older installs ~/.config/atuin/config.toml)",
+  "startupCostMs": "One `atuin init <shell>` process at shell start (10-60 ms on Windows, measured range for any extra process on this machine) plus a process per recorded command (preexec/precmd) unless the daemon is enabled, which makes history writes instant. Search UI opens on demand.",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "Atuinsh.Atuin", "notes": "Verified on this machine: Atuinsh.Atuin 18.25.1 (note the capitalisation; `atuinsh.atuin` as an exact id does not match)." },
+        { "manager": "scoop", "id": "atuin", "notes": "Verified in scoop main (18.25.1)." }
+      ],
+      "detect": ["atuin", "--version"],
+      "config": ["~/.atuin/config.toml", "{xdg-config}/atuin/config.toml"],
+      "notes": "Docs recommend WinGet and PowerShell: append `atuin init powershell | Out-String | Invoke-Expression` to $PROFILE. Try the `default-powershell` theme. bash/zsh init lines are documented for Unix; Atuin on Git Bash is not covered by the Windows instructions (unverified). Daemon uses a TCP port (tcp_port 8889) on non-Unix systems. The tmux popup and pty-proxy features are not available in PowerShell."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "atuin" }],
+      "detect": ["atuin", "--version"],
+      "config": ["~/.atuin/config.toml", "{xdg-config}/atuin/config.toml"],
+      "notes": "Daemon autostart runs as a launchd agent (~/Library/LaunchAgents/sh.atuin.daemon.plist). MacPorts: port install atuin."
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "brew", "id": "atuin", "notes": "Linuxbrew." },
+        { "manager": "pacman", "id": "atuin", "notes": "Arch extra (18.24.8 on 2026-11-23)." },
+        { "manager": "dnf", "id": "atuin", "notes": "Fedora package exists." },
+        { "manager": "apt", "id": "atuin", "notes": "Debian only, and old (trixie 18.6.1); prefer the installer script." }
+      ],
+      "detect": ["atuin", "--version"],
+      "config": ["~/.atuin/config.toml", "{xdg-config}/atuin/config.toml"],
+      "notes": "Installer: `curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh` (installs to ~/.atuin/bin and wires the shell). Older installs keep data in ~/.config/atuin and ~/.local/share/atuin; Atuin keeps using them if ~/.atuin is absent. ATUIN_HOME / ATUIN_CONFIG_DIR override locations."
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "suggestions": { "support": "no", "notes": "Interactive search, not inline ghost-text suggestions." },
+    "highlighting": { "support": "partial", "notes": "Only syntax-highlights commands inside its search results (ui.syntax_highlight); not the command line you type." },
+    "history-search": { "support": "yes", "recipe": "recipes/history-search.md" },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "colors": { "support": "yes", "recipe": "recipes/colors.md" },
+    "performance": { "support": "yes", "recipe": "recipes/performance.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "18.25.1", "how": "docs" },
+  "sources": [
+    "https://docs.atuin.sh/cli/guide/installation/",
+    "https://docs.atuin.sh/cli/configuration/config/",
+    "https://docs.atuin.sh/cli/configuration/key-binding/",
+    "https://docs.atuin.sh/cli/guide/theming/",
+    "winget show --id Atuinsh.Atuin; scoop search atuin (machine, 2026-11-23)"
+  ]
+}

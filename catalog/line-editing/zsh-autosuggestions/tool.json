@@ -1,0 +1,53 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "zsh-autosuggestions",
+  "name": "zsh-autosuggestions",
+  "category": "line-editing",
+  "summary": "Fish-like history suggestions for zsh: a grey completion after the cursor that you accept with Right/End; fetched asynchronously.",
+  "homepage": "https://github.com/zsh-users/zsh-autosuggestions",
+  "docs": "https://github.com/zsh-users/zsh-autosuggestions#readme",
+  "license": "MIT",
+  "configFormat": "zsh variables (ZSH_AUTOSUGGEST_*) in ~/.zshrc",
+  "startupCostMs": "Sourcing the plugin is a single zsh file (no extra process). Suggestions are fetched asynchronously on zsh >= 5.0.8 so typing is not blocked; the `completion` strategy uses a zpty and is the slow one. Cost on Windows is irrelevant: zsh is not part of Git Bash.",
+  "os": {
+    "windows": {
+      "supported": false,
+      "notes": "Needs zsh. Git for Windows does not ship zsh; only WSL (use the Linux entry) or MSYS2 provide it. On native Windows use PSReadLine predictions instead."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "zsh-autosuggestions", "notes": "0.7.1; source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" }],
+      "detect": ["zsh", "-c", "[[ -r $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && echo installed"],
+      "config": ["~/.zshrc"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "zsh-autosuggestions", "notes": "Debian 13 has 0.7.1-1; source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh (Debian) . Upstream lists an OBS repo for Debian/Ubuntu/Fedora." },
+        { "manager": "dnf", "id": "zsh-autosuggestions", "notes": "Fedora package exists; source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh." },
+        { "manager": "pacman", "id": "zsh-autosuggestions", "notes": "Arch extra 0.7.1; source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh." },
+        { "manager": "git", "id": "https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions", "notes": "Manual clone; source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh." }
+      ],
+      "detect": ["zsh", "-c", "[[ -r ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh || -r /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh || -r /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && echo installed"],
+      "config": ["~/.zshrc"],
+      "notes": "Requires zsh 4.3.11+. Plugin managers (Oh My Zsh: clone into ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins and add to plugins=(...), antigen `antigen bundle zsh-users/zsh-autosuggestions`) also work."
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "suggestions": { "support": "yes", "recipe": "recipes/suggestions.md" },
+    "highlighting": { "support": "no", "notes": "Use zsh-syntax-highlighting." },
+    "history-search": { "support": "partial", "notes": "Suggests from history as you type; no search UI. Use atuin or fzf for Ctrl-R." },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "colors": { "support": "yes", "recipe": "recipes/colors.md" },
+    "performance": { "support": "yes", "recipe": "recipes/performance.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "0.7.1", "how": "docs" },
+  "sources": [
+    "https://raw.githubusercontent.com/zsh-users/zsh-autosuggestions/master/README.md",
+    "https://raw.githubusercontent.com/zsh-users/zsh-autosuggestions/master/INSTALL.md",
+    "https://raw.githubusercontent.com/zsh-users/zsh-autosuggestions/master/src/config.zsh",
+    "https://formulae.brew.sh/api/formula/zsh-autosuggestions.json",
+    "https://sources.debian.org/api/src/zsh-autosuggestions/"
+  ]
+}

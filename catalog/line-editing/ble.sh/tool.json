@@ -1,0 +1,115 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "ble.sh",
+  "name": "ble.sh (Bash Line Editor)",
+  "category": "line-editing",
+  "summary": "Pure-Bash replacement for GNU Readline adding syntax highlighting, fish-style auto-complete suggestions, menu completion, vim mode and transient-prompt hooks.",
+  "homepage": "https://github.com/akinomyoga/ble.sh",
+  "docs": "https://github.com/akinomyoga/ble.sh/wiki",
+  "license": "BSD-3-Clause",
+  "configFormat": "bash script (~/.blerc or ~/.config/blesh/init.sh) using bleopt, ble-face, ble-bind",
+  "startupCostMs": "Measured on this Windows 11 machine in Git Bash: 24-60 ms per keystroke and ~0.9 s per new tab. Not recommended on Windows. On Linux/macOS it is acceptable but still adds shell-start time and per-key work since it is written in Bash.",
+  "os": {
+    "windows": {
+      "supported": true,
+      "detect": [
+        "bash",
+        "--norc",
+        "--noprofile",
+        "-c",
+        "for f in \"${XDG_DATA_HOME:-$HOME/.local/share}/blesh/ble.sh\" /usr/share/blesh/ble.sh; do [ -f \"$f\" ] && { grep -m1 -oE \"ble-[0-9][0-9.]*\" \"$f\" || echo present; exit; }; done"
+      ],
+      "config": [
+        "~/.blerc",
+        "{xdg-config}/blesh/init.sh",
+        "~/.bashrc"
+      ],
+      "notes": "Works in Git Bash (MSYS2) but NOT RECOMMENDED: machine-measured 24-60 ms per keystroke and ~0.9 s per new tab. Prefer PowerShell with PSReadLine 2.2+ (inline predictions, no per-key script cost) or zsh/fish on WSL. If you still want it: nightly tarball + `bash ble-nightly/ble.sh --install ~/.local/share` (needs curl, tar with xz)."
+    },
+    "macos": {
+      "supported": true,
+      "detect": [
+        "bash",
+        "--norc",
+        "--noprofile",
+        "-c",
+        "for f in \"${XDG_DATA_HOME:-$HOME/.local/share}/blesh/ble.sh\" /usr/share/blesh/ble.sh; do [ -f \"$f\" ] && { grep -m1 -oE \"ble-[0-9][0-9.]*\" \"$f\" || echo present; exit; }; done"
+      ],
+      "config": [
+        "~/.blerc",
+        "{xdg-config}/blesh/init.sh",
+        "~/.bash_profile",
+        "~/.bashrc"
+      ],
+      "notes": "Not in Homebrew core (checked 2026-11-23). Install from git or the nightly tarball. /bin/bash is 3.2: ble.sh runs but auto-complete and menu-filter need bash 4.0+, so `brew install bash` and make it your shell first. macOS awk may mishandle multibyte text; README suggests gawk."
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        {
+          "manager": "apt",
+          "id": "ble.sh",
+          "notes": "Debian forky/sid only (0.4.0~git20250806); not in trixie. Elsewhere use git/nightly."
+        }
+      ],
+      "detect": [
+        "bash",
+        "--norc",
+        "--noprofile",
+        "-c",
+        "for f in \"${XDG_DATA_HOME:-$HOME/.local/share}/blesh/ble.sh\" /usr/share/blesh/ble.sh; do [ -f \"$f\" ] && { grep -m1 -oE \"ble-[0-9][0-9.]*\" \"$f\" || echo present; exit; }; done"
+      ],
+      "config": [
+        "~/.blerc",
+        "{xdg-config}/blesh/init.sh",
+        "~/.bashrc"
+      ],
+      "notes": "Arch: AUR `blesh-git` (not in official repos). Generic: `git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git && make -C ble.sh install PREFIX=~/.local` (needs git, GNU make, GNU awk), then source ~/.local/share/blesh/ble.sh from ~/.bashrc. Nightly tarball: https://github.com/akinomyoga/ble.sh/releases/tag/nightly. Update: `ble-update` or `bash ble.sh --update` (0.4+)."
+    }
+  },
+  "capabilities": {
+    "install-init": {
+      "support": "yes",
+      "recipe": "recipes/install-init.md"
+    },
+    "suggestions": {
+      "support": "yes",
+      "recipe": "recipes/suggestions.md",
+      "notes": "auto-complete, bash 4.0+."
+    },
+    "highlighting": {
+      "support": "yes",
+      "recipe": "recipes/highlighting.md"
+    },
+    "history-search": {
+      "support": "yes",
+      "recipe": "recipes/history-search.md"
+    },
+    "keybindings": {
+      "support": "yes",
+      "recipe": "recipes/keybindings.md"
+    },
+    "colors": {
+      "support": "yes",
+      "recipe": "recipes/colors.md"
+    },
+    "performance": {
+      "support": "yes",
+      "recipe": "recipes/performance.md",
+      "notes": "Documents the cost; this is the tool's main drawback on Windows."
+    }
+  },
+  "verified": {
+    "date": "2026-11-23",
+    "version": "0.4.0-devel3 / nightly (stable 0.3.4)",
+    "how": "machine"
+  },
+  "sources": [
+    "https://raw.githubusercontent.com/akinomyoga/ble.sh/master/README.md",
+    "https://github.com/akinomyoga/ble.sh/wiki/Manual-%C2%A71-Introduction",
+    "https://github.com/akinomyoga/ble.sh/wiki/Manual-%C2%A73-Key-binding",
+    "https://github.com/akinomyoga/ble.sh/wiki/Manual-%C2%A77-Completion",
+    "https://sources.debian.org/api/src/ble.sh/",
+    "keystroke/tab timings measured on this machine (Git Bash, 2026-11-23)"
+  ]
+}

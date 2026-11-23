@@ -1,0 +1,58 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "starship",
+  "name": "Starship",
+  "category": "prompt",
+  "summary": "Cross-shell prompt in one Rust binary; one starship.toml drives bash, zsh, fish, PowerShell 5.1/7, nushell, cmd (via Clink) and more.",
+  "homepage": "https://starship.rs",
+  "docs": "https://starship.rs/config/",
+  "license": "ISC",
+  "configFormat": "toml (~/.config/starship.toml on every OS; override with STARSHIP_CONFIG)",
+  "startupCostMs": "One extra process at shell start (starship init) and one process per prompt render. Each extra process costs 10-60 ms on Windows (measured on this Windows 11 machine), ~1-5 ms on Linux/macOS. Module work is capped by scan_timeout=30 ms and command_timeout=500 ms (docs defaults); find the slow module with `starship timings`.",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "Starship.Starship", "notes": "Verified present in the winget source (1.27.0)." },
+        { "manager": "scoop", "id": "starship" }
+      ],
+      "detect": ["starship", "--version"],
+      "config": ["~/.config/starship.toml"],
+      "notes": "Config lives at %USERPROFILE%\\.config\\starship.toml (same relative path as Linux). Chocolatey (choco install starship) and the MSI from GitHub releases also exist. Works in Git Bash, Windows PowerShell 5.1, PowerShell 7, nushell and cmd (Clink 1.2.30+). No built-in validator: run `starship print-config` to see the merged config and `starship explain`/`starship timings` to inspect the prompt."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "starship" }],
+      "detect": ["starship", "--version"],
+      "config": ["~/.config/starship.toml"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "brew", "id": "starship", "notes": "Linuxbrew." },
+        { "manager": "pacman", "id": "starship", "notes": "Arch extra repo (1.27.0 on 2026-11-23)." },
+        { "manager": "apt", "id": "starship", "notes": "Only Debian 13+ and Ubuntu 25.04+ per the install guide; Debian trixie ships 1.22.1." }
+      ],
+      "detect": ["starship", "--version"],
+      "config": ["~/.config/starship.toml"],
+      "notes": "Any distro: `curl -sS https://starship.rs/install.sh | sh` (official script, reads the script before running is advisable). Fedora/CentOS: `dnf copr enable atim/starship` then `dnf install starship` (Copr, not Fedora main)."
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "palette": { "support": "yes", "recipe": "recipes/palette.md", "notes": "palettes + palette keys; named colors usable in any style string." },
+    "segments": { "support": "yes", "recipe": "recipes/segments.md" },
+    "transient": { "support": "partial", "recipe": "recipes/transient.md", "notes": "Native in PowerShell, fish and cmd/Clink; bash needs ble.sh; zsh and nushell are not built in." },
+    "right-prompt": { "support": "partial", "recipe": "recipes/right-prompt.md", "notes": "right_format works in elvish, fish, zsh, xonsh, cmd, nushell and bash (with ble.sh or Flyline); not listed for PowerShell." },
+    "multiline": { "support": "yes", "recipe": "recipes/multiline.md" },
+    "performance": { "support": "yes", "recipe": "recipes/performance.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "1.27.0", "how": "docs" },
+  "sources": [
+    "https://starship.rs/guide/",
+    "https://starship.rs/config/",
+    "https://starship.rs/advanced-config/",
+    "https://github.com/starship/starship/releases",
+    "winget show --id Starship.Starship (machine, 2026-11-23)"
+  ]
+}
