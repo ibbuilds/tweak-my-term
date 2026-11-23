@@ -149,7 +149,7 @@ async function main() {
       const r = run.measure({ before: Boolean(flags.before), runs: Number(flags.runs) || 5, shells: flags.shell ? String(flags.shell).split(',') : undefined });
       return out(r, json, (x) => {
         const prev = Object.fromEntries((x.before || []).map((b) => [b.shell, b]));
-        return `${x.results.map((m) => (m.skipped ? `${m.shell}: skipped (${m.skipped})` : `${m.shell}: ${m.medianMs} ms median (min ${m.minMs})${prev[m.shell] && prev[m.shell].medianMs ? `, before ${prev[m.shell].medianMs} ms` : ''}${m.medianMs > x.budgetMs ? '  OVER BUDGET' : ''}${m.error ? `\n  stderr: ${m.error}` : ''}`)).join('\n')}\nBudget: ${x.budgetMs} ms per shell start.${x.overBudget.length ? ' Over budget: see guides/performance.md.' : ''}`;
+        return `${x.results.map((m) => (m.skipped ? `${m.shell}: skipped (${m.skipped})` : `${m.shell}: ${m.medianMs} ms median (min ${m.minMs})${prev[m.shell] && prev[m.shell].medianMs ? `, before ${prev[m.shell].medianMs} ms` : ''}${m.medianMs > x.budgetMs ? '  OVER BUDGET' : ''}${m.error ? `\n  stderr: ${m.error}` : ''}`)).join('\n')}\nBudget: ${x.budgetMs} ms per shell start.${x.overBudget.length ? ' Over budget: see skills/setup/references/performance.md.' : ''}`;
       });
     }
     case 'restore': { const r = run.restore(sub); return out(r, json, (x) => `Restored run ${x.id}: ${x.restored.join(', ')}${x.changedSince.length ? `\nChanged after apply (kept a copy in the run's pre-restore folder): ${x.changedSince.join(', ')}` : ''}`); }
