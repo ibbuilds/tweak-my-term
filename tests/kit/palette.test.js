@@ -279,3 +279,9 @@ test('contrast: image rows use dim/opacity and the worst region; fix lifts the f
   assert.ok(K.report(palette, { image: bright }).every((r) => r.ok), 'all rows pass');
   assert.ok(changes.some((c) => c.key === 'foreground'));
 });
+
+test('fromScheme detects an Alacritty TOML that starts with a [colors.*] table', () => {
+  const toml = "[colors.primary]\nbackground = '#101010'\nforeground = '#e0e0e0'\n\n[colors.normal]\nblack = '#000000'\nred = '#cc0000'\ngreen = '#00cc00'\nyellow = '#cccc00'\nblue = '#0000cc'\nmagenta = '#cc00cc'\ncyan = '#00cccc'\nwhite = '#cccccc'\n";
+  const p = require('../../kit/palette').fromScheme(toml);
+  assert.strictEqual(p.background.toLowerCase(), '#101010');
+});

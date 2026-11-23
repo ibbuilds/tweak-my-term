@@ -300,7 +300,8 @@ function fromScheme(obj, format) {
   if (!format) {
     if (obj && typeof obj === 'object') format = 'windows-terminal';
     else if (/<plist|<dict>/.test(obj)) format = 'iterm';
-    else if (/^\s*[{[]/.test(obj)) format = 'windows-terminal';
+    // a TOML table header like [colors.primary] also starts with "[": only {, [{ or [" is JSON
+    else if (/^\s*(\{|\[\s*[{"])/.test(obj)) format = 'windows-terminal';
     else if (/\bbase00\s*:/i.test(obj)) format = 'base16';
     else if (/\[colors\./.test(obj) || /\bprimary\b/.test(obj)) format = 'alacritty';
     else throw new Error('fromScheme: could not detect format; pass iterm | base16 | windows-terminal | alacritty');
