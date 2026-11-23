@@ -41,12 +41,16 @@ same environment without extra processes.
 ## Requirements
 
 - Windows 10/11, [Windows Terminal](https://aka.ms/terminal), [Git for Windows](https://gitforwindows.org)
-- Fonts: JetBrains Mono and Symbols Nerd Font Mono ([Nerd Fonts](https://www.nerdfonts.com))
+- Fonts: [JetBrains Mono](https://www.jetbrains.com/lp/mono/) and Symbols Nerd Font Mono
+  (`NerdFontsSymbolsOnly` from [Nerd Fonts](https://www.nerdfonts.com/font-downloads))
 - CLI tools on `PATH`: `fzf fd ripgrep eza bat delta zoxide fastfetch lazygit`
   (any package manager works: winget, scoop or choco). The aliases (`ls` → eza,
   `diff` → delta) and the dossier expect them.
 - Optional: [ble.sh](https://github.com/akinomyoga/ble.sh) in `~/.local/share/blesh/`.
   Without it bash uses plain readline and the prompt still works.
+- Optional: PSReadLine 2.2 or newer for history predictions in PowerShell
+  (`Install-Module PSReadLine -Scope CurrentUser -Force`). Windows ships 2.0, which works
+  without them.
 - Optional: Node.js, only to rebuild the art.
 
 ## Setup
@@ -64,7 +68,11 @@ Back up your own files first; these replace them.
    `schemes`, `themes`, `profiles.defaults` and the Git Bash profile. Paths use
    `%USERPROFILE%`, so they work as they are. The Git Bash profile assumes Git is
    installed in `C:\Program Files\Git`.
-4. Open a new tab.
+4. **Git (optional).** Colored diffs through delta and a `git lg` graph:
+   ```powershell
+   git config --global include.path "~/.config/git/eclipse.gitconfig"
+   ```
+5. Open a new tab.
 
 ## Make it yours
 
