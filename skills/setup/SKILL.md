@@ -57,7 +57,9 @@ Read [references/style.md](references/style.md). From the anchor:
 - Choose font (Nerd Font for icons), size, line height, padding, opacity/blur,
   cursor, tab/title bar, prompt layout (segments, one or two lines, transient), and
   density.
-- Background: `tmt art treat anchor.png bg.png --fit WxH --for-text look.json` keeps text
+- Background: `tmt art treat anchor.png bg.png --fit WxH --for-text look.json` reads the
+  composition (where the subject sits vs where text goes) and applies the lightest fix; act on
+  its notes (move the subject) before adding veil. It keeps text
   readable over the image.
 
 ## 5. Look spec → `look.json`

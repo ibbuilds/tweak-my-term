@@ -17,10 +17,12 @@ const HELP = `tmt art: build the visual anchor, the background and the palette
 
   tmt art scene <out.png> [--preset name] [--seed n] [--width w --height h] [--palette look.json|scheme-file]
       paint a generated scene (presets: ${Object.keys(scene.presets).join(', ')}); same seed, same pixels
-  tmt art treat <in> <out.png> [--fit WxH] [--mode cover|contain] [--align topRight] [--dim 0.6] [--blur r]
+  tmt art treat <in> <out.png> [--crop X,Y,W,H] [--fit WxH] [--mode cover|contain] [--align topRight] [--dim 0.6] [--blur r]
         [--vignette a] [--bloom a] [--pixelate n] [--scanlines s] [--ascii alpha] [--tint #hex|background --tint-amount a]
-        [--quantize look.json] [--dither none|ordered|fs] [--for-text look.json --opacity 0.9]
-      make a background; --for-text adds just enough dim/blur that the palette's text is readable
+        [--quantize look.json] [--dither none|ordered|fs] [--for-text look.json --opacity 0.9 --zone terminal|full
+        --strategy auto|local|global]
+      make a background; --crop cuts the terminal out of a desktop screenshot first; --for-text reads the
+      composition and adds the lightest fix (none, a local shade, or an even veil) that keeps the palette's text readable
   tmt art palette <image> [--mode dark|light] [--accent #hex] [--out look-palette.json]
       extract colors, build a 16-color scheme, fix contrast (lightness only), print the result
   tmt art scheme <file> [--format auto|base16|alacritty|iterm|windows-terminal|kitty|ghostty|xresources] [--out file.json]
@@ -37,7 +39,7 @@ Paths inside look.json are relative to the look file. Add --json for machine-rea
 
 const ALLOWED = {
   scene: ['preset', 'seed', 'width', 'height', 'palette'],
-  treat: ['fit', 'mode', 'align', 'dim', 'blur', 'vignette', 'bloom', 'pixelate', 'scanlines', 'ascii', 'tint', 'tint-amount', 'quantize', 'dither', 'for-text', 'opacity'],
+  treat: ['crop', 'zone', 'strategy', 'fit', 'mode', 'align', 'dim', 'blur', 'vignette', 'bloom', 'pixelate', 'scanlines', 'ascii', 'tint', 'tint-amount', 'quantize', 'dither', 'for-text', 'opacity'],
   palette: ['mode', 'accent', 'out'],
   scheme: ['format', 'out'],
   contrast: ['image', 'opacity'],
@@ -188,6 +190,13 @@ function cmdScene(pos, flags, json) {
 function cmdTreat(pos, flags, json) {
   need(pos, 2, 'tmt art treat <in> <out.png> [--fit WxH] [--dim 0.6] [--blur r] [--vignette a] [--quantize look.json] [--for-text look.json]');
   let img = image.load(pos[0]);
+  if (flags.crop !== undefined) {
+    const m = /^(\d+),(\d+),(\d+),(\d+)$/.exec(String(flags.crop));
+    if (!m) throw new Error(`--crop expects X,Y,W,H in pixels, got "${flags.crop}"`);
+    const [x, y, w, h] = m.slice(1).map(Number);
+    if (x + w > img.width || y + h > img.height || !w || !h) throw new Error(`--crop ${flags.crop} is outside the ${img.width}x${img.height} image`);
+    img = treat.crop(img, x, y, w, h);
+  }
   const forTextFile = str(flags, 'for-text'), quantFile = str(flags, 'quantize'), tintArg = str(flags, 'tint', { bare: true });
   const ctx = {};
   const palFile = forTextFile || quantFile;
@@ -219,15 +228,16 @@ function cmdTreat(pos, flags, json) {
   if (forTextFile) {
     const lookOpacity = (() => { try { const j = JSON.parse(readText(forTextFile)); return j.background && j.background.opacity; } catch (_) { return undefined; } })();
     const opacity = num(flags, 'opacity', 0, 1) ?? lookOpacity ?? 1;
-    const r = treat.forText(img, ctx.palette, { opacity });
+    const zone = str(flags, 'zone') || 'terminal';
+    const r = treat.forText(img, ctx.palette, { opacity, zone, strategy: str(flags, 'strategy') || 'auto' });
     img = r.image;
-    data.forText = { opacity, dim: r.dim, blur: r.blur, ok: r.ok, failing: r.failing, report: r.report };
+    data.forText = { opacity, zone, strategy: r.strategy, dim: r.dim, blur: r.blur, coverage: r.coverage, ok: r.ok, failing: r.failing, composition: r.composition, report: r.report };
     steps.push(...r.steps);
-    extra = `\nfor-text at opacity ${opacity}: dim ${r.dim}, blur ${r.blur}px, ${r.ok ? 'text is readable' : `STILL LOW for ${r.failing.map((f) => f.color).join(', ')} (use a darker image, lower opacity, or fix the palette)`}`;
+    extra = `\nfor-text at opacity ${opacity} (zone ${zone}): ${r.strategy}${r.strategy === 'none' ? '' : `, strongest veil ${r.dim}, blur ${r.blur}px, ${Math.round(r.coverage * 100)}% of the image changed`}, ${r.ok ? 'text is readable' : `STILL LOW for ${r.failing.map((f) => f.color).join(', ')} (use a darker image, lower opacity, or fix the palette)`}\nsubject at x ${r.composition.focal.x}, y ${r.composition.focal.y}${r.composition.notes.map((n) => `\n  ${n}`).join('')}`;
   }
   image.save(img, pos[1]);
   data.width = img.width; data.height = img.height;
-  return emit(json, data, `Treated ${pos[0]} -> ${pos[1]} (${img.width}x${img.height}) with ${steps.length ? steps.map((s) => s.op + (s.amount !== undefined ? ':' + s.amount : s.radius !== undefined ? ':' + s.radius : '')).join(', ') : 'no steps'}${extra}`);
+  return emit(json, data, `Treated ${pos[0]} -> ${pos[1]} (${img.width}x${img.height}) with ${steps.length ? steps.map((s) => s.op + (s.amount !== undefined ? ':' + s.amount : s.radius !== undefined ? ':' + s.radius : s.op === 'scrim' ? ':' + s.opacity : '')).join(', ') : 'no steps'}${extra}`);
 }
 
 function cmdPalette(pos, flags, json) {

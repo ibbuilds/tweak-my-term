@@ -38,12 +38,36 @@ convey motion with the cursor/blink or a shader if supported.
 
 ## From anchor to background
 
-Text must stay readable over the image. `tmt art treat anchor.png bg.png --fit WxH
---for-text look.json` dims/blurs until every ANSI color passes contrast. Manual
-treatments: `--dim`, `--blur`, `--vignette`, `--quantize` (to the palette), scanlines,
-pixelate. Place busy detail where text isn't (a corner, right side): terminals align
-images (`backgroundImageAlignment` in WT, `background` in WezTerm, `background_image_layout`
-in kitty).
+Every image is a different composition, so there is no standard treatment. Never darken
+by habit: a dark, calm image needs nothing, and an even veil over a picture whose only
+bright part sits in a corner throws away what made it worth using.
+
+`tmt art treat anchor.png bg.png --fit WxH --for-text look.json` reads the composition
+and picks the lightest fix that keeps every text color readable:
+- **none**: already readable, the image is left exactly as it is;
+- **local**: a soft shade only where the image fights the text (`scrim` in the steps);
+  the rest keeps its full strength;
+- **global**: an even veil (+ slight blur) when most of the image is too strong anyway.
+
+It also reports where the subject sits (`focal`) and notes. Text starts at the left edge
+and most lines are short, so the left half needs full contrast and the right edge is
+allowed less (`--zone terminal`, default). Use `--zone full` when output fills the whole
+width (logs, wide tables, a multiplexer with a right pane). Force a choice with
+`--strategy local|global` only for a reason you can name.
+
+Act on the composition before reaching for more veil:
+- Subject in the left half (`focalInTextZone`): align the image right, mirror it, or crop
+  so the subject moves into the right third (`backgroundImageAlignment` in WT,
+  `background` in WezTerm, `background_image_layout` in kitty).
+- Bright everywhere: a darker frame of the same subject, a lower image opacity, or the
+  light palette mode fits better than a heavy veil.
+- Busy texture behind text: blur reads better than dimming.
+
+Screenshots of rices are whole desktops: cut the terminal window out first with
+`--crop X,Y,W,H` (pixels) before extracting a palette or using it as an anchor.
+
+Manual treatments when the look calls for them: `--dim`, `--blur`, `--vignette`,
+`--bloom`, `--quantize` (to the palette), `--scanlines`, `--pixelate`, `--ascii`.
 
 Size: the window size in pixels at the user's scale (detect or ask), 2560x1600 is a safe
 default for `uniformToFill`/cover. Keep PNGs under ~2 MB; some terminals re-decode on resize.

@@ -219,3 +219,26 @@ test('the acceptance commands from the repo root work and the PNG decodes', () =
   const img = png.decode(fs.readFileSync(out));
   assert.deepStrictEqual([img.width, img.height], [640, 400]);
 });
+
+test('treat --crop cuts a region (the terminal out of a desktop screenshot) before the other steps', () => {
+  const img = H.blocks(200, 100, [[120, 20, 60, 40, '#FF0000']], '#000000');
+  fs.writeFileSync(path.join(tmp, 'desk.png'), png.encode(img));
+  const r = j('treat', 'desk.png', 'term.png', '--crop', '120,20,60,40');
+  assert.deepStrictEqual([r.width, r.height], [60, 40]);
+  assert.deepStrictEqual(px(decode('term.png'), 30, 20), [255, 0, 0, 255]);
+  assert.match(art('treat', 'desk.png', 'x.png', '--crop', '1,2,3').stderr, /--crop expects X,Y,W,H/);
+});
+
+test('treat --for-text reports the strategy and the composition notes; --zone full is stricter', () => {
+  const img = H.flat(320, 200, '#0E0E12');
+  R.disc(img, 0.85 * 320, 50, 18, '#FFF4D0');
+  fs.writeFileSync(path.join(tmp, 'moon.png'), png.encode(img));
+  const r = j('treat', 'moon.png', 'moon-bg.png', '--for-text', FIXTURE, '--opacity', '1');
+  assert.strictEqual(r.forText.strategy, 'local');
+  assert.strictEqual(r.forText.zone, 'terminal');
+  assert.ok(r.forText.composition.focal.x > 0.75);
+  assert.ok(r.forText.coverage < 0.3);
+  const text = ok('treat', 'moon.png', 'moon-bg2.png', '--for-text', FIXTURE, '--opacity', '1').stdout;
+  assert.match(text, /shaded locally/);
+  assert.strictEqual(j('treat', 'moon.png', 'm3.png', '--for-text', FIXTURE, '--zone', 'full').forText.zone, 'full');
+});

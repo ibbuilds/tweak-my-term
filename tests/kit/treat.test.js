@@ -170,3 +170,69 @@ test('normalizePalette: fills optional colors, rejects a palette without ANSI; p
   assert.ok(hexes.includes('#0B0909') && hexes.includes('#D8D2CF') && hexes.includes('#F2EEEA'));
   assert.strictEqual(new Set(hexes).size, hexes.length);
 });
+
+// A dark night with one bright moon; x is where the moon sits (fraction of the width).
+function moonNight(x, { w = 320, h = 200, r = 18, color = '#FFF4D0' } = {}) {
+  const img = H.flat(w, h, '#0E0E12');
+  R.disc(img, x * w, 0.25 * h, r, color);
+  return img;
+}
+const sameRegion = (a, b, x0, x1) => {
+  for (let y = 0; y < a.height; y++) for (let x = Math.floor(x0 * a.width); x < Math.floor(x1 * a.width); x++) {
+    const o = (y * a.width + x) * 4;
+    if (a.data[o] !== b.data[o] || a.data[o + 1] !== b.data[o + 1] || a.data[o + 2] !== b.data[o + 2]) return false;
+  }
+  return true;
+};
+
+test('forText (composition): a bright subject in the right third is shaded locally; the text side is untouched', () => {
+  const img = moonNight(0.85);
+  const r = T.forText(img, LOOK.palette, { opacity: 1 });
+  assert.strictEqual(r.strategy, 'local');
+  assert.strictEqual(r.ok, true, JSON.stringify(r.failing));
+  assert.ok(sameRegion(r.image, img, 0, 0.5), 'left half keeps its exact pixels');
+  assert.ok(r.coverage < 0.3, `coverage ${r.coverage}`);
+});
+
+test('forText (composition): the local shade keeps more of the picture than an even veil of the same image', () => {
+  const img = moonNight(0.85);
+  const local = T.forText(img, LOOK.palette, { strategy: 'local' });
+  const even = T.forText(img, LOOK.palette, { strategy: 'global' });
+  assert.ok(local.ok && even.ok);
+  assert.ok(meanLuma(local.image) > meanLuma(even.image), `${meanLuma(local.image)} vs ${meanLuma(even.image)}`);
+  assert.strictEqual(even.coverage, 1);
+});
+
+test('forText (composition): reports where the subject sits and advises moving it out of the text zone', () => {
+  const right = T.forText(moonNight(0.85), LOOK.palette).composition;
+  assert.ok(right.focal.x > 0.75 && right.focal.y < 0.4, JSON.stringify(right.focal));
+  assert.strictEqual(right.focalInTextZone, false);
+  assert.ok(!right.notes.some((n) => /align the image right/.test(n)));
+  const left = T.forText(moonNight(0.2), LOOK.palette).composition;
+  assert.strictEqual(left.focalInTextZone, true);
+  assert.ok(left.notes.some((n) => /align the image right/.test(n)), JSON.stringify(left.notes));
+});
+
+test('forText (composition): zone "full" asks for full contrast at the right edge, so it shades the subject harder', () => {
+  const img = moonNight(0.9, { color: '#8A8070' });
+  const terminal = T.forText(img, LOOK.palette, { zone: 'terminal' });
+  const full = T.forText(img, LOOK.palette, { zone: 'full' });
+  assert.ok(full.dim > terminal.dim, `full ${full.dim} vs terminal ${terminal.dim}`);
+  assert.throws(() => T.forText(img, LOOK.palette, { zone: 'middle' }), /zone must be terminal or full/);
+});
+
+test('forText (composition): an image that is bright everywhere gets an even veil', () => {
+  const r = T.forText(H.flat(200, 120, '#C8C0B0'), LOOK.palette);
+  assert.strictEqual(r.strategy, 'global');
+  assert.strictEqual(r.ok, true, JSON.stringify(r.failing));
+  assert.ok(r.composition.notes.some((n) => /veiled evenly/.test(n)));
+});
+
+test('apply: a "scrim" step from forText reproduces the same pixels from the look spec', () => {
+  const img = moonNight(0.85);
+  const r = T.forText(img, LOOK.palette, { opacity: 0.9 });
+  assert.deepStrictEqual(r.steps, [{ op: 'scrim', opacity: 0.9, zone: 'terminal' }]);
+  const again = T.apply(img, r.steps, { palette: LOOK.palette });
+  assert.ok(Buffer.from(again.data).equals(Buffer.from(r.image.data)));
+  assert.deepStrictEqual(T.parseStep('scrim:0.8'), { op: 'scrim', opacity: 0.8 });
+});
