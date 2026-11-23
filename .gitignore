@@ -4,3 +4,8 @@ home/.config/eclipse/art/eclipse-art-v*.png
 !home/.config/eclipse/art/eclipse-art-v1.png
 # Machine-specific environment
 home/.config/bash/local.bash
+
+# Local scratch
+tmp/
+node_modules/
+evals/results/
