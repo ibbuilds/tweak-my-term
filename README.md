@@ -6,11 +6,20 @@ Linux**: colors, font, background image, prompt, layout, fetch art and CLI tools
 change comes with a preview, a diff you approve, checks, startup timing, and a one-command
 undo.
 
-It combines tools that already exist (Windows Terminal, WezTerm, Ghostty, kitty,
-starship, oh-my-posh, fzf, eza, Nerd Fonts, ...) and adds what's missing: a design kit
-(palettes from images, contrast fixing, generated backgrounds, ASCII art, HTML preview),
-4,000+ real setups to draw ideas from, tested per-tool recipes, and an apply engine that
-cannot write anything you didn't approve.
+There are no ready-made looks in here. What it gives the agent is what separates a great
+terminal from a themed default, and the means to build one for you:
+
+- **References.** 4,000+ real r/unixporn setups, searched by style (mood, scheme, tool)
+  and by layout (tiling, floating, panes, dashboard, scrolling). The agent looks at the
+  screenshots and judges the terminal inside each desktop, not the metadata.
+- **Design knowledge.** A guide distilled from studying real setups: palette discipline,
+  spacing, type, prompt, composition over images, common mistakes, and a critique
+  checklist the agent uses on its own result.
+- **Tools that adapt.** Palettes from your image, contrast fixing, backgrounds shaded only
+  where text needs it, generated art, and an HTML preview of the look and pane layout.
+- **Per-OS recipes** for terminals, shells, prompts, multiplexers, window managers and CLI
+  tools on Windows, macOS and Linux, with the date and source each was verified against.
+- **An apply engine** that cannot write anything you didn't approve, and undoes it all.
 
 ## Install (Claude Code plugin)
 
@@ -35,11 +44,11 @@ Needs [Node.js](https://nodejs.org) 20 or newer. No npm packages are installed.
 |---|---|
 | Detect | OS, terminals, shells, prompt tools, fonts, existing configs, startup times |
 | Brief | what you want, what must keep working, whether installs are OK |
-| Inspire | search 4,000+ r/unixporn setups by mood, scheme or tool; screenshots are linked |
+| Inspire | real setups matching your style and your layout, screenshots reviewed by the agent and linked |
 | Anchor | one image defines the look: yours, a chosen setup's, or generated (scenes, gradients, ASCII) |
 | Style | palette from the anchor (16 ANSI colors + accent), contrast-checked; font, padding, prompt, effects |
 | Fit | which tool does each part on your OS, and the closest alternative when one can't |
-| Preview | an HTML mock terminal in the real colors and font, for you to approve |
+| Preview | an HTML mock terminal in the real colors, font and pane layout, for you to approve |
 | Apply | configs staged, diff shown, you approve, then backup, write, verify each config, time shell startup |
 | Polish | screenshot of the real terminal compared with the preview; small fixes |
 | Undo | `tmt restore` puts every file back byte for byte |
@@ -56,8 +65,8 @@ Needs [Node.js](https://nodejs.org) 20 or newer. No npm packages are installed.
 - The plugin blocks the agent from editing live terminal configs directly, and won't let
   it stop with a change applied but unchecked.
 
-There are no ready-made looks to copy. Every terminal is built for its user from their
-request, their machine and their anchor image.
+Every terminal is built for its user from their request, their machine and real
+references; nothing is copied from a preset.
 
 ## What's covered
 
