@@ -1,0 +1,56 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "zsh",
+  "name": "Zsh",
+  "category": "shell",
+  "summary": "Z shell: default shell on macOS (since 10.15), programmable completion (compsys), ZLE line editor, themeable prompts, plugin ecosystem.",
+  "homepage": "https://www.zsh.org/",
+  "docs": "https://zsh.sourceforge.io/Doc/Release/",
+  "license": "MIT-like (zsh license)",
+  "configFormat": "shell script (~/.zshenv, ~/.zprofile, ~/.zshrc, ~/.zlogin)",
+  "startupCostMs": "Docs/community figures, not measured here: bare zsh with compinit ~20-50 ms; oh-my-zsh with several plugins and nvm commonly 300-1000+ ms; compinit without -C and duplicate compinit calls are the usual hot spots (zprof shows them).",
+  "os": {
+    "windows": {
+      "supported": false,
+      "notes": "No native Windows build. Available inside WSL (apt install zsh) or MSYS2 (pacman -S zsh); Git Bash does not ship zsh. Prefer bash (Git Bash), PowerShell or nushell for native Windows."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "zsh", "notes": "macOS already ships /bin/zsh as the default shell; brew gives a newer build." }],
+      "detect": ["zsh", "--version"],
+      "config": ["~/.zshenv", "~/.zprofile", "~/.zshrc"],
+      "validate": ["zsh", "-n", "{file}"],
+      "notes": "Terminal.app and iTerm2 start login + interactive shells: ~/.zprofile and ~/.zshrc both run. /etc/zprofile runs path_helper, which reorders PATH after ~/.zshenv; set PATH in ~/.zprofile or ~/.zshrc."
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "zsh" },
+        { "manager": "dnf", "id": "zsh" },
+        { "manager": "pacman", "id": "zsh" }
+      ],
+      "detect": ["zsh", "--version"],
+      "config": ["~/.zshenv", "~/.zprofile", "~/.zshrc"],
+      "validate": ["zsh", "-n", "{file}"],
+      "notes": "Terminal emulators start non-login interactive shells (only ~/.zshenv and ~/.zshrc). Change login shell with chsh -s $(command -v zsh)."
+    }
+  },
+  "capabilities": {
+    "startup-file": { "support": "yes", "recipe": "recipes/startup-file.md" },
+    "prompt": { "support": "yes", "recipe": "recipes/prompt.md", "notes": "PROMPT/RPROMPT with %-escapes, precmd hooks; transient prompt via ZLE hooks (starship/p10k provide it)." },
+    "line-editing": { "support": "yes", "recipe": "recipes/line-editing.md", "notes": "ZLE built in; autosuggestions and syntax highlighting via zsh-autosuggestions / zsh-syntax-highlighting plugins." },
+    "history": { "support": "yes", "recipe": "recipes/history.md" },
+    "completion": { "support": "yes", "recipe": "recipes/completion.md" },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "colors": { "support": "yes", "recipe": "recipes/colors.md" },
+    "startup-speed": { "support": "yes", "recipe": "recipes/startup-speed.md" },
+    "env": { "support": "yes", "recipe": "recipes/env.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "zsh 5.9 (docs)", "how": "docs" },
+  "sources": [
+    "https://zsh.sourceforge.io/Doc/Release/Files.html",
+    "https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html",
+    "https://zsh.sourceforge.io/Doc/Release/Zsh-Modules.html",
+    "https://wiki.archlinux.org/title/Zsh"
+  ]
+}

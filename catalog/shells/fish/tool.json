@@ -1,0 +1,57 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "fish",
+  "name": "fish",
+  "category": "shell",
+  "summary": "The friendly interactive shell: autosuggestions, syntax highlighting, completions from man pages and a web/CLI config tool, all built in.",
+  "homepage": "https://fishshell.com/",
+  "docs": "https://fishshell.com/docs/current/",
+  "license": "GPL-2.0-only",
+  "configFormat": "fish script (~/.config/fish/config.fish, conf.d/*.fish, functions/*.fish)",
+  "startupCostMs": "Not measured here. fish ships its features built in, so a bare start is typically a few ms to tens of ms; cost comes from config.fish and conf.d (nvm, conda, eval-style inits). Measure with fish --profile-startup.",
+  "os": {
+    "windows": {
+      "supported": false,
+      "notes": "No native Windows build (fish 4.x targets Unix). Works inside WSL (apt install fish), MSYS2 or Cygwin. For native Windows prefer PowerShell, Git Bash or nushell."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "fish" }],
+      "detect": ["fish", "--version"],
+      "config": ["{xdg-config}/fish/config.fish", "{xdg-config}/fish/conf.d", "{xdg-config}/fish/functions"],
+      "validate": ["fish", "--no-execute", "{file}"],
+      "notes": "To make it the login shell: add its path to /etc/shells, then chsh -s <path>. Homebrew's PATH is not set by default on Apple Silicon: eval (/opt/homebrew/bin/brew shellenv) in config.fish."
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "fish" },
+        { "manager": "dnf", "id": "fish" },
+        { "manager": "pacman", "id": "fish" }
+      ],
+      "detect": ["fish", "--version"],
+      "config": ["{xdg-config}/fish/config.fish", "{xdg-config}/fish/conf.d", "{xdg-config}/fish/functions"],
+      "validate": ["fish", "--no-execute", "{file}"],
+      "notes": "Config dir honors $XDG_CONFIG_HOME. Distro packages can lag the current release; the upstream project also publishes apt/OBS repos."
+    }
+  },
+  "capabilities": {
+    "startup-file": { "support": "yes", "recipe": "recipes/startup-file.md" },
+    "prompt": { "support": "yes", "recipe": "recipes/prompt.md", "notes": "fish_prompt / fish_right_prompt functions; fish_config prompt picks sample prompts." },
+    "line-editing": { "support": "yes", "recipe": "recipes/line-editing.md", "notes": "Autosuggestions, syntax highlighting, pager and abbreviations are built in." },
+    "history": { "support": "yes", "recipe": "recipes/history.md" },
+    "completion": { "support": "yes", "recipe": "recipes/completion.md" },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "colors": { "support": "yes", "recipe": "recipes/colors.md" },
+    "startup-speed": { "support": "yes", "recipe": "recipes/startup-speed.md" },
+    "env": { "support": "yes", "recipe": "recipes/env.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "fish 4.9.3 docs", "how": "docs" },
+  "sources": [
+    "https://fishshell.com/docs/current/language.html",
+    "https://fishshell.com/docs/current/interactive.html",
+    "https://fishshell.com/docs/current/cmds/fish.html",
+    "https://fishshell.com/docs/current/cmds/bind.html",
+    "https://fishshell.com/docs/current/faq.html"
+  ]
+}

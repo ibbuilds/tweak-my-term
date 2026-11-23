@@ -1,0 +1,62 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "powershell",
+  "name": "PowerShell (Windows PowerShell 5.1 and PowerShell 7+)",
+  "category": "shell",
+  "summary": "Object-pipeline shell. Windows PowerShell 5.1 (powershell.exe, built into Windows, PSReadLine 2.0.0) and PowerShell 7+ (pwsh, cross-platform, newer PSReadLine and PSStyle).",
+  "homepage": "https://learn.microsoft.com/powershell/",
+  "docs": "https://learn.microsoft.com/en-us/powershell/",
+  "license": "MIT (PowerShell 7); Windows PowerShell 5.1 is part of Windows",
+  "configFormat": "PowerShell script ($PROFILE); line editor options via PSReadLine cmdlets",
+  "startupCostMs": "Measured on Windows 11, Windows PowerShell 5.1 (single run): powershell -NoLogo -NoProfile -Command exit = 208 ms; same with a rich profile (PSReadLine 2.4 import, prompt, idle-loaded zoxide) = 531 ms. Importing modules and calling external tools in $PROFILE is where time goes; PowerShell 7 has a similar order of magnitude (not measured here).",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "Microsoft.PowerShell", "notes": "PowerShell 7 (pwsh). Windows PowerShell 5.1 is built in and cannot be uninstalled." },
+        { "manager": "scoop", "id": "pwsh" }
+      ],
+      "detect": ["powershell", "-NoProfile", "-Command", "$PSVersionTable.PSVersion.ToString()"],
+      "config": ["{ps-profile}", "{pwsh-profile}"],
+      "validate": ["powershell", "-NoProfile", "-Command", "$e=$null;[void][System.Management.Automation.Language.Parser]::ParseFile('{file}',[ref]$null,[ref]$e);if($e){$e;exit 1}"],
+      "notes": "{ps-profile} = Windows PowerShell 5.1 profile (Documents\\WindowsPowerShell\\Microsoft.PowerShell_profile.ps1), {pwsh-profile} = PowerShell 7 profile (Documents\\PowerShell\\Microsoft.PowerShell_profile.ps1). Documents may be redirected by OneDrive: trust $PROFILE. Save 5.1 profiles as UTF-8 with BOM. PowerShell 7 validate: replace powershell with pwsh."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "powershell", "notes": "Homebrew cask: brew install --cask powershell" }],
+      "detect": ["pwsh", "--version"],
+      "config": ["{pwsh-profile}"],
+      "validate": ["pwsh", "-NoProfile", "-Command", "$e=$null;[void][System.Management.Automation.Language.Parser]::ParseFile('{file}',[ref]$null,[ref]$e);if($e){$e;exit 1}"],
+      "notes": "{pwsh-profile} = ~/.config/powershell/Microsoft.PowerShell_profile.ps1. Only PowerShell 7+ exists here."
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "powershell", "notes": "From the Microsoft package repository (packages.microsoft.com); not in default Debian/Ubuntu repos." },
+        { "manager": "dnf", "id": "powershell", "notes": "From the Microsoft package repository." }
+      ],
+      "detect": ["pwsh", "--version"],
+      "config": ["{pwsh-profile}"],
+      "validate": ["pwsh", "-NoProfile", "-Command", "$e=$null;[void][System.Management.Automation.Language.Parser]::ParseFile('{file}',[ref]$null,[ref]$e);if($e){$e;exit 1}"],
+      "notes": "{pwsh-profile} = ~/.config/powershell/Microsoft.PowerShell_profile.ps1. Also installable via snap (powershell --classic) or the tarball."
+    }
+  },
+  "capabilities": {
+    "startup-file": { "support": "yes", "recipe": "recipes/startup-file.md" },
+    "prompt": { "support": "yes", "recipe": "recipes/prompt.md", "notes": "function prompt {}; transient prompt via a PSReadLine Enter handler." },
+    "line-editing": { "support": "yes", "recipe": "recipes/line-editing.md", "notes": "PSReadLine. 5.1 ships 2.0.0 (no predictions); install >= 2.2 for prediction list view." },
+    "history": { "support": "yes", "recipe": "recipes/history.md" },
+    "completion": { "support": "yes", "recipe": "recipes/completion.md" },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "colors": { "support": "yes", "recipe": "recipes/colors.md", "notes": "PSReadLine -Colors; $PSStyle only in PowerShell 7.2+." },
+    "startup-speed": { "support": "yes", "recipe": "recipes/startup-speed.md" },
+    "env": { "support": "yes", "recipe": "recipes/env.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "Windows PowerShell 5.1.26100 + PSReadLine 2.0.0/2.4.5 (machine); PowerShell 7.6 docs", "how": "machine" },
+  "sources": [
+    "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles",
+    "https://learn.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline",
+    "https://learn.microsoft.com/en-us/powershell/module/psreadline/set-psreadlineoption",
+    "https://learn.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline_release_notes"
+  ]
+}

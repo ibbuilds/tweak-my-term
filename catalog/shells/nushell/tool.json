@@ -1,0 +1,67 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "nushell",
+  "name": "Nushell",
+  "category": "shell",
+  "summary": "Cross-platform shell built on structured data (tables, records) with the reedline editor, a typed scripting language and autoload-directory configuration.",
+  "homepage": "https://www.nushell.sh/",
+  "docs": "https://www.nushell.sh/book/",
+  "license": "MIT",
+  "configFormat": "Nushell script ($nu.default-config-dir: env.nu, config.nu, login.nu, autoload/*.nu)",
+  "startupCostMs": "Not measured here (nu is not installed on the verification machine). It is a single Rust binary; cost is parsing config.nu and autoload files plus any init script you generate. Measure with Measure-Command { nu -c exit } vs nu -n -c exit.",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "Nushell.Nushell", "notes": "User scope by default; machine scope: --override 'ALLUSERS=1'." },
+        { "manager": "scoop", "id": "nu" }
+      ],
+      "detect": ["nu", "--version"],
+      "config": ["{appdata}/nushell/config.nu", "{appdata}/nushell/env.nu", "{appdata}/nushell/autoload"],
+      "validate": ["nu", "-n", "-c", "nu-check --debug '{file}'"],
+      "notes": "Config dir is $nu.default-config-dir = %APPDATA%\\nushell (C:\\Users\\<user>\\AppData\\Roaming\\nushell); XDG_CONFIG_HOME overrides it on every OS. Not a login shell by default: set it in the terminal profile (Windows Terminal commandline `nu`)."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "nushell" }],
+      "detect": ["nu", "--version"],
+      "config": ["{mac-app-support}/nushell/config.nu", "{mac-app-support}/nushell/env.nu", "{mac-app-support}/nushell/autoload"],
+      "validate": ["nu", "-n", "-c", "nu-check --debug '{file}'"],
+      "notes": "Config dir is ~/Library/Application Support/nushell unless XDG_CONFIG_HOME is set (then $XDG_CONFIG_HOME/nushell)."
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "brew", "id": "nushell", "notes": "Linuxbrew" },
+        { "manager": "pacman", "id": "nushell" },
+        { "manager": "apt", "id": "nushell", "notes": "From the official apt.fury.io/nushell repository (see the Nushell install docs); not in default Debian/Ubuntu repos." },
+        { "manager": "dnf", "id": "nushell", "notes": "From the official yum.fury.io/nushell repository." }
+      ],
+      "detect": ["nu", "--version"],
+      "config": ["{xdg-config}/nushell/config.nu", "{xdg-config}/nushell/env.nu", "{xdg-config}/nushell/autoload"],
+      "validate": ["nu", "-n", "-c", "nu-check --debug '{file}'"],
+      "notes": "Config dir is ~/.config/nushell ($XDG_CONFIG_HOME/nushell). Add nu to /etc/shells before chsh."
+    }
+  },
+  "capabilities": {
+    "startup-file": { "support": "yes", "recipe": "recipes/startup-file.md" },
+    "prompt": { "support": "yes", "recipe": "recipes/prompt.md", "notes": "PROMPT_COMMAND / PROMPT_COMMAND_RIGHT closures and native TRANSIENT_PROMPT_* variables." },
+    "line-editing": { "support": "yes", "recipe": "recipes/line-editing.md", "notes": "reedline: emacs/vi/helix, history hints, completion menus; syntax highlighting built in." },
+    "history": { "support": "yes", "recipe": "recipes/history.md" },
+    "completion": { "support": "yes", "recipe": "recipes/completion.md", "notes": "Built-in plus external completer closure (carapace, fish)." },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "colors": { "support": "yes", "recipe": "recipes/colors.md" },
+    "startup-speed": { "support": "yes", "recipe": "recipes/startup-speed.md" },
+    "env": { "support": "yes", "recipe": "recipes/env.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "Nushell 0.117.0 docs", "how": "docs" },
+  "sources": [
+    "https://www.nushell.sh/book/configuration",
+    "https://www.nushell.sh/book/config_reference.html",
+    "https://www.nushell.sh/book/coloring_and_theming.html",
+    "https://www.nushell.sh/book/3rdpartyprompts.html",
+    "https://www.nushell.sh/book/special_variables.html",
+    "https://www.nushell.sh/book/installation",
+    "https://www.nushell.sh/blog/2026-11-09-nushell_v0_117_0.html"
+  ]
+}

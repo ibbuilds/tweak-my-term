@@ -1,0 +1,63 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "bash",
+  "name": "Bash (incl. Git Bash on Windows)",
+  "category": "shell",
+  "summary": "GNU Bash with GNU Readline. Ships with Git for Windows (Git Bash), every Linux distro, and as an old 3.2 on macOS.",
+  "homepage": "https://www.gnu.org/software/bash/",
+  "docs": "https://www.gnu.org/software/bash/manual/html_node/index.html",
+  "license": "GPL-3.0-or-later",
+  "configFormat": "shell script (~/.bashrc, ~/.bash_profile, ~/.inputrc)",
+  "startupCostMs": "Measured on Windows 11 with Git for Windows 2.54 (median of 5): usr\\bin\\bash.exe --norc -i -c exit = 20 ms; bin\\bash.exe --norc --noprofile = 35 ms; bin\\bash.exe -l -i with stock /etc/profile = 258 ms; usr\\bin\\bash.exe -i with a modular rc = 158 ms. Each extra process (subshell, $(...), external tool) at startup costs 10-60 ms on Windows, ~1-5 ms on Linux. ble.sh on Windows costs 24-60 ms per keystroke and ~0.9 s per new tab.",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "Git.Git", "notes": "Git for Windows provides Git Bash (bash 5.x, MSYS2 runtime) at C:\\Program Files\\Git\\usr\\bin\\bash.exe" },
+        { "manager": "scoop", "id": "git" }
+      ],
+      "detect": ["bash", "--version"],
+      "config": ["~/.bashrc", "~/.bash_profile", "~/.inputrc", "~/.bash_history"],
+      "validate": ["bash", "-n", "{file}"],
+      "notes": "Git Bash is MSYS2-based: ~ is %USERPROFILE%. Start usr\\bin\\bash.exe -i directly (not git-bash.exe or bin\\bash.exe) to skip Git's launcher and /etc/profile; the profile must then rebuild PATH/MSYSTEM itself."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "bash", "notes": "macOS ships bash 3.2 (GPLv2) at /bin/bash: no PROMPT_COMMAND array, no EPOCHREALTIME, no globstar. Install 5.x with brew." }],
+      "detect": ["bash", "--version"],
+      "config": ["~/.bash_profile", "~/.bashrc", "~/.inputrc"],
+      "validate": ["bash", "-n", "{file}"],
+      "notes": "Terminal.app and iTerm2 start login shells, so ~/.bash_profile is read and ~/.bashrc is not unless it is sourced from there. The default login shell is zsh since macOS 10.15."
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "bash" },
+        { "manager": "dnf", "id": "bash" },
+        { "manager": "pacman", "id": "bash" }
+      ],
+      "detect": ["bash", "--version"],
+      "config": ["~/.bashrc", "~/.bash_profile", "~/.profile", "~/.inputrc"],
+      "validate": ["bash", "-n", "{file}"],
+      "notes": "Terminal emulators usually start non-login interactive shells (read ~/.bashrc); display managers and ssh start login shells (read ~/.bash_profile, else ~/.profile)."
+    }
+  },
+  "capabilities": {
+    "startup-file": { "support": "yes", "recipe": "recipes/startup-file.md" },
+    "prompt": { "support": "yes", "recipe": "recipes/prompt.md", "notes": "PS1 + PROMPT_COMMAND; no native transient or right prompt." },
+    "line-editing": { "support": "yes", "recipe": "recipes/line-editing.md", "notes": "GNU Readline via ~/.inputrc; no built-in autosuggestions or syntax highlighting (ble.sh adds them, slow on Windows)." },
+    "history": { "support": "yes", "recipe": "recipes/history.md" },
+    "completion": { "support": "yes", "recipe": "recipes/completion.md" },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "colors": { "support": "partial", "recipe": "recipes/colors.md", "notes": "No syntax highlighting in plain readline; LS_COLORS drives ls and completion colors." },
+    "startup-speed": { "support": "yes", "recipe": "recipes/startup-speed.md" },
+    "env": { "support": "yes", "recipe": "recipes/env.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "GNU bash 5.3.9 (Git for Windows 2.54.0.windows.1)", "how": "machine" },
+  "sources": [
+    "https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files",
+    "https://www.gnu.org/software/bash/manual/html_node/Interactive-Shell-Behavior",
+    "https://tiswww.case.edu/php/chet/readline/rluserman.html",
+    "https://gitforwindows.org/"
+  ]
+}
