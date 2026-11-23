@@ -1,12 +1,12 @@
 # tweak-my-term: plan
 
-Status (2026-11-23): M0-M6 done and verified locally (181 tests, catalog check, privacy
-scan, plugin validate, fake-home image -> look -> apply -> verify -> measure -> restore).
-M7: trigger and behavior evals pass 6/6; the e2e eval needs a shell sandbox (WSL2 or
-Linux/macOS). M8: CI written, runs after the first push. Open: Eclipse art rebuilt through
-the kit is a generic scene (no figure), so no pixel-diff match; for-text treatment is
-conservative on images with a bright spot. No release until the "done" checks at the end
-pass.
+Status (2026-11-23): M0-M8 verified locally (189 tests, catalog check, privacy scan).
+Changed after review: no presets. The repo ships knowledge (design guide, catalog,
+inspiration from real rices, composition-aware tooling), never a terminal to copy; every
+terminal is built for its user. Background treatment reads the composition instead of
+darkening by default. Open: git history still holds the author's personal setup and
+derived art from the first commits; rewrite it (with the author's go-ahead) before the
+first push. No release until the "done" checks at the end pass.
 
 ## 1. Goal
 
@@ -19,6 +19,13 @@ knowledge, and a safe way to apply it. It also works for a person with no AI.
 
 It combines existing tools (terminals, shells, prompts, fonts, palettes, CLI tools). Its
 own code is glue: design tooling, an apply engine with gates, and knowledge.
+
+No two terminals are the same, so the repo holds no looks to copy (no presets, no
+author's setup). What it gives the agent is the difference between an ordinary terminal
+and a great one: a design guide distilled from real rices, a search over thousands of
+them that the agent looks at (screenshots, judged by the terminal window inside), and
+tools that adapt to each composition (palette from the anchor, readability fixes only
+where text needs them).
 
 ## 2. How a terminal gets built (the pipeline)
 
@@ -50,7 +57,7 @@ A terminal style starts from one visual. Sources, in the order the skill offers 
    reference configs.
 3. **Generated** by the toolkit, no external service needed:
    - a parametric scene (sky/moon/horizon/terrain, gradients, noise fields, grids, waves,
-     stars) painted in the chosen palette, as in the Eclipse preset;
+     stars) painted in the chosen palette;
    - custom art: the agent writes a small paint script against the toolkit's raster API
      (shapes, gradients, noise, blur, glow), as `scene.js` does today;
    - ASCII/ANSI art from any image (logo, dossier, fetch art).
@@ -82,7 +89,10 @@ capability matrix decides.
   st 315, urxvt 243, foot 110, Ghostty 63, iTerm2 58, WezTerm 44; zsh 510, fish 208).
   `inspire` searches it by terminal, shell, colorscheme, WM, distro and keyword, ranked by
   score. It reads the JSON from GitHub (cached), never scrapes the site.
-- **Our presets** (Windows first, since the dataset has almost no Windows setups).
+- The agent **looks at** the screenshots it shortlists (vision), finds the terminal
+  window in each desktop shot, and judges layout, composition, palette, type and prompt
+  against `skills/setup/references/design.md`. Results are varied by design (no repeated
+  scheme, WM or author; seeded random draws), so each run sees different examples.
 - **Palette galleries**: iTerm2-Color-Schemes, tinted-theming/base16, Catppuccin, and so on.
 - For a chosen rice, the agent opens its screenshot (vision) and its dotfiles repo, and
   pulls the terminal-related files (`kitty.conf`, `alacritty.toml`, `.zshrc`,
@@ -111,7 +121,6 @@ Frequently requested tools get recipes over time.
 | `kit/` (`tmt art`, `tmt inspire`...) | PNG codec, palette, contrast, treatments, scene painter, ASCII art, preview, rice search | same |
 | `catalog/` | One folder per tool: `tool.json` (OSes, install ids, config paths, validator, startup cost, verified date) + `recipes/*.md` (how to do each capability in that tool) | data |
 | `guides/` | Design method (anchor → palette → font → layout → polish), readability, performance, per-OS gotchas | data |
-| `presets/` | Complete looks: `look.json` + rendered files + assets + screenshots | data |
 | `skills/tweak-my-term/` | `SKILL.md` (the pipeline) + stage references | any agent with Agent Skills |
 | Plugin (`.claude-plugin/`, `hooks/`, `agents/`, `bin/`) | Commands, hooks, subagents, `userConfig` | Claude Code |
 
@@ -162,7 +171,7 @@ machine.
 ### Claude Code plugin
 
 - `bin/tmt`, `bin/tmt.cmd`: shims, so the agent calls `tmt` directly.
-- Skills (slash commands): `/tweak-my-term:setup` (full pipeline), `:inspire`, `:preset`,
+- Skills (slash commands): `/tweak-my-term:setup` (full pipeline), `:inspire`,
   `:capture` (read the current setup into a look), `:doctor` (read-only diagnosis),
   `:restore`, `:status`.
 - Subagents: `inspiration-scout` (searches rices, opens repos, returns candidates
@@ -185,7 +194,7 @@ hooks/hooks.json
 agents/inspiration-scout.md  agents/terminal-auditor.md
 skills/
   setup/SKILL.md              the pipeline (also /tweak-my-term:setup)
-  inspire/ preset/ capture/ doctor/ restore/ status/   thin entry skills
+  inspire/ capture/ doctor/ restore/ status/   thin entry skills
   setup/references/           stage guides the skill loads on demand
 engine/                       cli.js, run.js, detect.js, stage.js, apply.js, verify.js,
                               measure.js, shot.js, hook.js, paths.js, jsonc.js, schema.js
@@ -204,7 +213,6 @@ catalog/
   palettes/  sources.json
   capabilities.json           generated from recipes
 guides/                       design.md readability.md performance.md windows.md macos.md linux.md
-presets/eclipse/              look.json files/ assets/ screenshot.png
 tests/                        node:test: engine, kit, catalog schema, conformance on fake homes
 evals/                        claude plugin eval cases
 .github/workflows/ci.yml      Windows + Ubuntu + macOS
@@ -235,8 +243,9 @@ installed).
 **M3 Kit.** PNG decode/encode, raster API, palette extraction + ANSI mapping, contrast +
 auto-fix, treatments (port of `build.ps1`), scene painter (port of `scene.js`), ASCII
 art, preview HTML, swatch PNG, rice search.
-Check: unit tests. The Eclipse art rebuilt through the kit matches the current image
-closely (pixel diff under a threshold). Palette from a test image passes contrast.
+Check: unit tests. Palette from a test image passes contrast. Backgrounds: text stays
+readable and the treatment depends on the composition (untouched when readable, local
+shade when only part fights the text, even veil only when most of it does).
 Inspire returns ranked results for "kitty catppuccin", "minimal zsh", "macos".
 
 **M4 Catalog + guides.** `tool.json` + recipes for the first wave (terminals: Windows
@@ -254,7 +263,7 @@ edit of a live config, Stop blocks an unfinished run, `/tweak-my-term:status` wo
 
 **M6 End to end on Windows.** In a fake home: "make it look like this image" → anchor →
 palette → preview → staged WT/PowerShell/bash/starship configs → apply → verify → measure
-→ restore. Then a second preset (minimal, cross-OS) built the same way.
+→ restore.
 Check: the run reaches `done`; restore is byte-identical; the preview opens with no
 console errors.
 
@@ -288,7 +297,7 @@ Check: green locally; CI runs once you allow a push.
 ## 7. Rules
 
 - No personal data (username, PC name, email, local paths) in the repo.
-- No Berserk-derived art; generated art only. Other people's screenshots are linked, never
+- No third-party or derived art; generated art only. No presets or personal setups. Other people's screenshots are linked, never
   re-hosted.
 - Commit as `ibbuilds <70708615+ibbuilds@users.noreply.github.com>`.
 - Nothing installs or writes by itself: stage, show, approve, back up.

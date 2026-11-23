@@ -33,19 +33,31 @@ keybindings, habits), speed budget, and whether installs are allowed. Ask at mos
 questions, only for what changes the result. If the user is vague or says "surprise me",
 go to Inspire.
 
-## 2. Inspire (vague requests or "show me options")
+## 2. Inspire: real examples that match the request
 
-`tmt inspire <mood words> --os <os> [--terminal x] [--limit 6]` searches 4,000+ r/unixporn
-rices with their dotfiles repos. For deep digging use the `inspiration-scout` subagent so
-repo browsing stays out of your context. Show 3-6 candidates as a numbered list with the
-screenshot link, what makes each one distinctive, and what transfers to the user's OS.
-Let the user pick one, mix two, or reject all.
+Every terminal is different, and nothing in this repo is a look to copy. What tells you
+what "better" means for this user is real work by people who care: 4,000+ r/unixporn
+rices with screenshots and dotfiles. Do this for every request, not only vague ones; a
+precise request ("gruvbox, minimal, kitty") still needs examples to set the bar.
+
+Follow the `inspire` skill ([../inspire/SKILL.md](../inspire/SKILL.md)), or hand it to the
+`inspiration-scout` subagent to keep screenshots out of your context:
+- search with the user's words and what they imply (mood, scheme, layout, terminal);
+  results are varied on purpose, and `--sort random --seed n` draws a fresh set;
+- download and **look at** the screenshots; they are whole desktops, so judge the terminal
+  window inside each one (layout, composition, palette, type, prompt);
+- judge them with [references/design.md](references/design.md).
+
+Vague request or "show me options": show 3-6 that differ from each other and let the
+user pick, mix, or reject. Precise request: pick 2-3 matching examples yourself, say what
+you're taking from each, and keep going. Write what you took into `brief.md`.
 
 ## 3. Visual anchor → `anchor.png`
 
 Every look has one anchor image that defines it. Read [references/anchor.md](references/anchor.md).
 Sources, in this order: the user's own image/URL → the chosen rice screenshot
-(`tmt inspire --save <n> <run>/`) → generated (`tmt art scene`, or a custom paint script
+(`tmt inspire --save <n> <run>/`, then `tmt art treat ... --crop X,Y,W,H` to cut out the
+terminal) → generated (`tmt art scene`, or a custom paint script
 against the kit raster API) → an image tool the user already has. Show the anchor to the
 user (path or preview) before continuing. ASCII/ANSI logos come from `tmt art ascii`.
 
@@ -125,7 +137,8 @@ machine half-applied; the Stop hook enforces this.
 ## 11. Polish
 
 Ask the user to open a new terminal window, then `tmt shot` (or ask for a screenshot).
-Compare it with `anchor.png` and `preview.html`: colors, contrast, font rendering,
+Compare it with `anchor.png`, `preview.html` and the inspiration examples you chose, and
+critique it with [references/design.md](references/design.md): colors, contrast, font rendering,
 background crop, prompt alignment, icon glyphs (tofu boxes = missing Nerd Font). Fix
 small issues in a new run (`tmt new`, stage, plan, approve, apply). Read
 [references/polish.md](references/polish.md).
