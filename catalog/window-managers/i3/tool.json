@@ -1,0 +1,45 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "i3",
+  "name": "i3",
+  "category": "window-manager",
+  "summary": "Tiling window manager for X11 with a container tree (splits, tabbed, stacking), plain-text config and i3-msg IPC. Gaps are built in since 4.22 (the former i3-gaps fork was merged). No rounded corners or opacity without an external compositor.",
+  "homepage": "https://i3wm.org/",
+  "docs": "https://i3wm.org/docs/userguide.html",
+  "license": "BSD-3-Clause",
+  "configFormat": "i3",
+  "os": {
+    "windows": { "supported": false, "notes": "X11 on Linux only." },
+    "macos": { "supported": false, "notes": "X11 on Linux only." },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "pacman", "id": "i3-wm", "notes": "Window manager only; the i3 group adds i3status, i3lock, i3bar tools. The separate i3-gaps package no longer exists." },
+        { "manager": "apt", "id": "i3", "notes": "Metapackage (i3-wm, i3status, i3lock, suckless-tools). Debian unstable/testing carry 4.25.1; stable releases may carry older versions without gaps (4.22+ needed)." },
+        { "manager": "dnf", "id": "i3", "notes": "Fedora 43 updates have 4.25.1." }
+      ],
+      "detect": ["i3", "--version"],
+      "config": ["{xdg-config}/i3/config", "~/.i3/config"],
+      "validate": ["i3", "-C", "-c", "{file}"],
+      "notes": "X11 only (no Wayland session; use sway for the same config on Wayland). Gaps need i3 4.22 or newer; before that they exist only in the i3-gaps fork. Newest version seen: 4.25.1 (from Debian, Ubuntu and Fedora package data, February 2026); i3wm.org was not checked for a newer tag. Config search order: ~/.config/i3/config (or $XDG_CONFIG_HOME/i3/config), ~/.i3/config, /etc/xdg/i3/config, /etc/i3/config. On first start i3 offers i3-config-wizard to create the config; if ~/.i3/config exists the wizard will not run. Transparency, rounded corners and shadows need an X11 compositor such as picom, which is a separate program."
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "gaps": { "support": "yes", "recipe": "recipes/gaps.md" },
+    "borders": { "support": "partial", "recipe": "recipes/borders.md", "notes": "Width and colors only. Rounded corners need an external X11 compositor." },
+    "layouts": { "support": "yes", "recipe": "recipes/layouts.md" },
+    "window-rules": { "support": "partial", "recipe": "recipes/window-rules.md", "notes": "for_window and assign cover float, size, position, border and workspace. There is no opacity command; transparency needs a compositor." },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "autostart": { "support": "yes", "recipe": "recipes/autostart.md" },
+    "config-reload": { "support": "yes", "recipe": "recipes/config-reload.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "4.25.1", "how": "docs" },
+  "sources": [
+    "https://i3wm.org/docs/userguide.html",
+    "https://i3wm.org/downloads/RELEASE-NOTES-4.22.txt",
+    "https://manpages.debian.org/testing/i3-wm/i3.1.en.html",
+    "https://packages.debian.org/sid/i3",
+    "https://wiki.archlinux.org/title/I3"
+  ]
+}

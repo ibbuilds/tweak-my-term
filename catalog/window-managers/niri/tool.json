@@ -1,0 +1,49 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "niri",
+  "name": "niri",
+  "category": "window-manager",
+  "summary": "Scrollable-tiling Wayland compositor: windows sit in columns on an infinite horizontal strip, and opening a window never resizes the others. KDL config with live reload, focus ring, borders, per-window corner radius, tabbed columns and named workspaces.",
+  "homepage": "https://github.com/niri-wm/niri",
+  "docs": "https://github.com/niri-wm/niri/wiki/Getting-Started",
+  "license": "GPL-3.0-or-later",
+  "configFormat": "kdl",
+  "os": {
+    "windows": { "supported": false, "notes": "Linux (Wayland) only." },
+    "macos": { "supported": false, "notes": "Linux (Wayland) only." },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "pacman", "id": "niri", "notes": "Arch extra repository (26.04 at verification)." },
+        { "manager": "dnf", "id": "niri", "notes": "Fedora 43 updates and 44 carry 26.04. The Copr yalter/niri (releases) and yalter/niri-git (nightly) are maintained by the author: dnf copr enable yalter/niri." }
+      ],
+      "detect": ["niri", "--version"],
+      "config": ["{xdg-config}/niri/config.kdl", "~/.config/niri/config.kdl"],
+      "validate": ["niri", "validate", "-c", "{file}"],
+      "notes": "Latest release at verification: v26.04. Config loads from $XDG_CONFIG_HOME/niri/config.kdl, falling back to /etc/niri/config.kdl; if neither exists niri writes the default there. No official Debian or Ubuntu package is documented in the wiki (a community pacstall package exists); build from source or use a distro that ships it. Wayland only: X11 apps need xwayland-satellite (niri starts it when installed). The binds {} section is not filled with defaults when omitted, so keep the default binds when editing. Niri has no layout types to pick: windows are always columns, so a left-plus-two-stacked-right terminal layout is built by moving windows into columns."
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "gaps": { "support": "yes", "recipe": "recipes/gaps.md" },
+    "borders": { "support": "yes", "recipe": "recipes/borders.md" },
+    "layouts": { "support": "yes", "recipe": "recipes/layouts.md" },
+    "window-rules": { "support": "yes", "recipe": "recipes/window-rules.md" },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "autostart": { "support": "yes", "recipe": "recipes/autostart.md" },
+    "config-reload": { "support": "yes", "recipe": "recipes/config-reload.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "26.04", "how": "docs" },
+  "sources": [
+    "https://github.com/niri-wm/niri/wiki/Getting-Started",
+    "https://github.com/niri-wm/niri/wiki/Configuration:-Introduction",
+    "https://github.com/niri-wm/niri/wiki/Configuration:-Layout",
+    "https://github.com/niri-wm/niri/wiki/Configuration:-Window-Rules",
+    "https://github.com/niri-wm/niri/wiki/Configuration:-Key-Bindings",
+    "https://github.com/niri-wm/niri/wiki/Configuration:-Miscellaneous",
+    "https://github.com/niri-wm/niri/wiki/Tabs",
+    "https://github.com/niri-wm/niri/releases/latest",
+    "https://raw.githubusercontent.com/niri-wm/niri/main/resources/default-config.kdl",
+    "https://raw.githubusercontent.com/niri-wm/niri/main/src/cli.rs"
+  ]
+}

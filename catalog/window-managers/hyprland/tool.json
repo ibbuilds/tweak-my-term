@@ -1,0 +1,49 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "hyprland",
+  "name": "Hyprland",
+  "category": "window-manager",
+  "summary": "Dynamic tiling Wayland compositor with animations, rounded corners and gradient borders. Since 0.55 it is configured in Lua (hyprland.lua); the older hyprlang hyprland.conf is deprecated. Layouts: dwindle, master, scrolling, monocle.",
+  "homepage": "https://hypr.land/",
+  "docs": "https://wiki.hypr.land/Configuring/Start/",
+  "license": "BSD-3-Clause",
+  "configFormat": "lua",
+  "os": {
+    "windows": { "supported": false, "notes": "Linux (Wayland) only." },
+    "macos": { "supported": false, "notes": "Linux (Wayland) only." },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "pacman", "id": "hyprland", "notes": "Arch extra repository, tagged releases. The wiki advises against -git packages." },
+        { "manager": "dnf", "id": "hyprland", "notes": "No official Fedora package; the wiki lists the lionheartp/Hyprland Copr (dnf copr enable lionheartp/Hyprland). Community-maintained." },
+        { "manager": "apt", "id": "hyprland", "notes": "Debian 14 (forky) or 13 (trixie) via trixie-backports; Ubuntu 24.10 and 26.04 via the universe repo (the wiki calls Ubuntu's packages extremely outdated). Not available on Debian 12." }
+      ],
+      "detect": ["Hyprland", "--version"],
+      "config": ["{xdg-config}/hypr/hyprland.lua", "{xdg-config}/hypr/hyprland.conf"],
+      "notes": "Latest tag at verification: v0.57.2 (2026-11-09). 0.55+ reads hyprland.lua when it exists; hyprland.conf (hyprlang) is deprecated (the exact fallback behaviour is inferred from the 0.55 notes 'use lua if available' and the 'hyprctl reload full-reset' lua/hyprlang switch). 0.54 and older read only hyprland.conf and use windowrule = ..., match:class ... (0.53+) or windowrulev2 (older). Recipes show Lua first and give the hyprlang line where it differs. No standalone config validator is documented: save or reload, then run hyprctl configerrors. Start from a display manager session or the start-hyprland wrapper (otherwise a watchdog warning shows). NVIDIA GPUs need extra setup, see the wiki."
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "gaps": { "support": "yes", "recipe": "recipes/gaps.md" },
+    "borders": { "support": "yes", "recipe": "recipes/borders.md" },
+    "layouts": { "support": "yes", "recipe": "recipes/layouts.md" },
+    "window-rules": { "support": "yes", "recipe": "recipes/window-rules.md" },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "autostart": { "support": "yes", "recipe": "recipes/autostart.md" },
+    "config-reload": { "support": "yes", "recipe": "recipes/config-reload.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "v0.57.2", "how": "docs" },
+  "sources": [
+    "https://wiki.hypr.land/Configuring/Start/",
+    "https://wiki.hypr.land/Configuring/Basics/Variables/",
+    "https://wiki.hypr.land/Configuring/Basics/Window-Rules/",
+    "https://wiki.hypr.land/Configuring/Basics/Dispatchers/",
+    "https://wiki.hypr.land/Configuring/Basics/Autostart/",
+    "https://wiki.hypr.land/Configuring/Layouts/Dwindle-Layout/",
+    "https://wiki.hypr.land/Getting-Started/Installation/",
+    "https://wiki.hypr.land/0.54.0/Configuring/Window-Rules/",
+    "https://github.com/hyprwm/Hyprland/releases/latest",
+    "https://raw.githubusercontent.com/hyprwm/Hyprland/main/example/hyprland.lua"
+  ]
+}

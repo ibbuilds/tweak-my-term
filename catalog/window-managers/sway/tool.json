@@ -1,0 +1,45 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "sway",
+  "name": "sway",
+  "category": "window-manager",
+  "summary": "i3-compatible tiling Wayland compositor. Plain-text config in i3 syntax, splits/tabs/stacking containers, inner and outer gaps, swaymsg IPC. No rounded corners or blur (those need the SwayFX fork).",
+  "homepage": "https://swaywm.org/",
+  "docs": "https://man.archlinux.org/man/sway.5",
+  "license": "MIT",
+  "configFormat": "sway",
+  "os": {
+    "windows": { "supported": false, "notes": "Linux (Wayland) only." },
+    "macos": { "supported": false, "notes": "Linux (Wayland) only." },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "pacman", "id": "sway", "notes": "Arch extra repository (1.12 at verification)." },
+        { "manager": "apt", "id": "sway", "notes": "Debian and Ubuntu; testing/unstable carry 1.12, stable releases may lag (trixie has 1.10.1). Add foot or another terminal." },
+        { "manager": "dnf", "id": "sway", "notes": "Fedora; Rawhide and 45 have 1.12, 43 and 44 have 1.11. The sway-config-upstream and sway-config-minimal packages hold the default config." }
+      ],
+      "detect": ["sway", "--version"],
+      "config": ["{xdg-config}/sway/config", "~/.config/sway/config"],
+      "validate": ["sway", "--validate", "--config", "{file}"],
+      "notes": "Latest release at verification: 1.12 (2026-05-25). Config search order: ~/.sway/config, $XDG_CONFIG_HOME/sway/config, ~/.i3/config, $XDG_CONFIG_HOME/i3/config, /etc/sway/config, /etc/i3/config. The default config is usually /etc/sway/config; copy it to ~/.config/sway/config before editing. Run from a TTY with sway or pick it in a display manager (supported officially since 1.12). Wayland only; X11 apps run through Xwayland (match them by class instead of app_id)."
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "gaps": { "support": "yes", "recipe": "recipes/gaps.md" },
+    "borders": { "support": "partial", "recipe": "recipes/borders.md", "notes": "Width and colors only. No rounded corners in sway itself (SwayFX adds them)." },
+    "layouts": { "support": "yes", "recipe": "recipes/layouts.md" },
+    "window-rules": { "support": "yes", "recipe": "recipes/window-rules.md" },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "autostart": { "support": "yes", "recipe": "recipes/autostart.md" },
+    "config-reload": { "support": "yes", "recipe": "recipes/config-reload.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "1.12", "how": "docs" },
+  "sources": [
+    "https://man.archlinux.org/man/sway.5",
+    "https://manpages.debian.org/testing/sway/sway.1.en.html",
+    "https://github.com/swaywm/sway/releases/latest",
+    "https://packages.fedoraproject.org/pkgs/sway/sway",
+    "https://github.com/swaywm/sway/wiki"
+  ]
+}
