@@ -1,11 +1,12 @@
 'use strict';
+const mkTmp = require('../_tmp');
 const test = require('node:test');
 const assert = require('node:assert');
 const path = require('path');
 const os = require('os');
 const fs = require('fs');
 
-const home = fs.mkdtempSync(path.join(os.tmpdir(), 'tmt-home-'));
+const home = mkTmp('tmt-home-');
 process.env.TMT_HOME = home;
 const paths = require('../../engine/paths');
 const { applyBlock, removeBlock, markerFor } = require('../../engine/blocks');

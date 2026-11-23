@@ -1,4 +1,5 @@
 'use strict';
+const mkTmp = require('../_tmp');
 const test = require('node:test');
 const assert = require('node:assert');
 const path = require('path');
@@ -6,12 +7,12 @@ const os = require('os');
 const fs = require('fs');
 const { spawnSync } = require('child_process');
 
-const home = fs.mkdtempSync(path.join(os.tmpdir(), 'tmt-hook-'));
+const home = mkTmp('tmt-hook-');
 process.env.TMT_HOME = home;
 const run = require('../../engine/run');
 const { handle } = require('../../engine/hook');
 
-const src = (content) => { const f = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'tmt-s-')), 'x.conf'); fs.writeFileSync(f, content); return f; };
+const src = (content) => { const f = path.join(mkTmp('tmt-s-'), 'x.conf'); fs.writeFileSync(f, content); return f; };
 const target = path.join(home, '.config', 'demo', 'demo.conf');
 
 test.before(() => {

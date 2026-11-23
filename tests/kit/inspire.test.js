@@ -1,4 +1,5 @@
 'use strict';
+const mkTmp = require('../_tmp');
 // Inspire tests. Never touch the network: the dataset is a local fixture (TMT_RICES_FILE) and
 // downloads go through a fake fetch.
 const test = require('node:test');
@@ -15,7 +16,7 @@ const raw = JSON.parse(fs.readFileSync(FIXTURE, 'utf8'));
 const entries = Object.values(raw).map(I.normalize);
 const byId = Object.fromEntries(entries.map((e) => [e.id, e]));
 const ids = (list) => list.map((x) => x.id);
-const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), 'tmt-inspire-'));
+const tmp = () => mkTmp('tmt-inspire-');
 
 function withEnv(vars, fn) {
   const old = {};

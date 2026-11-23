@@ -1,4 +1,5 @@
 'use strict';
+const mkTmp = require('../_tmp');
 const test = require('node:test');
 const assert = require('node:assert');
 const path = require('path');
@@ -7,7 +8,7 @@ const fs = require('fs');
 
 // Each test gets a fresh fake home; the engine reads TMT_HOME on every call.
 function freshHome() {
-  const h = fs.mkdtempSync(path.join(os.tmpdir(), 'tmt-run-'));
+  const h = mkTmp('tmt-run-');
   process.env.TMT_HOME = h;
   delete process.env.TMT_STATE;
   return h;
@@ -15,7 +16,7 @@ function freshHome() {
 const run = require('../../engine/run');
 
 function src(name, content) {
-  const d = fs.mkdtempSync(path.join(os.tmpdir(), 'tmt-src-'));
+  const d = mkTmp('tmt-src-');
   const f = path.join(d, name);
   fs.writeFileSync(f, content);
   return f;

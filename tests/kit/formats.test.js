@@ -1,4 +1,5 @@
 'use strict';
+const mkTmp = require('../_tmp');
 const test = require('node:test');
 const assert = require('node:assert');
 const fs = require('fs');
@@ -166,7 +167,7 @@ test('gif: large image grows LZW code size to 12 bits; frameCount counts frames'
 });
 
 test('image: load dispatches on magic bytes; save picks png/bmp by extension', () => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tmt-kit-test-'));
+  const dir = mkTmp('tmt-kit-test-');
   try {
     const img = H.randomImage(9, 6, 21, true);
     for (const ext of ['png', 'bmp']) {

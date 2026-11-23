@@ -1,11 +1,12 @@
 'use strict';
+const mkTmp = require('../_tmp');
 const test = require('node:test');
 const assert = require('node:assert');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-process.env.TMT_HOME = fs.mkdtempSync(path.join(os.tmpdir(), 'tmt-installers-'));
+process.env.TMT_HOME = mkTmp('tmt-installers-');
 const installers = require('../../engine/installers');
 
 test('resolve picks the first catalog install whose manager exists', () => {

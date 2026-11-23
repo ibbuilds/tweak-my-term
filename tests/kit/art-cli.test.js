@@ -1,4 +1,5 @@
 'use strict';
+const mkTmp = require('../_tmp');
 const test = require('node:test');
 const assert = require('node:assert');
 const fs = require('fs');
@@ -12,7 +13,7 @@ const H = require('./_helpers');
 const ROOT = path.join(__dirname, '..', '..');
 const CLI = path.join(ROOT, 'engine', 'cli.js');
 const FIXTURE = path.join(__dirname, 'fixtures', 'look.json');
-const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'tmt-art-'));
+const tmp = mkTmp('tmt-art-');
 test.after(() => fs.rmSync(tmp, { recursive: true, force: true }));
 
 const art = (...args) => spawnSync(process.execPath, [CLI, 'art', ...args], { encoding: 'utf8', cwd: tmp, timeout: 120000 });
