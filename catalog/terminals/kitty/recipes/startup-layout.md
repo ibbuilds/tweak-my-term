@@ -28,4 +28,4 @@ focus
 - Keywords: `new_os_window`, `new_tab [title]`, `layout <name>`, `cd <path>`, `launch [options] [cmd]`, `os_window_size`, `focus`. `launch` cannot create tabs or OS windows inside a session.
 - Run once from a shell: `kitty --session path/to/file.session`.
 - `startup_session` default is `none`. Relative `cd` paths resolve against the session file directory.
-- Use look `layout.panes` to describe intent; translate it into `launch --location=vsplit|hsplit` lines.
+- Build look `layout.arrangement` (pane tree, see render.md) as `launch --location=vsplit|hsplit` lines; `layout.panes` is only a description.

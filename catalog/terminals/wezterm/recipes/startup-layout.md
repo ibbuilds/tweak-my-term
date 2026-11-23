@@ -21,7 +21,7 @@ wezterm.on('gui-startup', function(cmd)
   window:gui_window():maximize()   -- optional
 end)
 ```
-Look spec `layout.panes` in words ("editor left 70%, shell right 30%") becomes the `split` calls: `direction = 'Right'|'Left'|'Top'|'Bottom'`, `size = 0.3`, `cwd = '/path'`, `args = { ... }`.
+Look spec `layout.arrangement` (pane tree, see render.md) becomes the `split` calls: `direction = 'Right'|'Left'|'Top'|'Bottom'`, `size = 0.3`, `cwd = '/path'`, `args = { ... }`.
 
 ## Notes
 - Register the handler at top level of the config, outside any function.

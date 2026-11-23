@@ -33,6 +33,11 @@ keybindings, habits), speed budget, and whether installs are allowed. Ask at mos
 questions, only for what changes the result. If the user is vague or says "surprise me",
 go to Inspire.
 
+Record style and layout separately, and the scope: a layout-only request keeps the
+user's palette, font and prompt and skips the anchor and palette work (`tmt capture`
+copies their configs; `tmt art scheme <their theme file>` or the hexes from their config go in look.json
+for the preview); a style-only request keeps their arrangement.
+
 ## 2. Inspire: real examples that match the request
 
 Every terminal is different, and nothing in this repo is a look to copy. What tells you
@@ -71,8 +76,9 @@ Read [references/style.md](references/style.md). From the anchor:
 - Choose font (Nerd Font for icons), size, line height, padding, opacity/blur,
   cursor, tab/title bar, prompt layout (segments, one or two lines, transient), and
   density. Judge every choice with [references/design.md](references/design.md).
-- Arrangement (panes, what runs where, startup layout, dropdown): build it from the
-  brief's layout line with [references/layout.md](references/layout.md), natively first.
+- Arrangement (panes, what runs where, startup layout, dropdown): from the brief's layout
+  line, write `layout.arrangement` in look.json ([references/layout.md](references/layout.md));
+  build it natively first.
 - Background: `tmt art treat anchor.png bg.png --fit WxH --for-text look.json` reads the
   composition (where the subject sits vs where text goes) and applies the lightest fix; act on
   its notes (move the subject) before adding veil. It keeps text
@@ -96,7 +102,7 @@ current official docs, and mark the result "unverified" to the user.
 ## 7. Preview → user approves the look
 
 `tmt art preview look.json --out <run>/preview.html --swatch <run>/swatch.png`. Open or
-link it. Get a yes on the look (colors, font, background, prompt) before rendering
+link it. Get a yes on the look (colors, font, background, prompt, arrangement) before rendering
 configs. Iterate here; it's cheap.
 
 ## 8. Render configs → staged files

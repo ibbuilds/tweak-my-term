@@ -44,3 +44,23 @@ Every staged config should have a check: tools' own (`wezterm --config-file x ls
 `kitty +runpy`, `starship config`? → see recipes), syntax (`bash -n`, `zsh -n`,
 `fish --no-execute`, PowerShell parser: automatic), JSON parse (automatic).
 `tmt stage check -- <cmd>` adds one.
+
+## Layout: from `layout.arrangement` to startup configs
+
+The arrangement the user approved in the preview is the spec; build exactly that tree.
+
+- Splitting a tree: start with one pane (the first leaf); for a `row` split, split the
+  current pane to the right; for `column`, downward. The new pane's size is its share of
+  what remains (`sizes [60, 40]` → split off 0.4; `[50, 25, 25]` → split off 0.5, then
+  split that pane 0.5). Recurse into nested splits, then start each leaf's program
+  (`args`, or `send_text`/`--` command). Focus the leaf marked `focus`.
+- Where it goes, by tool (recipes have the syntax): terminal `startup-layout`
+  (WezTerm `gui-startup`, kitty session file, Windows Terminal `startupActions` / `wt`
+  arguments), multiplexer `layouts` (zellij layout KDL, tmux script), or window-manager
+  `autostart` + `window-rules` when each pane is its own window.
+- `layout.gap`: inside one terminal panes share 1-2 px dividers (style them: inactive
+  dimming, divider color from the palette), so keep `gap` 0 there. A gap between panes
+  is a window-manager setting (`gaps` recipe); set the preview's gap to what will
+  actually render.
+- Programs in panes must exist: check `tmt detect`, and stage installs (btop, yazi,
+  lazygit) only with the user's yes; otherwise fall back to a shell in that pane.
