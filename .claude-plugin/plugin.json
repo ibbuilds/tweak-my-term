@@ -1,0 +1,36 @@
+{
+  "name": "tweak-my-term",
+  "version": "0.1.0",
+  "description": "Build any terminal look on Windows, macOS or Linux from an image, a mood or a rice: visual anchor, palette, font, layout, prompt and tools, applied with a diff, an approval, a verify and a byte-for-byte undo.",
+  "author": { "name": "ibbuilds" },
+  "homepage": "https://github.com/ibbuilds/tweak-my-term",
+  "repository": "https://github.com/ibbuilds/tweak-my-term",
+  "license": "MIT",
+  "keywords": ["terminal", "dotfiles", "rice", "theme", "windows-terminal", "wezterm", "kitty", "ghostty", "starship"],
+  "userConfig": {
+    "startup_budget_ms": {
+      "type": "number",
+      "title": "Shell startup budget (ms)",
+      "description": "tmt measure warns when a shell takes longer than this to start.",
+      "default": 500
+    },
+    "allow_installs": {
+      "type": "boolean",
+      "title": "Allow package installs",
+      "description": "Let tmt apply run the approved winget/brew/apt installs. Off: it prints them for you to run.",
+      "default": false
+    },
+    "package_manager": {
+      "type": "string",
+      "title": "Preferred package manager",
+      "description": "winget, scoop, brew, apt, dnf, pacman, zypper or flatpak. Empty: pick the one detected.",
+      "default": ""
+    },
+    "guard_configs": {
+      "type": "boolean",
+      "title": "Guard live terminal configs",
+      "description": "Block direct edits to terminal and shell config files so every change goes through a backed-up, undoable tmt run.",
+      "default": true
+    }
+  }
+}

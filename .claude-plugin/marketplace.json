@@ -1,0 +1,11 @@
+{
+  "name": "tweak-my-term",
+  "owner": { "name": "ibbuilds" },
+  "plugins": [
+    {
+      "name": "tweak-my-term",
+      "source": "./",
+      "description": "Build any terminal look on Windows, macOS or Linux, safely and undoably."
+    }
+  ]
+}
