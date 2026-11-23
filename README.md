@@ -1,106 +1,111 @@
-# berserk-terminal
+# tweak-my-term
 
-Dotfiles for a dark, fast, minimal Windows Terminal with **Git Bash** and **Windows
-PowerShell**: blood-moon ASCII art, a Templar-cross dossier, one prompt design across both
-shells, and fuzzy everything. Tuned for startup speed on Windows, where every process
-costs 10–60 ms.
+Tell your AI agent what you want your terminal to look like ("like this picture",
+"something calm and fast", "show me options") and it builds it on **Windows, macOS or
+Linux**: colors, font, background image, prompt, layout, fetch art and CLI tools. Every
+change comes with a preview, a diff you approve, checks, startup timing, and a one-command
+undo.
 
-There is no installer. These are plain config files: read them, copy what you want.
+It combines tools that already exist (Windows Terminal, WezTerm, Ghostty, kitty,
+starship, oh-my-posh, fzf, eza, Nerd Fonts, ...) and adds what's missing: a design kit
+(palettes from images, contrast fixing, generated backgrounds, ASCII art, HTML preview),
+4,000+ real setups to draw ideas from, tested per-tool recipes, and an apply engine that
+cannot write anything you didn't approve.
 
-![Git Bash in Windows Terminal with this setup](docs/screenshot.png)
+![The Eclipse preset: Git Bash in Windows Terminal](presets/eclipse/screenshot.png)
 
-## What you get
+## Install (Claude Code plugin)
 
-- **Art**: an original engraving-style scene (a blood moon, a fallen warrior curled on a
-  hill of red-lit grass) painted by [`scene.js`](home/.config/eclipse/art/scene.js) and
-  turned into a pixel/ASCII background by [`build.ps1`](home/.config/eclipse/art/build.ps1).
-  The built image is included.
-- **Dossier**: on each new tab, an ASCII Templar cross and a short system block, drawn
-  first so the tab has content in ~0.3 s ([fastfetch](https://github.com/fastfetch-cli/fastfetch)).
-- **Prompt**: two lines, the same in bash and PowerShell: path, git branch and state, how
-  long the last command took, its exit code, and the project's runtimes.
-- **Line editing**: plain readline in bash, so typing costs nothing (as in `cmd`); ↑/↓
-  search history by what you've typed. PSReadLine in PowerShell adds history predictions.
-- **Fuzzy tools**: [fzf](https://github.com/junegunn/fzf) on `ctrl+r` (history), `ctrl+t`
-  (files) and `alt+c` (cd), [zoxide](https://github.com/ajeetdsouza/zoxide) `z`, plus `fe`,
-  `rgf`, `gb`, `glog`, `fkill` and `port`. Run `keys` for the full sheet.
-- **Windows Terminal**: color scheme and theme, tab icons, shell integration (jump between
-  commands, select the last output) and a quake drop-down window. No animations, no
-  acrylic, no transparency and no shader: an opaque window redraws the least.
+```
+/plugin install tweak-my-term --marketplace ibbuilds/tweak-my-term
+```
 
-| Measured on one machine | Stock Git Bash and profile | This setup |
-|---|---|---|
-| Git Bash, prompt ready | ~1.65 s | ~0.4 s |
-| Git Bash, cost per keystroke | ~0 ms | ~0 ms |
-| Git Bash, Enter in a git repo | – | ~45 ms (one `git status`); ~2 ms on an empty Enter |
-| PowerShell, profile | ~0.55 s | ~0.47 s |
+(Older Claude Code: `/plugin marketplace add ibbuilds/tweak-my-term`, then
+`/plugin install tweak-my-term@tweak-my-term`.)
 
-Why no [ble.sh](https://github.com/akinomyoga/ble.sh) (inline hints and syntax colors
-for bash)? On Windows it costs 24–60 ms per keystroke and ~0.9 s per new tab. Inline
-hints are left to PowerShell, where PSReadLine draws them natively.
+Then just ask: *"make my terminal look like this"* (attach an image), *"show me some
+terminal setups"*, *"apply the quiet preset"*, *"why is my shell slow?"*, *"undo that"*.
 
-Most of the bash gain comes from starting `usr\bin\bash.exe` directly, which skips Git's
-launcher and `/etc/profile`; [`profile.bash`](home/.config/bash/profile.bash) sets up the
-same environment without extra processes.
+Needs [Node.js](https://nodejs.org) 20 or newer. No npm packages are installed.
 
-## Requirements
+**Other agents** (Codex, Cursor, Gemini CLI, ...): clone the repo and point the agent at
+[`AGENTS.md`](AGENTS.md). The same CLI runs as `node engine/cli.js`.
 
-- Windows 10/11, [Windows Terminal](https://aka.ms/terminal), [Git for Windows](https://gitforwindows.org)
-- Fonts: [JetBrains Mono](https://www.jetbrains.com/lp/mono/) and Symbols Nerd Font Mono
-  (`NerdFontsSymbolsOnly` from [Nerd Fonts](https://www.nerdfonts.com/font-downloads))
-- CLI tools on `PATH`: `fzf fd ripgrep eza bat delta zoxide fastfetch lazygit`
-  (any package manager works: winget, scoop or choco). The aliases (`ls` → eza,
-  `diff` → delta) and the dossier expect them.
-- Optional: PSReadLine 2.2 or newer for history predictions in PowerShell
-  (`Install-Module PSReadLine -Scope CurrentUser -Force`). Windows ships 2.0, which works
-  without them.
-- Optional: Node.js, only to rebuild the art.
+## How it builds a terminal
 
-## Setup
-
-Back up your own files first; these replace them.
-
-1. **Copy the config.** Everything under [`home/`](home) mirrors your home folder
-   (`%USERPROFILE%`). Copy the files you want to the same paths.
-2. **PowerShell.** Add this line to your profile (`notepad $PROFILE`):
-   ```powershell
-   . "$HOME\.config\eclipse\eclipse.ps1"
-   ```
-3. **Windows Terminal.** [`terminal/settings.json`](terminal/settings.json) is a complete
-   example. Merge the parts you want into yours (Settings → Open JSON file): the
-   `schemes`, `themes`, `profiles.defaults` and the Git Bash profile. Paths use
-   `%USERPROFILE%`, so they work as they are. The Git Bash profile assumes Git is
-   installed in `C:\Program Files\Git`.
-4. **Git (optional).** Colored diffs through delta and a `git lg` graph:
-   ```powershell
-   git config --global include.path "~/.config/git/eclipse.gitconfig"
-   ```
-5. Open a new tab.
-
-## Make it yours
-
-| Want | Do |
+| Stage | What happens |
 |---|---|
-| Your own background | `powershell -File ~/.config/eclipse/art/build.ps1 -Base my-picture.png` (needs Node.js) builds a new image, points Windows Terminal at it and removes the previous build. Tune it with `-BaseDim`, `-Pixel`, `-GlyphA` and `-Bloom`. Add `-OutFile art.png` to only write the image. |
-| Machine-specific paths and aliases | Copy [`local.example.bash`](home/.config/bash/local.example.bash) to `~/.config/bash/local.bash` and keep it out of version control. |
-| A quieter tab | `ECLIPSE_QUIET=1` hides the dossier. |
+| Detect | OS, terminals, shells, prompt tools, fonts, existing configs, startup times |
+| Brief | what you want, what must keep working, whether installs are OK |
+| Inspire | search 4,000+ r/unixporn setups by mood, scheme or tool; screenshots are linked |
+| Anchor | one image defines the look: yours, a chosen setup's, or generated (scenes, gradients, ASCII) |
+| Style | palette from the anchor (16 ANSI colors + accent), contrast-checked; font, padding, prompt, effects |
+| Fit | which tool does each part on your OS, and the closest alternative when one can't |
+| Preview | an HTML mock terminal in the real colors and font, for you to approve |
+| Apply | configs staged, diff shown, you approve, then backup, write, verify each config, time shell startup |
+| Polish | screenshot of the real terminal compared with the preview; small fixes |
+| Undo | `tmt restore` puts every file back byte for byte |
 
-## Layout
+## Safety
+
+- Nothing is written until you approve the exact plan; the approval is tied to a hash
+  of it, and apply refuses if a file changed since.
+- Your own files keep your content: rc files get one marked block, JSON settings are
+  merged key by key in their own style and encoding.
+- Every file is backed up first. `tmt restore` undoes a whole run.
+- Installs need your explicit yes (`--allow-installs` or the plugin option). System
+  package managers that need `sudo` are printed for you to run.
+- The plugin blocks the agent from editing live terminal configs directly, and won't let
+  it stop with a change applied but unchecked.
+
+## Presets
+
+| Preset | OS | Look |
+|---|---|---|
+| `eclipse` | Windows (Windows Terminal, Git Bash, PowerShell) | blood-moon engraving background, two-line prompt, fuzzy tools, tuned for startup speed |
+| `quiet` | Windows, macOS, Linux (WezTerm + starship) | calm cool-dark palette, no image, one-line prompt |
+
+`tmt preset list`, then ask the agent to apply one, or build your own look from scratch.
+
+## What's covered
+
+Terminals: Windows Terminal, WezTerm, Ghostty, kitty, Alacritty, iTerm2, foot. Shells:
+bash, zsh, fish, PowerShell, Nushell. Prompts and editing: starship, oh-my-posh,
+PSReadLine, ble.sh, zsh-autosuggestions, zsh-syntax-highlighting, atuin. Multiplexers:
+tmux, zellij. Plus CLI tools, Nerd Fonts and color scheme sources under
+[`catalog/`](catalog). Each recipe records when and how it was verified (`machine` or
+`docs`). Anything else the agent researches live and marks as unverified.
+
+Tested on: Windows 11 on a real machine. macOS and Linux: the test suite runs there in
+CI, and their recipes are checked against official docs, not yet on real machines.
+
+## CLI
 
 ```
-home/                      mirrors your home folder
-  .bashrc                  load order: fast profile -> env -> dossier -> modules
-  .config/bash/            env, profile, shell, history, theme, completion, tools,
-                           aliases, functions, prompt
-  .config/eclipse/         eclipse.ps1 (PowerShell), dossier.jsonc, art/
-  .config/git/             eclipse.gitconfig (delta colors), git-prompt.sh (keeps Git's
-                           default prompt out of the way)
-  .config/bat, lazygit     their configs, in the same palette
-  .inputrc                 readline settings for bash
-terminal/settings.json     Windows Terminal example settings
+tmt new | status | runs | detect | capture
+tmt stage write|block|merge-json <target> <file> | install <mgr> <id> | font <name> | preset <name>
+tmt plan | approve <hash> | apply [--allow-installs] | verify | measure [--before] | restore [run]
+tmt art scene|treat|palette|scheme|contrast|ascii|preview ...
+tmt inspire <words> [--os x] [--terminal x] [--limit n] [--save n dir]
+tmt shot | preset list | catalog list|show|cap|paths | look check <file>
 ```
 
-## License
+`tmt help` for details. Add `--json` for machine-readable output.
 
-[MIT](LICENSE). The art in this repo is generated by its own code. Tools it configures
-keep their own licenses.
+## Develop
+
+```
+npm test           # node:test, never touches your real home (TMT_HOME)
+npm run check      # catalog check + tests
+node tools/privacy.js
+claude plugin validate .
+claude plugin eval . --tag trigger
+```
+
+See [`PLAN.md`](PLAN.md) for the design and [`AGENTS.md`](AGENTS.md) for conventions.
+
+## License and data
+
+[MIT](LICENSE). Images in this repo are generated by its own code. Tools it configures
+keep their own licenses. Inspiration data: [awesome-dotfiles](https://github.com/0xN1nja/awesome-dotfiles)
+(r/unixporn posts); screenshots are linked to their original posts, not copied.
