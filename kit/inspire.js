@@ -350,8 +350,56 @@ function explain(e, matched, filters, exact) {
   return out.join('; ');
 }
 
+// ---- variety ----------------------------------------------------------------------------------
+// The same few popular rices for every request teach nothing. Results are picked greedily: each next
+// one is the best remaining match after a penalty for sharing a colorscheme, window manager, author or
+// terminal with what is already picked, so a shortlist shows different layouts and palettes.
+
+function seededRandom(seed) {
+  let a = (Number(seed) >>> 0) || 1;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const firstTerminal = (e) => e.tools.find((t) => TERMINAL_SET.has(t)) || null;
+const same = (a, b) => a != null && b != null && String(a).toLowerCase() === String(b).toLowerCase();
+
+// pool is sorted best first; returns up to `limit` entries chosen for variety.
+function diversify(pool, limit) {
+  const n = pool.length;
+  const window = pool.slice(0, Math.max(limit * 10, 60));
+  const base = new Map(window.map((p, i) => [p, 1 - i / Math.max(1, n)]));
+  const picked = [];
+  const left = new Set(window);
+  while (picked.length < limit && left.size) {
+    let best = null, bestScore = -Infinity;
+    for (const p of left) {
+      let pen = 0;
+      for (const q of picked) {
+        if (same(p.e.colorscheme, q.e.colorscheme)) pen += 0.5;
+        if (same(p.e.wm, q.e.wm)) pen += 0.35;
+        if (same(p.e.author, q.e.author)) pen += 1;
+        if (same(firstTerminal(p.e), firstTerminal(q.e))) pen += 0.1;
+      }
+      const sc = base.get(p) - pen;
+      if (sc > bestScore) { best = p; bestScore = sc; }
+    }
+    picked.push(best);
+    left.delete(best);
+  }
+  return picked;
+}
+
 // Pure ranking over normalized entries.
+// opts.sort: 'relevance' (default), 'new' (newest first) or 'random' (with opts.seed); opts.diverse (default true).
 function rank(entries, query, opts = {}) {
+  const sort = opts.sort || 'relevance';
+  if (!['relevance', 'new', 'random'].includes(sort)) throw new Error(`sort must be relevance, new or random, got "${sort}"`);
   const terms = parseQuery(query);
   const filters = { os: canonOs(opts.os), terminal: canonIn(opts.terminal, TERMINALS, 'terminal'), shell: canonIn(opts.shell, SHELLS, 'shell') };
   const active = Object.keys(filters).filter((k) => filters[k]);
@@ -398,9 +446,17 @@ function rank(entries, query, opts = {}) {
     p.rank = p.s.relevance * 10 + 1.5 * Math.log1p(Math.max(0, e.score)) + 1.5 * recency + p.fm.length * (exact ? 0 : 8)
       + (filters.os === 'windows' ? (e.os === 'windows' ? 6 : e.portable ? 2 : 0) : 0);
   }
+  if (sort === 'new') for (const p of pool) p.rank = (Date.parse(p.e.date) || 0) + p.fm.length * (exact ? 0 : 1e13);
+  if (sort === 'random') {
+    const rnd = seededRandom(opts.seed ?? Date.now());
+    const top = Math.log1p(Math.max(1, ...pool.map((p) => p.e.score)));
+    // a fresh draw each time, tilted toward posts people rated well
+    for (const p of pool.sort((a, b) => (a.e.id < b.e.id ? -1 : 1))) p.rank = rnd() + 0.6 * (Math.log1p(Math.max(0, p.e.score)) / top) + p.fm.length * (exact ? 0 : 10);
+  }
   pool.sort((a, b) => b.rank - a.rank || b.e.score - a.e.score || (a.e.id < b.e.id ? -1 : 1));
+  const chosen = opts.diverse === false ? pool.slice(0, limit) : diversify(pool, limit);
 
-  const results = pool.slice(0, limit).map((p) => ({
+  const results = chosen.map((p) => ({
     ...p.e,
     relevance: Math.round(p.s.relevance * 100) / 100,
     exact: exact || p.fm.length === active.length,
@@ -470,15 +526,26 @@ async function saveImage(entry, dir, opts = {}) {
   return { file, bytes: buf.length, source: url };
 }
 
+// Downloads every result's screenshot (sequentially, politely) for a visual review.
+async function saveAll(list, dir, opts = {}) {
+  const saved = [], failed = [];
+  for (const e of list) {
+    try { saved.push({ id: e.id, ...(await saveImage(e, dir, opts)) }); } catch (err) { failed.push({ id: e.id, error: err.message }); }
+  }
+  return { saved, failed };
+}
+
 // ---- CLI --------------------------------------------------------------------------------------
 
 const USAGE = `Usage: tmt inspire <query...> [--os linux|macos|windows] [--terminal x] [--shell x] [--limit n] [--min-score n]
-                   [--json] [--refresh] [--facets] [--save <n> <dir>]
+                   [--sort relevance|new|random] [--seed n] [--json] [--refresh] [--facets] [--save <n|all> <dir>]
+Results vary by design: no repeated colorscheme, window manager or author while other matches exist.
+--sort random --seed n draws a different set each time; --save all <dir> downloads every screenshot to review.
 Search r/unixporn rices by mood, colorscheme, tool or WM. Example: tmt inspire cozy gruvbox --terminal kitty`;
 
 function parseArgs(argv) {
   const a = { query: [], flags: {} };
-  const valued = new Set(['os', 'terminal', 'shell', 'limit', 'min-score']);
+  const valued = new Set(['os', 'terminal', 'shell', 'limit', 'min-score', 'sort', 'seed']);
   const bool = new Set(['json', 'refresh', 'facets', 'help']);
   const list = argv.filter((x) => x !== undefined && x !== null).map(String);
   for (let i = 0; i < list.length; i++) {
@@ -492,8 +559,8 @@ function parseArgs(argv) {
     if (name === 'save') {
       const n = inline !== null ? inline : list[++i];
       const dir = list[++i];
-      if (n === undefined || dir === undefined || !/^\d+$/.test(n)) throw new Error('--save needs a result number and a folder: --save <n> <dir>');
-      a.flags.save = { n: Number(n), dir };
+      if (n === undefined || dir === undefined || !/^(\d+|all)$/.test(n)) throw new Error('--save needs a result number (or all) and a folder: --save <n|all> <dir>');
+      a.flags.save = { n: n === 'all' ? 'all' : Number(n), dir };
       continue;
     }
     if (valued.has(name)) {
@@ -550,10 +617,12 @@ async function main(argv = []) {
   const limit = intFlag(flags.limit, 'limit');
   const minScore = flags['min-score'] === undefined ? undefined : Number(flags['min-score']);
   if (minScore !== undefined && !Number.isFinite(minScore)) throw new Error('--min-score must be a number.');
-  const r = await searchDetailed(query, { ...loadOpts, os: flags.os, terminal: flags.terminal, shell: flags.shell, limit, minScore });
+  const r = await searchDetailed(query, { ...loadOpts, os: flags.os, terminal: flags.terminal, shell: flags.shell, limit, minScore, sort: flags.sort, seed: flags.seed === undefined ? undefined : Number(flags.seed) });
 
   let saved = null;
-  if (flags.save) {
+  if (flags.save && flags.save.n === 'all') {
+    saved = await saveAll(r.results, flags.save.dir);
+  } else if (flags.save) {
     const pick = r.results[flags.save.n - 1];
     if (!pick) throw new Error(`--save ${flags.save.n}: there are only ${r.results.length} results.`);
     saved = { n: flags.save.n, id: pick.id, ...(await saveImage(pick, flags.save.dir)) };
@@ -563,12 +632,13 @@ async function main(argv = []) {
     out(JSON.stringify({ query: r.query, filters: r.filters, matches: r.matches, notes: r.notes, results: r.results, saved, attribution: ATTRIBUTION }, null, 2));
   } else {
     out(formatResults(r));
-    if (saved) out(`\nSaved screenshot ${saved.n} to ${saved.file} (${saved.bytes} bytes). Local reference only; do not redistribute.`);
+    if (saved && saved.saved) out(`\nSaved ${saved.saved.length} screenshot(s) to ${flags.save.dir} for review${saved.failed.length ? `; failed: ${saved.failed.map((x) => x.id).join(', ')}` : ''}. Local reference only; do not redistribute. Look at the terminal window in each, not the whole desktop.`);
+    else if (saved) out(`\nSaved screenshot ${saved.n} to ${saved.file} (${saved.bytes} bytes). Local reference only; do not redistribute.`);
   }
   return 0;
 }
 
 module.exports = {
   DATA_URL, ATTRIBUTION, TERMINALS, SHELLS, MOODS,
-  load, normalize, normalizeTools, rank, search, searchDetailed, facets, facetsOf, saveImage, parseQuery, parseArgs, main,
+  load, normalize, normalizeTools, rank, search, searchDetailed, facets, facetsOf, saveImage, saveAll, parseQuery, parseArgs, main,
 };

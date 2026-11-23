@@ -104,7 +104,7 @@ test('normalize: portable means the look only needs things that exist on Windows
 // ---- search -----------------------------------------------------------------------------------
 
 test('search: "cozy" ranks the gruvbox entry first and pulls in warm colorschemes', async () => {
-  const r = await I.searchDetailed('cozy', { entries });
+  const r = await I.searchDetailed('cozy', { entries, diverse: false });
   assert.deepStrictEqual(ids(r.results), ['fx0001', 'fx0003', 'fx0011', 'fx0013', 'fx0007', 'fx0012']);
   assert.strictEqual(r.results[0].colorscheme, 'Gruvbox');
   assert.strictEqual(r.results[0].why, 'matches title cozy, colorscheme gruvbox (fits "cozy"); 900 upvotes');
@@ -122,7 +122,7 @@ test('search: other moods', async () => {
 });
 
 test('search: tool and distro words match, extra words in the query are ignored', async () => {
-  assert.deepStrictEqual(ids(await I.search('kitty + zsh on Arch', { entries, limit: 3 })), ['fx0005', 'fx0001', 'fx0013']);
+  assert.deepStrictEqual(ids(await I.search('kitty + zsh on Arch', { entries, limit: 3, diverse: false })), ['fx0005', 'fx0001', 'fx0013']);
   assert.deepStrictEqual(ids(await I.search('something with nvim', { entries })), ['fx0001', 'fx0011', 'fx0013', 'fx0007']);
   assert.deepStrictEqual(ids(await I.search('windows terminal', { entries })), ['fx0004']);
   assert.deepStrictEqual(ids(await I.search('tokyo night', { entries })), ['fx0004']);
@@ -172,7 +172,7 @@ test('search: terminal and shell filters; soft fallback when nothing matches exa
 test('search: limit, default limit, minScore and an empty query', async () => {
   assert.strictEqual((await I.search('cozy', { entries, limit: 2 })).length, 2);
   assert.strictEqual((await I.search('', { entries })).length, 6);
-  assert.deepStrictEqual(ids(await I.search('', { entries, limit: 2 })), ['fx0005', 'fx0001']);
+  assert.deepStrictEqual(ids(await I.search('', { entries, limit: 2, diverse: false })), ['fx0005', 'fx0001']);
   assert.deepStrictEqual(ids(await I.search('cozy', { entries, minScore: 500 })), ['fx0001', 'fx0003']);
 });
 
@@ -296,7 +296,7 @@ test('parseArgs: query words, valued flags, --save takes two values', () => {
   const a = I.parseArgs(['cozy', 'gruvbox', '--os', 'linux', '--limit=3', '--json', '--save', '2', 'out', 'dir']);
   assert.deepStrictEqual(a.query, ['cozy', 'gruvbox', 'dir']);
   assert.deepStrictEqual(a.flags, { os: 'linux', limit: '3', json: true, save: { n: 2, dir: 'out' } });
-  assert.throws(() => I.parseArgs(['--save', 'x']), /--save needs a result number and a folder/);
+  assert.throws(() => I.parseArgs(['--save', 'x']), /--save needs a result number \(or all\) and a folder/);
   assert.throws(() => I.parseArgs(['--os']), /--os needs a value/);
   assert.throws(() => I.parseArgs(['--bogus']), /Unknown flag --bogus/);
 });
@@ -311,7 +311,7 @@ test('cli: tmt inspire cozy --json has the documented shape', () => {
   assert.strictEqual(j.matches, 7);
   assert.strictEqual(j.saved, null);
   assert.strictEqual(j.attribution, 'Data: awesome-dotfiles (r/unixporn), links to original posts.');
-  assert.deepStrictEqual(j.results.map((x) => x.id), ['fx0001', 'fx0003', 'fx0011', 'fx0013', 'fx0007', 'fx0012']);
+  assert.deepStrictEqual(j.results.map((x) => x.id), ['fx0001', 'fx0003', 'fx0007', 'fx0011', 'fx0013', 'fx0012'], 'varied: Catppuccin and Hyprland do not repeat while others match');
   assert.deepStrictEqual(Object.keys(j.results[0]), ['id', 'title', 'url', 'author', 'image', 'images', 'repo', 'wm', 'distro', 'os', 'colorscheme', 'tools', 'score', 'date', 'portable', 'relevance', 'exact', 'why']);
   assert.strictEqual(j.results[0].image, 'https://example.invalid/img/fx0001.png');
   assert.strictEqual(j.results[0].repo, 'https://github.com/example-user-01/dotfiles');
@@ -349,4 +349,38 @@ test('cli: --facets and errors', () => {
   const save = tmt(['cozy', '--save', '9', path.join(tmp(), 'x')]);
   assert.strictEqual(save.status, 1);
   assert.match(save.stderr, /--save 9: there are only 6 results\./);
+});
+
+// ---- variety ----------------------------------------------------------------------------------
+
+test('rank: results vary by default - no repeated colorscheme, window manager or author while others match', () => {
+  const r = I.rank(entries, '', { limit: 6 });
+  const schemes = r.results.map((x) => x.colorscheme).filter(Boolean);
+  const wms = r.results.map((x) => x.wm).filter(Boolean);
+  assert.strictEqual(new Set(schemes).size, schemes.length, schemes.join(', '));
+  assert.strictEqual(new Set(wms).size, wms.length, wms.join(', '));
+  assert.strictEqual(r.results[0].id, I.rank(entries, '', { limit: 6, diverse: false }).results[0].id, 'the best match still leads');
+});
+
+test('rank: sort "random" with a seed gives a different, repeatable set of matches; "new" puts the newest first', () => {
+  const a = ids(I.rank(entries, '', { limit: 5, sort: 'random', seed: 1 }).results);
+  assert.deepStrictEqual(ids(I.rank(entries, '', { limit: 5, sort: 'random', seed: 1 }).results), a);
+  const others = [2, 3, 4, 5].map((seed) => ids(I.rank(entries, '', { limit: 5, sort: 'random', seed }).results).join());
+  assert.ok(others.some((o) => o !== a.join()), 'another seed changes the pick');
+  for (const x of I.rank(entries, 'gruvbox', { sort: 'random', seed: 9 }).results) assert.match(String(x.colorscheme), /gruvbox/i);
+  const fresh = I.rank(entries, '', { limit: 3, sort: 'new', diverse: false }).results;
+  const dates = entries.map((e) => e.date).filter(Boolean).sort().reverse();
+  assert.strictEqual(fresh[0].date, dates[0]);
+  assert.throws(() => I.rank(entries, '', { sort: 'hot' }), /sort must be relevance, new or random/);
+});
+
+test('saveAll: downloads every result screenshot for a visual review, and reports the ones that fail', async () => {
+  const dir = path.join(tmp(), 'review');
+  const png = Buffer.from([0x89, 0x50, 0x4e, 0x47]);
+  const list = [byId.fx0001, byId.fx0002, { id: 'nolink', image: null }];
+  const r = await I.saveAll(list, dir, { fetchImpl: async () => fakeRes(200, png, { 'content-type': 'image/png' }) });
+  assert.deepStrictEqual(r.saved.map((s) => path.basename(s.file)), ['rice-fx0001.png', 'rice-fx0002.png']);
+  assert.deepStrictEqual(r.failed.map((f) => f.id), ['nolink']);
+  assert.deepStrictEqual(I.parseArgs(['--save', 'all', 'out']).flags.save, { n: 'all', dir: 'out' });
+  assert.deepStrictEqual(I.parseArgs(['--sort', 'random', '--seed', '4']).flags, { sort: 'random', seed: '4' });
 });
