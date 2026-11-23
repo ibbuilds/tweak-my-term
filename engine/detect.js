@@ -113,10 +113,10 @@ async function detect() {
   dirs.forEach((d) => walk(d, 0));
   result.fonts.nerd = [...families].sort().slice(0, 200);
 
-  for (const c of catalog.configPaths(osName)) {
+  for (const c of catalog.userConfigs(osName)) {
     if (fs.existsSync(c.abs)) {
       const s = fs.statSync(c.abs);
-      result.configs.push({ tool: c.tool, path: paths.pretty(c.abs), dir: s.isDirectory(), bytes: s.isDirectory() ? undefined : s.size, modified: s.mtime.toISOString().slice(0, 10) });
+      result.configs.push({ tool: c.tool, tools: c.tools, path: paths.pretty(c.abs), dir: s.isDirectory(), bytes: s.isDirectory() ? undefined : s.size, modified: s.mtime.toISOString().slice(0, 10) });
     }
   }
   if (!result.tools.hyperfine || !result.tools.hyperfine.installed) result.notes.push('hyperfine not found: tmt measure uses its own timing loop.');

@@ -17,14 +17,14 @@
         { "manager": "scoop", "id": "zoxide" }
       ],
       "detect": ["zoxide", "--version"],
-      "config": ["{localappdata}/zoxide"],
+      "config": [],
       "notes": "Works in PowerShell (verified in Windows PowerShell 5.1) and in Git Bash/MSYS2/Cygwin bash. Database dir is %LOCALAPPDATA%\\zoxide."
     },
     "macos": {
       "supported": true,
       "install": [{ "manager": "brew", "id": "zoxide" }],
       "detect": ["zoxide", "--version"],
-      "config": ["~/Library/Application Support/zoxide"]
+      "config": []
     },
     "linux": {
       "supported": true,
@@ -35,7 +35,7 @@
         { "manager": "script", "id": "curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh", "notes": "Official installer, installs to ~/.local/bin." }
       ],
       "detect": ["zoxide", "--version"],
-      "config": ["{xdg-data}/zoxide"]
+      "config": []
     }
   },
   "capabilities": {

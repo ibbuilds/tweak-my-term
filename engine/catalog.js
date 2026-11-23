@@ -41,9 +41,30 @@ function configPaths(osName = paths.platform()) {
   return out;
 }
 
+// Files that sit next to configs but hold the user's data or secrets, never look settings.
+const PRIVATE = /(history|\.db$|\.sqlite\d?$|credential|secret|token|\.env$|\.pem$|\.key$|id_rsa|id_ed25519|\.zo$)/i;
+const isPrivate = (file) => PRIVATE.test(path.basename(file));
+
+/**
+ * The user's own config files for an OS, for detect and capture: no font folders, no
+ * history/database/secret files, one entry per path with every tool that uses it.
+ */
+function userConfigs(osName = paths.platform()) {
+  const fontTools = new Set(tools().filter((t) => t.category === 'font').map((t) => t.id));
+  const byPath = new Map();
+  for (const c of configPaths(osName)) {
+    if (fontTools.has(c.tool) || isPrivate(c.abs)) continue;
+    const key = process.platform === 'win32' ? c.abs.toLowerCase() : c.abs;
+    const seen = byPath.get(key);
+    if (seen) { if (!seen.tools.includes(c.tool)) seen.tools.push(c.tool); continue; }
+    byPath.set(key, { ...c, tools: [c.tool] });
+  }
+  return [...byPath.values()];
+}
+
 function capabilities() {
   const f = path.join(ROOT, 'capabilities.json');
   return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null;
 }
 
-module.exports = { tools, get, configPaths, capabilities, ROOT };
+module.exports = { tools, get, configPaths, userConfigs, isPrivate, capabilities, ROOT };

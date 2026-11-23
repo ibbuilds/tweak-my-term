@@ -17,7 +17,7 @@
         { "manager": "scoop", "id": "git" }
       ],
       "detect": ["bash", "--version"],
-      "config": ["~/.bashrc", "~/.bash_profile", "~/.inputrc", "~/.bash_history"],
+      "config": ["~/.bashrc", "~/.bash_profile", "~/.inputrc"],
       "validate": ["bash", "-n", "{file}"],
       "notes": "Git Bash is MSYS2-based: ~ is %USERPROFILE%. Start usr\\bin\\bash.exe -i directly (not git-bash.exe or bin\\bash.exe) to skip Git's launcher and /etc/profile; the profile must then rebuild PATH/MSYSTEM itself."
     },

@@ -111,11 +111,11 @@ async function main() {
       if (!st) throw new run.GateError('start a run first: tmt new');
       const dest = path.join(run.runDir(st.id), 'captured');
       const got = [];
-      for (const c of require('./catalog').configPaths(st.os)) {
+      for (const c of require('./catalog').userConfigs(st.os)) {
         if (!fs.existsSync(c.abs)) continue;
         const to = path.join(dest, c.tool, path.basename(c.abs));
         fs.mkdirSync(path.dirname(to), { recursive: true });
-        if (fs.statSync(c.abs).isDirectory()) fs.cpSync(c.abs, to, { recursive: true, filter: (s) => { try { return fs.statSync(s).size < 2e6; } catch { return false; } } });
+        if (fs.statSync(c.abs).isDirectory()) fs.cpSync(c.abs, to, { recursive: true, filter: (s) => { try { return !require('./catalog').isPrivate(s) && fs.statSync(s).size < 2e6; } catch { return false; } } });
         else fs.copyFileSync(c.abs, to);
         got.push({ tool: c.tool, from: paths.pretty(c.abs), to });
       }
