@@ -341,6 +341,7 @@ function explain(e, matched, filters, exact) {
   if (filters.os) fl.push(filters.os === 'windows' && e.os !== 'windows' ? 'portable to Windows' : `os ${e.os}`);
   if (filters.terminal) fl.push(e.tools.includes(filters.terminal) ? `uses ${filters.terminal}` : `no ${filters.terminal}`);
   if (filters.shell) fl.push(e.tools.includes(filters.shell) ? `uses ${filters.shell}` : `no ${filters.shell}`);
+  if (filters.layout) { const ev = LAYOUTS[filters.layout](e); fl.push(ev ? `layout ${filters.layout} (${String(ev).toLowerCase()})` : `not ${filters.layout}`); }
   const out = [];
   if (parts.length) out.push(`matches ${parts.slice(0, 4).join(', ')}`);
   if (fl.length) out.push(fl.join(', '));
@@ -348,6 +349,39 @@ function explain(e, matched, filters, exact) {
   out.push(`${fmtCount(e.score)} upvotes`);
   if (!exact) out.push('closest match, not exact');
   return out.join('; ');
+}
+
+// ---- layout ----------------------------------------------------------------------------------
+// Layout is how things are arranged; style is how they look. The dataset has no layout field, so it
+// is inferred from the window manager and tools. Each test returns the evidence, or null.
+
+const TILING_WMS = /^(i3|i3wm|i3-gaps|i3gaps|bspwm|hyprland|dwm|sway|swaywm|awesome|awesomewm|qtile|xmonad|yabai|aerospace|amethyst|komorebi|glazewm|herbstluftwm|leftwm|river|spectrwm|dwl|ratpoison|stumpwm|frankenwm|berry|2bwm|nimdow|instantwm|wayfire)$/;
+const SCROLLING_WMS = /^(niri|paperwm|karousel|papersway|hyprscroller)$/;
+const FLOATING_WMS = /^(openbox|fluxbox|xfce|xfwm|xfwm4|kde|kde plasma|kwin|plasma|gnome|gnome shell|mutter|cinnamon|mate|budgie|lxqt|lxde|icewm|jwm|windowmaker|window maker|enlightenment|cosmic|pantheon|aqua|explorer|fvwm|twm|cwm|marco)$/;
+const WIDGET_TOOLS = new Set(['eww', 'conky', 'btop', 'htop', 'gotop', 'bottom', 'cava', 'ncmpcpp', 'cmatrix', 'pipes', 'tty-clock', 'peaclock', 'cbonsai', 'rainmeter', 'ubersicht', 'glances']);
+const MUX_TOOLS = ['tmux', 'zellij', 'screen', 'byobu'];
+const wmKey = (e) => String(e.wm || '').toLowerCase().trim();
+const LAYOUTS = {
+  tiling: (e) => (TILING_WMS.test(wmKey(e)) ? e.wm : /\btiling\b/i.test(e.title) ? 'title' : null),
+  floating: (e) => {
+    if (FLOATING_WMS.test(wmKey(e))) return e.wm;
+    if (!e.wm && (e.os === 'windows' || e.os === 'macos')) return `stock ${e.os}`;
+    return /\bfloating\b/i.test(e.title) ? 'title' : null;
+  },
+  panes: (e) => MUX_TOOLS.find((t) => e.tools.includes(t)) || (/\b(splits?|panes?|tmux|zellij)\b/i.test(e.title) ? 'title' : null),
+  dashboard: (e) => {
+    const w = e.tools.filter((t) => WIDGET_TOOLS.has(t));
+    return w.length >= 2 ? w.slice(0, 3).join(', ') : /\b(dashboard|hud|widgets?)\b/i.test(e.title) ? 'title' : null;
+  },
+  scrolling: (e) => (SCROLLING_WMS.test(wmKey(e)) ? e.wm : /\bscrolling\b/i.test(e.title) ? 'title' : null),
+};
+const LAYOUT_NAMES = Object.keys(LAYOUTS);
+
+function canonLayout(v) {
+  if (v == null || v === '') return null;
+  const c = String(v).toLowerCase().trim();
+  if (!LAYOUTS[c]) throw new Error(`Unknown layout "${v}". Known: ${LAYOUT_NAMES.join(', ')}.`);
+  return c;
 }
 
 // ---- variety ----------------------------------------------------------------------------------
@@ -401,7 +435,7 @@ function rank(entries, query, opts = {}) {
   const sort = opts.sort || 'relevance';
   if (!['relevance', 'new', 'random'].includes(sort)) throw new Error(`sort must be relevance, new or random, got "${sort}"`);
   const terms = parseQuery(query);
-  const filters = { os: canonOs(opts.os), terminal: canonIn(opts.terminal, TERMINALS, 'terminal'), shell: canonIn(opts.shell, SHELLS, 'shell') };
+  const filters = { os: canonOs(opts.os), terminal: canonIn(opts.terminal, TERMINALS, 'terminal'), shell: canonIn(opts.shell, SHELLS, 'shell'), layout: canonLayout(opts.layout) };
   const active = Object.keys(filters).filter((k) => filters[k]);
   const limit = Number.isInteger(opts.limit) && opts.limit > 0 ? opts.limit : 6;
   const minScore = Number(opts.minScore) || 0;
@@ -415,7 +449,9 @@ function rank(entries, query, opts = {}) {
     os: (e) => (filters.os === 'windows' ? e.os === 'windows' || e.portable : e.os === filters.os),
     terminal: (e) => e.tools.includes(filters.terminal),
     shell: (e) => e.tools.includes(filters.shell),
+    layout: (e) => LAYOUTS[filters.layout](e) !== null,
   };
+  if (filters.layout) notes.push('Layout is inferred from the window manager and tools; confirm it on each screenshot.');
 
   let pool = [];
   for (const e of entries) {
@@ -537,7 +573,7 @@ async function saveAll(list, dir, opts = {}) {
 
 // ---- CLI --------------------------------------------------------------------------------------
 
-const USAGE = `Usage: tmt inspire <query...> [--os linux|macos|windows] [--terminal x] [--shell x] [--limit n] [--min-score n]
+const USAGE = `Usage: tmt inspire <query...> [--os linux|macos|windows] [--terminal x] [--shell x] [--layout ${LAYOUT_NAMES.join('|')}] [--limit n] [--min-score n]
                    [--sort relevance|new|random] [--seed n] [--json] [--refresh] [--facets] [--save <n|all> <dir>]
 Results vary by design: no repeated colorscheme, window manager or author while other matches exist.
 --sort random --seed n draws a different set each time; --save all <dir> downloads every screenshot to review.
@@ -545,7 +581,7 @@ Search r/unixporn rices by mood, colorscheme, tool or WM. Example: tmt inspire c
 
 function parseArgs(argv) {
   const a = { query: [], flags: {} };
-  const valued = new Set(['os', 'terminal', 'shell', 'limit', 'min-score', 'sort', 'seed']);
+  const valued = new Set(['os', 'terminal', 'shell', 'layout', 'limit', 'min-score', 'sort', 'seed']);
   const bool = new Set(['json', 'refresh', 'facets', 'help']);
   const list = argv.filter((x) => x !== undefined && x !== null).map(String);
   for (let i = 0; i < list.length; i++) {
@@ -617,7 +653,7 @@ async function main(argv = []) {
   const limit = intFlag(flags.limit, 'limit');
   const minScore = flags['min-score'] === undefined ? undefined : Number(flags['min-score']);
   if (minScore !== undefined && !Number.isFinite(minScore)) throw new Error('--min-score must be a number.');
-  const r = await searchDetailed(query, { ...loadOpts, os: flags.os, terminal: flags.terminal, shell: flags.shell, limit, minScore, sort: flags.sort, seed: flags.seed === undefined ? undefined : Number(flags.seed) });
+  const r = await searchDetailed(query, { ...loadOpts, os: flags.os, terminal: flags.terminal, shell: flags.shell, layout: flags.layout, limit, minScore, sort: flags.sort, seed: flags.seed === undefined ? undefined : Number(flags.seed) });
 
   let saved = null;
   if (flags.save && flags.save.n === 'all') {

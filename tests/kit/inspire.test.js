@@ -307,7 +307,7 @@ test('cli: tmt inspire cozy --json has the documented shape', () => {
   const j = JSON.parse(r.stdout);
   assert.deepStrictEqual(Object.keys(j), ['query', 'filters', 'matches', 'notes', 'results', 'saved', 'attribution']);
   assert.strictEqual(j.query, 'cozy');
-  assert.deepStrictEqual(j.filters, { os: null, terminal: null, shell: null });
+  assert.deepStrictEqual(j.filters, { os: null, terminal: null, shell: null, layout: null });
   assert.strictEqual(j.matches, 7);
   assert.strictEqual(j.saved, null);
   assert.strictEqual(j.attribution, 'Data: awesome-dotfiles (r/unixporn), links to original posts.');
@@ -383,4 +383,41 @@ test('saveAll: downloads every result screenshot for a visual review, and report
   assert.deepStrictEqual(r.failed.map((f) => f.id), ['nolink']);
   assert.deepStrictEqual(I.parseArgs(['--save', 'all', 'out']).flags.save, { n: 'all', dir: 'out' });
   assert.deepStrictEqual(I.parseArgs(['--sort', 'random', '--seed', '4']).flags, { sort: 'random', seed: '4' });
+});
+
+// ---- layout -----------------------------------------------------------------------------------
+// Layout (how things are arranged) is a separate axis from style (how it looks). The dataset has no
+// layout field, so it is inferred from the window manager and tools, and the agent confirms it on
+// the screenshot.
+
+const layoutIds = (layout, query = '') => ids(I.rank(entries, query, { layout, limit: 20, diverse: false }).results.filter((x) => x.exact)).sort();
+
+test('rank: --layout panes keeps rices with a multiplexer', () => {
+  assert.deepStrictEqual(layoutIds('panes'), ['fx0006', 'fx0010', 'fx0011']);
+});
+
+test('rank: --layout tiling keeps tiling window managers, floating keeps desktops and stock Windows/macOS', () => {
+  assert.deepStrictEqual(layoutIds('tiling', 'nord'), ['fx0002']);
+  assert.deepStrictEqual(layoutIds('floating'), ['fx0004', 'fx0009', 'fx0012', 'fx0014']);
+});
+
+test('rank: --layout dashboard needs several widget tools or a dashboard title', () => {
+  assert.deepStrictEqual(layoutIds('dashboard'), ['fx0005']);
+});
+
+test('rank: layout explains itself, falls back softly, rejects unknown kinds', () => {
+  const r = I.rank(entries, 'gruvbox', { layout: 'floating' });
+  assert.deepStrictEqual(ids(r.results), ['fx0012']);
+  assert.match(r.results[0].why, /layout floating \(stock windows\)/);
+  assert.ok(r.notes.includes('Layout is inferred from the window manager and tools; confirm it on each screenshot.'));
+  const soft = I.rank(entries, 'gruvbox', { layout: 'scrolling' });
+  assert.strictEqual(soft.results.every((x) => x.exact === false), true);
+  assert.match(soft.results[0].why, /not scrolling/);
+  assert.throws(() => I.rank(entries, 'x', { layout: 'grid' }), /Unknown layout "grid". Known: tiling, floating, panes, dashboard, scrolling/);
+});
+
+test('cli: --layout is a filter', () => {
+  const j = JSON.parse(tmt(['--layout', 'panes', '--json']).stdout);
+  assert.strictEqual(j.filters.layout, 'panes');
+  assert.deepStrictEqual(j.results.map((x) => x.id).sort(), ['fx0006', 'fx0010', 'fx0011']);
 });
