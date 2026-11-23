@@ -356,8 +356,8 @@ function defaultShells(osName) {
 function budgetFor(st) {
   const env = Number(process.env.CLAUDE_PLUGIN_OPTION_STARTUP_BUDGET_MS || process.env.TMT_BUDGET_MS);
   if (env > 0) return env;
-  const look = readLook(st);
-  return (look && look.budget && look.budget.shellStartMs) || 800;
+  const look = st && st.id ? readLook(st) : null;
+  return (look && look.budget && look.budget.shellStartMs) || 500;
 }
 
 function timeShell(id, runs, exec) {
@@ -378,8 +378,16 @@ function timeShell(id, runs, exec) {
 }
 
 function measure({ before = false, runs = 5, shells, exec = sys.exec } = {}) {
-  const st = current();
-  if (!st) throw new GateError('no run: start one with `tmt new`');
+  let st = current();
+  if (st && before && ['done', 'restored'].includes(st.status)) st = null;
+  if (!st) {
+    if (!before) throw new GateError('no run: start one with `tmt new` (or use `tmt measure --before` to just time the shells)');
+    // diagnosis outside a run: time the shells, record nothing
+    const os = paths.platform();
+    const budget = budgetFor({ os, look: null, id: null });
+    const results = (shells && shells.length ? shells : defaultShells(os)).map((s) => timeShell(s, runs, exec));
+    return { id: null, budgetMs: budget, results, before: null, overBudget: results.filter((r) => r.medianMs > budget).map((r) => r.shell) };
+  }
   if (!before && !['verified', 'done'].includes(st.status)) throw new GateError(`measure comes after verify (run is ${st.status})`);
   const list = shells && shells.length ? shells : st.shells.length ? st.shells : defaultShells(st.os);
   const budget = budgetFor(st);

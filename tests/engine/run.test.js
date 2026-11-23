@@ -233,3 +233,12 @@ test('merge-json keeps the file\'s own JSON style (Windows Terminal puts [ and {
   const p = run.plan();
   assert.strictEqual(p.files[0].diff, '     [\n         {\n             "id": "x",\n-            "v": 1\n+            "v": 2\n         }\n     ],\n     "b": [],\n');
 });
+
+test('measure --before works without a run (diagnosis) and saves nothing', () => {
+  freshHome();
+  const calls = [];
+  const r = run.measure({ before: true, runs: 1, shells: ['powershell'], exec: (c) => { calls.push(c); return { status: 0, stdout: '', stderr: '' }; } });
+  assert.strictEqual(r.id, null);
+  assert.strictEqual(r.results.length, 1);
+  assert.strictEqual(run.current(), null);
+});
