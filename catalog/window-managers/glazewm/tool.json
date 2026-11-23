@@ -1,0 +1,50 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "glazewm",
+  "name": "GlazeWM",
+  "category": "window-manager",
+  "summary": "i3-inspired tiling window manager for Windows (and macOS), configured in one YAML file. Gaps, focused and unfocused border colors, window rules and keybindings all live in the same file; keyboard shortcuts are built in, no separate hotkey daemon.",
+  "homepage": "https://github.com/glzr-io/glazewm",
+  "docs": "https://github.com/glzr-io/glazewm#config-documentation",
+  "license": "GPL-3.0",
+  "configFormat": "yaml",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "glzr-io.glazewm" },
+        { "manager": "scoop", "id": "extras/glazewm", "notes": "Needs the extras bucket: scoop bucket add extras" },
+        { "manager": "choco", "id": "glazewm" }
+      ],
+      "detect": ["glazewm", "--version"],
+      "config": ["~/.glzr/glazewm/config.yaml"],
+      "notes": "No config validator is documented: a config that fails to parse is reported when GlazeWM starts or reloads. The default config is generated on first launch (optional prompt). The status bar is a separate app (Zebar, optional checkbox in the installer). Window borders and rounded corners need Windows 11. Elevated (admin/UAC) windows cannot be managed by a non-elevated window manager (general Windows limit, not stated in the GlazeWM docs). Latest release v3.10.1 (2026-03-21); the tray 'Run on system startup' option was broken before v3.10.1. The glazewm command may not be on PATH after install; the CLI is the same executable."
+    },
+    "macos": {
+      "supported": true,
+      "install": [
+        { "manager": "brew", "id": "cask:glzr-io/tap/glazewm", "notes": "brew install --cask glzr-io/tap/glazewm (Zebar bar: glzr-io/tap/zebar)" }
+      ],
+      "detect": ["glazewm", "--version"],
+      "config": ["~/.glzr/glazewm/config.yaml"],
+      "notes": "macOS support exists (v3.10 release notes) but the recipes here are written and sourced for Windows only; window_effects borders are Windows 11 only."
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "gaps": { "support": "yes", "recipe": "recipes/gaps.md" },
+    "borders": { "support": "partial", "recipe": "recipes/borders.md", "notes": "Focused and non-focused window border colors via window_effects, Windows 11 only. Border width is not configurable." },
+    "layouts": { "support": "partial", "recipe": "recipes/layouts.md", "notes": "Tree of horizontal/vertical splits steered by the tiling direction; no named layouts and no automatic layout switching (community scripts exist)." },
+    "window-rules": { "support": "yes", "recipe": "recipes/window-rules.md" },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "autostart": { "support": "yes", "recipe": "recipes/autostart.md" },
+    "config-reload": { "support": "yes", "recipe": "recipes/config-reload.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "v3.10.1", "how": "docs" },
+  "sources": [
+    "https://github.com/glzr-io/glazewm",
+    "https://github.com/glzr-io/glazewm/releases/latest",
+    "https://github.com/glzr-io/glazewm/blob/main/resources/assets/sample-config.yaml",
+    "https://github.com/microsoft/winget-pkgs/tree/master/manifests/g/glzr-io/glazewm"
+  ]
+}

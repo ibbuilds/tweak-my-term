@@ -1,0 +1,44 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "komorebi",
+  "name": "komorebi",
+  "category": "window-manager",
+  "summary": "Tiling window manager for Windows 10 and 11 driven by the komorebic CLI and a komorebi.json file. Named layouts (BSP, VerticalStack, Rows, Grid and more) per workspace, colored borders per container state, window rules, and a hot-reloaded config. Keyboard shortcuts come from a separate daemon (whkd or AutoHotkey).",
+  "homepage": "https://lgug2z.github.io/komorebi/",
+  "docs": "https://lgug2z.github.io/komorebi/example-configurations.html",
+  "license": "Komorebi License 2.0.0 (source-available, personal use only)",
+  "configFormat": "json",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "LGUG2Z.komorebi", "notes": "Install the hotkey daemon separately: winget install LGUG2Z.whkd" },
+        { "manager": "scoop", "id": "komorebi", "notes": "Needs the extras bucket (scoop bucket add extras); also scoop install whkd" }
+      ],
+      "detect": ["komorebic", "--version"],
+      "config": ["~/komorebi.json", "~/.config/whkdrc", "~/applications.json", "~/komorebi.bar.json"],
+      "validate": ["komorebic", "check", "--komorebi-config", "{file}"],
+      "notes": "License: the Komorebi License forbids any commercial use, which includes using it at work, without a paid Individual Commercial Use License; free for personal use. No built-in hotkeys: install whkd (or AutoHotkey). The status bar is optional and separate (komorebi-bar, started with --bar). Borders are drawn by komorebi as an overlay, and the author calls the feature a hack; they only appear on windows komorebi manages. Some apps need entries from the community applications.json (komorebic fetch-asc). Elevated (admin/UAC) windows cannot be managed by a non-elevated process (general Windows limit, not stated in the komorebi docs). Config files default to the home folder; KOMOREBI_CONFIG_HOME relocates them. Latest release v0.1.41 (2026-05-03). Enabling long paths and turning off unnecessary Windows animations is recommended by the install docs."
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "gaps": { "support": "yes", "recipe": "recipes/gaps.md" },
+    "borders": { "support": "yes", "recipe": "recipes/borders.md" },
+    "layouts": { "support": "yes", "recipe": "recipes/layouts.md" },
+    "window-rules": { "support": "yes", "recipe": "recipes/window-rules.md", "notes": "Float, ignore, force-manage and workspace rules match by exe, class, title or path. No per-window size or position rule; floating windows can only be centered and resized by an aspect ratio." },
+    "keybindings": { "support": "partial", "recipe": "recipes/keybindings.md", "notes": "komorebi itself binds no keys: they come from whkd (recommended) or AutoHotkey calling komorebic." },
+    "autostart": { "support": "yes", "recipe": "recipes/autostart.md" },
+    "config-reload": { "support": "yes", "recipe": "recipes/config-reload.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "v0.1.41", "how": "docs" },
+  "sources": [
+    "https://lgug2z.github.io/komorebi/",
+    "https://lgug2z.github.io/komorebi/installation.html",
+    "https://lgug2z.github.io/komorebi/example-configurations.html",
+    "https://github.com/LGUG2Z/komorebi/releases/latest",
+    "https://raw.githubusercontent.com/LGUG2Z/komorebi/v0.1.41/schema.json",
+    "https://github.com/LGUG2Z/komorebi-application-specific-configuration",
+    "https://github.com/microsoft/winget-pkgs/tree/master/manifests/l/LGUG2Z"
+  ]
+}
