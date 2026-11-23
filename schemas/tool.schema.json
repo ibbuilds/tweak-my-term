@@ -9,7 +9,7 @@
     "$schema": { "type": "string" },
     "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$" },
     "name": { "type": "string" },
-    "category": { "enum": ["terminal", "shell", "prompt", "line-editing", "multiplexer", "tool", "font", "fetch"] },
+    "category": { "enum": ["terminal", "shell", "prompt", "line-editing", "multiplexer", "window-manager", "tool", "font", "fetch"] },
     "summary": { "type": "string" },
     "homepage": { "type": "string" },
     "docs": { "type": "string" },

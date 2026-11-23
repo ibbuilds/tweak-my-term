@@ -13,6 +13,7 @@
   "prompt": ["install-init", "palette", "segments", "transient", "right-prompt", "multiline", "performance"],
   "line-editing": ["install-init", "suggestions", "highlighting", "history-search", "keybindings", "colors", "performance"],
   "multiplexer": ["install-init", "palette", "statusbar", "layouts", "keybindings", "plugins"],
+  "window-manager": ["install-init", "gaps", "borders", "layouts", "window-rules", "keybindings", "autostart", "config-reload"],
   "tool": ["install-init", "theme", "integration", "keybindings", "config"],
   "fetch": ["install-init", "logo", "modules", "theme"],
   "font": ["install", "configure", "nerd-glyphs"]
