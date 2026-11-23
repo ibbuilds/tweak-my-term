@@ -278,6 +278,19 @@
         "how": "docs"
       }
     },
+    "gnome-terminal": {
+      "name": "GNOME Terminal",
+      "category": "terminal",
+      "path": "catalog/terminals/gnome-terminal",
+      "os": [
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "3.60.0",
+        "how": "docs"
+      }
+    },
     "iterm2": {
       "name": "iTerm2",
       "category": "terminal",
@@ -302,6 +315,32 @@
       "verified": {
         "date": "2026-11-23",
         "version": "0.51.1",
+        "how": "docs"
+      }
+    },
+    "konsole": {
+      "name": "Konsole",
+      "category": "terminal",
+      "path": "catalog/terminals/konsole",
+      "os": [
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "26.08",
+        "how": "docs"
+      }
+    },
+    "terminal-app": {
+      "name": "Terminal (macOS)",
+      "category": "terminal",
+      "path": "catalog/terminals/terminal-app",
+      "os": [
+        "macos"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "Terminal User Guide (2026)",
         "how": "docs"
       }
     },
@@ -481,6 +520,111 @@
         "date": "2026-11-23",
         "version": "0.10.0",
         "how": "machine"
+      }
+    },
+    "aerospace": {
+      "name": "AeroSpace",
+      "category": "window-manager",
+      "path": "catalog/window-managers/aerospace",
+      "os": [
+        "macos"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "0.21.3-Beta",
+        "how": "docs"
+      }
+    },
+    "glazewm": {
+      "name": "GlazeWM",
+      "category": "window-manager",
+      "path": "catalog/window-managers/glazewm",
+      "os": [
+        "windows",
+        "macos"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "v3.10.1",
+        "how": "docs"
+      }
+    },
+    "hyprland": {
+      "name": "Hyprland",
+      "category": "window-manager",
+      "path": "catalog/window-managers/hyprland",
+      "os": [
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "v0.57.2",
+        "how": "docs"
+      }
+    },
+    "i3": {
+      "name": "i3",
+      "category": "window-manager",
+      "path": "catalog/window-managers/i3",
+      "os": [
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "4.25.1",
+        "how": "docs"
+      }
+    },
+    "komorebi": {
+      "name": "komorebi",
+      "category": "window-manager",
+      "path": "catalog/window-managers/komorebi",
+      "os": [
+        "windows"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "v0.1.41",
+        "how": "docs"
+      }
+    },
+    "niri": {
+      "name": "niri",
+      "category": "window-manager",
+      "path": "catalog/window-managers/niri",
+      "os": [
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "26.04",
+        "how": "docs"
+      }
+    },
+    "sway": {
+      "name": "sway",
+      "category": "window-manager",
+      "path": "catalog/window-managers/sway",
+      "os": [
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "1.12",
+        "how": "docs"
+      }
+    },
+    "yabai": {
+      "name": "yabai",
+      "category": "window-manager",
+      "path": "catalog/window-managers/yabai",
+      "os": [
+        "macos"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "7.1.25",
+        "how": "docs"
       }
     }
   },
@@ -663,6 +807,63 @@
           "linux"
         ],
         "recipe": "catalog/tools/zoxide/recipes/install-init.md"
+      },
+      "aerospace": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/aerospace/recipes/install-init.md"
+      },
+      "glazewm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/glazewm/recipes/install-init.md"
+      },
+      "hyprland": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/hyprland/recipes/install-init.md"
+      },
+      "i3": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/i3/recipes/install-init.md"
+      },
+      "komorebi": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/window-managers/komorebi/recipes/install-init.md"
+      },
+      "niri": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/niri/recipes/install-init.md"
+      },
+      "sway": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/sway/recipes/install-init.md"
+      },
+      "yabai": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/yabai/recipes/install-init.md"
       }
     },
     "logo": {
@@ -1093,6 +1294,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/keybindings.md"
       },
+      "gnome-terminal": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/gnome-terminal/recipes/keybindings.md"
+      },
       "iterm2": {
         "support": "partial",
         "os": [
@@ -1107,6 +1315,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/keybindings.md"
+      },
+      "konsole": {
+        "support": "partial",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/keybindings.md"
+      },
+      "terminal-app": {
+        "support": "partial",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/terminal-app/recipes/keybindings.md"
       },
       "wezterm": {
         "support": "yes",
@@ -1150,6 +1372,64 @@
           "linux"
         ],
         "recipe": "catalog/tools/yazi/recipes/keybindings.md"
+      },
+      "aerospace": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/aerospace/recipes/keybindings.md"
+      },
+      "glazewm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/glazewm/recipes/keybindings.md"
+      },
+      "hyprland": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/hyprland/recipes/keybindings.md"
+      },
+      "i3": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/i3/recipes/keybindings.md"
+      },
+      "komorebi": {
+        "support": "partial",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/window-managers/komorebi/recipes/keybindings.md",
+        "notes": "komorebi itself binds no keys: they come from whkd (recommended) or AutoHotkey calling komorebic."
+      },
+      "niri": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/niri/recipes/keybindings.md"
+      },
+      "sway": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/sway/recipes/keybindings.md"
+      },
+      "yabai": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/yabai/recipes/keybindings.md"
       }
     },
     "colors": {
@@ -1368,6 +1648,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/palette.md"
       },
+      "gnome-terminal": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/gnome-terminal/recipes/palette.md"
+      },
       "iterm2": {
         "support": "yes",
         "os": [
@@ -1382,6 +1669,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/palette.md"
+      },
+      "konsole": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/palette.md"
+      },
+      "terminal-app": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/terminal-app/recipes/palette.md"
       },
       "wezterm": {
         "support": "yes",
@@ -1436,6 +1737,64 @@
           "linux"
         ],
         "recipe": "catalog/multiplexers/zellij/recipes/layouts.md"
+      },
+      "aerospace": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/aerospace/recipes/layouts.md"
+      },
+      "glazewm": {
+        "support": "partial",
+        "os": [
+          "windows",
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/glazewm/recipes/layouts.md",
+        "notes": "Tree of horizontal/vertical splits steered by the tiling direction; no named layouts and no automatic layout switching (community scripts exist)."
+      },
+      "hyprland": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/hyprland/recipes/layouts.md"
+      },
+      "i3": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/i3/recipes/layouts.md"
+      },
+      "komorebi": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/window-managers/komorebi/recipes/layouts.md"
+      },
+      "niri": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/niri/recipes/layouts.md"
+      },
+      "sway": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/sway/recipes/layouts.md"
+      },
+      "yabai": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/yabai/recipes/layouts.md"
       }
     },
     "plugins": {
@@ -1894,6 +2253,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/font.md"
       },
+      "gnome-terminal": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/gnome-terminal/recipes/font.md"
+      },
       "iterm2": {
         "support": "yes",
         "os": [
@@ -1908,6 +2274,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/font.md"
+      },
+      "konsole": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/font.md"
+      },
+      "terminal-app": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/terminal-app/recipes/font.md"
       },
       "wezterm": {
         "support": "yes",
@@ -1952,6 +2332,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/ligatures.md"
       },
+      "gnome-terminal": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No ligature key in the schema (enable-shaping is Arabic shaping only). Use kitty, WezTerm, Ghostty or iTerm2."
+      },
       "iterm2": {
         "support": "yes",
         "os": [
@@ -1967,6 +2354,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/ligatures.md"
+      },
+      "konsole": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No ligature option in the profile keys read from Profile.cpp or in the handbook. Use kitty, WezTerm, Ghostty or iTerm2 for ligatures."
+      },
+      "terminal-app": {
+        "support": "no",
+        "os": [
+          "macos"
+        ],
+        "notes": "The User Guide's Text settings list no ligature option. Use iTerm2, kitty, WezTerm or Ghostty."
       },
       "wezterm": {
         "support": "yes",
@@ -2011,6 +2412,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/font-fallback.md"
       },
+      "gnome-terminal": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No fallback list; Pango/fontconfig supplies fallback glyphs. Use a patched Nerd Font as the main font, or install a symbols font system-wide."
+      },
       "iterm2": {
         "support": "partial",
         "os": [
@@ -2025,6 +2433,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/font-fallback.md"
+      },
+      "konsole": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No fallback list. Konsole uses the system (fontconfig) fallback; the profile has a separate EmojiFont key (Appearance). Unverified that a symbols-only font is picked automatically for Private Use glyphs, so use a patched Nerd Font as the main font."
+      },
+      "terminal-app": {
+        "support": "no",
+        "os": [
+          "macos"
+        ],
+        "notes": "No fallback list; macOS substitutes fonts per glyph. Use a Nerd Font as the main font for icons."
       },
       "wezterm": {
         "support": "yes",
@@ -2070,6 +2492,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/line-height.md"
       },
+      "gnome-terminal": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/gnome-terminal/recipes/line-height.md"
+      },
       "iterm2": {
         "support": "yes",
         "os": [
@@ -2084,6 +2513,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/line-height.md"
+      },
+      "konsole": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/line-height.md"
+      },
+      "terminal-app": {
+        "support": "partial",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/terminal-app/recipes/line-height.md"
       },
       "wezterm": {
         "support": "yes",
@@ -2127,6 +2570,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/opacity.md"
       },
+      "gnome-terminal": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "The profile schema has no transparency key; the GNOME wiki FAQ says the option was removed from Preferences in 3.7. Ptyxis has a per-profile `opacity` key (org.gnome.Ptyxis.Profile, 0.0-1.0), or use kitty/WezTerm/Konsole/Alacritty."
+      },
       "iterm2": {
         "support": "yes",
         "os": [
@@ -2141,6 +2591,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/opacity.md"
+      },
+      "konsole": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/opacity.md"
+      },
+      "terminal-app": {
+        "support": "partial",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/terminal-app/recipes/opacity.md"
       },
       "wezterm": {
         "support": "yes",
@@ -2187,6 +2651,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/blur.md"
       },
+      "gnome-terminal": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No blur. Use Konsole, kitty, WezTerm or iTerm2."
+      },
       "iterm2": {
         "support": "yes",
         "os": [
@@ -2202,6 +2673,20 @@
         ],
         "recipe": "catalog/terminals/kitty/recipes/blur.md",
         "notes": "macOS and Wayland only (compositor-dependent)."
+      },
+      "konsole": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/blur.md"
+      },
+      "terminal-app": {
+        "support": "partial",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/terminal-app/recipes/blur.md"
       },
       "wezterm": {
         "support": "partial",
@@ -2248,6 +2733,13 @@
         "recipe": "catalog/terminals/ghostty/recipes/background-image.md",
         "notes": "PNG/JPEG only, since 1.2.0."
       },
+      "gnome-terminal": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No background image. Use Konsole, kitty, WezTerm or iTerm2."
+      },
       "iterm2": {
         "support": "yes",
         "os": [
@@ -2262,6 +2754,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/background-image.md"
+      },
+      "konsole": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/background-image.md"
+      },
+      "terminal-app": {
+        "support": "partial",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/terminal-app/recipes/background-image.md"
       },
       "wezterm": {
         "support": "yes",
@@ -2307,6 +2813,13 @@
         "recipe": "catalog/terminals/ghostty/recipes/background-animated.md",
         "notes": "No animated image formats; animate through a custom shader."
       },
+      "gnome-terminal": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "Use kitty or Ghostty."
+      },
       "iterm2": {
         "support": "no",
         "os": [
@@ -2322,6 +2835,20 @@
         ],
         "recipe": "catalog/terminals/kitty/recipes/background-animated.md",
         "notes": "Via bundled or custom shaders (0.49+); animated image files are not documented."
+      },
+      "konsole": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "Wallpaper is a static image. Use kitty (custom shaders), Ghostty or WezTerm."
+      },
+      "terminal-app": {
+        "support": "no",
+        "os": [
+          "macos"
+        ],
+        "notes": "Static images only. Use kitty, Ghostty or WezTerm."
       },
       "wezterm": {
         "support": "partial",
@@ -2367,6 +2894,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/shader.md"
       },
+      "gnome-terminal": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "Use Ghostty or kitty."
+      },
       "iterm2": {
         "support": "no",
         "os": [
@@ -2382,6 +2916,20 @@
         ],
         "recipe": "catalog/terminals/kitty/recipes/shader.md",
         "notes": "custom_shaders, official since 0.49. Slang shaders, not GLSL."
+      },
+      "konsole": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No shader support. Use Ghostty or kitty."
+      },
+      "terminal-app": {
+        "support": "no",
+        "os": [
+          "macos"
+        ],
+        "notes": "No shader support. Use Ghostty or kitty."
       },
       "wezterm": {
         "support": "no",
@@ -2427,6 +2975,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/padding.md"
       },
+      "gnome-terminal": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No padding key in the schema. Workaround: GTK CSS in ~/.config/gtk-3.0/gtk.css targeting VteTerminal padding (unverified here), or choose another terminal."
+      },
       "iterm2": {
         "support": "partial",
         "os": [
@@ -2441,6 +2996,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/padding.md"
+      },
+      "konsole": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/padding.md"
+      },
+      "terminal-app": {
+        "support": "no",
+        "os": [
+          "macos"
+        ],
+        "notes": "No padding setting in the User Guide's Text or Window panes. Use iTerm2 (margins) or another terminal."
       },
       "wezterm": {
         "support": "yes",
@@ -2484,6 +3053,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/cursor.md"
       },
+      "gnome-terminal": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/gnome-terminal/recipes/cursor.md"
+      },
       "iterm2": {
         "support": "yes",
         "os": [
@@ -2498,6 +3074,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/cursor.md"
+      },
+      "konsole": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/cursor.md"
+      },
+      "terminal-app": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/terminal-app/recipes/cursor.md"
       },
       "wezterm": {
         "support": "yes",
@@ -2541,6 +3131,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/tabs.md"
       },
+      "gnome-terminal": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/gnome-terminal/recipes/tabs.md"
+      },
       "iterm2": {
         "support": "partial",
         "os": [
@@ -2555,6 +3152,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/tabs.md"
+      },
+      "konsole": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/tabs.md"
+      },
+      "terminal-app": {
+        "support": "partial",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/terminal-app/recipes/tabs.md"
       },
       "wezterm": {
         "support": "yes",
@@ -2599,6 +3210,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/titlebar.md"
       },
+      "gnome-terminal": {
+        "support": "partial",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/gnome-terminal/recipes/titlebar.md"
+      },
       "iterm2": {
         "support": "partial",
         "os": [
@@ -2613,6 +3231,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/titlebar.md"
+      },
+      "konsole": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/titlebar.md"
+      },
+      "terminal-app": {
+        "support": "no",
+        "os": [
+          "macos"
+        ],
+        "notes": "Native title bar only. Profiles > Window > Title chooses what the title shows (working directory, path, process name, dimensions...), not the chrome. For a borderless look use another terminal."
       },
       "wezterm": {
         "support": "yes",
@@ -2656,6 +3288,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/splits.md"
       },
+      "gnome-terminal": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No split panes. Use tmux/zellij, or Ptyxis/Konsole."
+      },
       "iterm2": {
         "support": "yes",
         "os": [
@@ -2670,6 +3309,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/splits.md"
+      },
+      "konsole": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/splits.md"
+      },
+      "terminal-app": {
+        "support": "no",
+        "os": [
+          "macos"
+        ],
+        "notes": "No independent split panes. Terminal has a Shell > Split Pane command, but user reports describe it as a second view of the same session, not a new shell (not confirmed in Apple's docs). Use tabs, tmux or zellij."
       },
       "wezterm": {
         "support": "yes",
@@ -2714,6 +3367,13 @@
         "recipe": "catalog/terminals/ghostty/recipes/quake.md",
         "notes": "Quick terminal. Linux needs Wayland + wlr-layer-shell."
       },
+      "gnome-terminal": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No drop-down mode. GNOME users use the Guake or Tilix terminals, or a Shell extension."
+      },
       "iterm2": {
         "support": "partial",
         "os": [
@@ -2729,6 +3389,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/quake.md"
+      },
+      "konsole": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "Konsole has no drop-down mode. The KDE drop-down terminal is Yakuake, a separate app that embeds Konsole and uses Konsole profiles and color schemes."
+      },
+      "terminal-app": {
+        "support": "no",
+        "os": [
+          "macos"
+        ],
+        "notes": "No drop-down mode. Use iTerm2's hotkey window."
       },
       "wezterm": {
         "support": "no",
@@ -2772,6 +3446,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/shell-integration.md"
       },
+      "gnome-terminal": {
+        "support": "partial",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/gnome-terminal/recipes/shell-integration.md"
+      },
       "iterm2": {
         "support": "yes",
         "os": [
@@ -2786,6 +3467,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/shell-integration.md"
+      },
+      "konsole": {
+        "support": "partial",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/shell-integration.md"
+      },
+      "terminal-app": {
+        "support": "no",
+        "os": [
+          "macos"
+        ],
+        "notes": "No configurable shell integration in the User Guide. Terminal sets TERM_PROGRAM=Apple_Terminal and macOS's zsh startup tracks the working directory for it (community knowledge, not verified here)."
       },
       "wezterm": {
         "support": "yes",
@@ -2829,6 +3524,13 @@
         ],
         "notes": "No session or layout file. Use tmux/zellij for pane layouts, `window-width`/`window-height` for size, or the macOS AppleScript dictionary (listed on the features page) to script windows and tabs."
       },
+      "gnome-terminal": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No layout or session file. gnome-terminal(1) accepts per-launch options (such as --tab, --window, --working-directory and profile selection; not re-read here), or use tmux/zellij."
+      },
       "iterm2": {
         "support": "partial",
         "os": [
@@ -2843,6 +3545,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/startup-layout.md"
+      },
+      "konsole": {
+        "support": "partial",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/startup-layout.md"
+      },
+      "terminal-app": {
+        "support": "partial",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/terminal-app/recipes/startup-layout.md"
       },
       "wezterm": {
         "support": "yes",
@@ -2888,6 +3604,13 @@
         "recipe": "catalog/terminals/ghostty/recipes/inline-images.md",
         "notes": "Kitty graphics protocol. Sixel is not documented."
       },
+      "gnome-terminal": {
+        "support": "partial",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/gnome-terminal/recipes/inline-images.md"
+      },
       "iterm2": {
         "support": "yes",
         "os": [
@@ -2902,6 +3625,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/inline-images.md"
+      },
+      "konsole": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/inline-images.md"
+      },
+      "terminal-app": {
+        "support": "no",
+        "os": [
+          "macos"
+        ],
+        "notes": "No inline image protocol is documented. Use iTerm2, kitty or WezTerm."
       },
       "wezterm": {
         "support": "yes",
@@ -2947,6 +3684,13 @@
         ],
         "notes": "One config, no profile concept. Use `config-file = ?other` includes or launch with a different `--config-file`."
       },
+      "gnome-terminal": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/gnome-terminal/recipes/profiles.md"
+      },
       "iterm2": {
         "support": "yes",
         "os": [
@@ -2961,6 +3705,20 @@
           "linux"
         ],
         "notes": "No profile concept. Use `include other.conf` plus `kitty --config <file>` or `-o key=value` per launch, and session files for tab/window setups."
+      },
+      "konsole": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/profiles.md"
+      },
+      "terminal-app": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/terminal-app/recipes/profiles.md"
       },
       "wezterm": {
         "support": "partial",
@@ -3005,6 +3763,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/default-shell.md"
       },
+      "gnome-terminal": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/gnome-terminal/recipes/default-shell.md"
+      },
       "iterm2": {
         "support": "yes",
         "os": [
@@ -3019,6 +3784,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/default-shell.md"
+      },
+      "konsole": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/default-shell.md"
+      },
+      "terminal-app": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/terminal-app/recipes/default-shell.md"
       },
       "wezterm": {
         "support": "yes",
@@ -3062,6 +3841,13 @@
         ],
         "recipe": "catalog/terminals/ghostty/recipes/config-reload.md"
       },
+      "gnome-terminal": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/gnome-terminal/recipes/config-reload.md"
+      },
       "iterm2": {
         "support": "yes",
         "os": [
@@ -3076,6 +3862,20 @@
           "linux"
         ],
         "recipe": "catalog/terminals/kitty/recipes/config-reload.md"
+      },
+      "konsole": {
+        "support": "partial",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/konsole/recipes/config-reload.md"
+      },
+      "terminal-app": {
+        "support": "partial",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/terminals/terminal-app/recipes/config-reload.md"
       },
       "wezterm": {
         "support": "yes",
@@ -3092,6 +3892,63 @@
           "windows"
         ],
         "recipe": "catalog/terminals/windows-terminal/recipes/config-reload.md"
+      },
+      "aerospace": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/aerospace/recipes/config-reload.md"
+      },
+      "glazewm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/glazewm/recipes/config-reload.md"
+      },
+      "hyprland": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/hyprland/recipes/config-reload.md"
+      },
+      "i3": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/i3/recipes/config-reload.md"
+      },
+      "komorebi": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/window-managers/komorebi/recipes/config-reload.md"
+      },
+      "niri": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/niri/recipes/config-reload.md"
+      },
+      "sway": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/sway/recipes/config-reload.md"
+      },
+      "yabai": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/yabai/recipes/config-reload.md"
       }
     },
     "integration": {
@@ -3275,6 +4132,247 @@
           "linux"
         ],
         "recipe": "catalog/tools/zoxide/recipes/config.md"
+      }
+    },
+    "gaps": {
+      "aerospace": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/aerospace/recipes/gaps.md"
+      },
+      "glazewm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/glazewm/recipes/gaps.md"
+      },
+      "hyprland": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/hyprland/recipes/gaps.md"
+      },
+      "i3": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/i3/recipes/gaps.md"
+      },
+      "komorebi": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/window-managers/komorebi/recipes/gaps.md"
+      },
+      "niri": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/niri/recipes/gaps.md"
+      },
+      "sway": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/sway/recipes/gaps.md"
+      },
+      "yabai": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/yabai/recipes/gaps.md"
+      }
+    },
+    "borders": {
+      "aerospace": {
+        "support": "no",
+        "os": [
+          "macos"
+        ],
+        "notes": "AeroSpace deliberately has no window borders. Companion tool: JankyBorders (brew tap FelixKratz/formulae; brew install borders), macOS 14+. Start it from AeroSpace by adding to ~/.aerospace.toml: after-startup-command = ['exec-and-forget borders active_color=0xffRRGGBB inactive_color=0xffRRGGBB width=5.0'], with active_color = the look's {palette.accent} and inactive_color = {palette.ansi.brightBlack}, each written as 0xff followed by the hex without the #. Colors are 0xAARRGGBB."
+      },
+      "glazewm": {
+        "support": "partial",
+        "os": [
+          "windows",
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/glazewm/recipes/borders.md",
+        "notes": "Focused and non-focused window border colors via window_effects, Windows 11 only. Border width is not configurable."
+      },
+      "hyprland": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/hyprland/recipes/borders.md"
+      },
+      "i3": {
+        "support": "partial",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/i3/recipes/borders.md",
+        "notes": "Width and colors only. Rounded corners need an external X11 compositor."
+      },
+      "komorebi": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/window-managers/komorebi/recipes/borders.md"
+      },
+      "niri": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/niri/recipes/borders.md"
+      },
+      "sway": {
+        "support": "partial",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/sway/recipes/borders.md",
+        "notes": "Width and colors only. No rounded corners in sway itself (SwayFX adds them)."
+      },
+      "yabai": {
+        "support": "no",
+        "os": [
+          "macos"
+        ],
+        "notes": "yabai has no window border option in the current docs. Companion tool: JankyBorders (brew tap FelixKratz/formulae; brew install borders), macOS 14+. Add as the last line of yabairc: borders active_color=0xffRRGGBB inactive_color=0xffRRGGBB width=5.0 &, with active_color = the look's {palette.accent} and inactive_color = {palette.ansi.brightBlack}, each written as 0xff followed by the hex without the #. Colors are 0xAARRGGBB."
+      }
+    },
+    "window-rules": {
+      "aerospace": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/aerospace/recipes/window-rules.md"
+      },
+      "glazewm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/glazewm/recipes/window-rules.md"
+      },
+      "hyprland": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/hyprland/recipes/window-rules.md"
+      },
+      "i3": {
+        "support": "partial",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/i3/recipes/window-rules.md",
+        "notes": "for_window and assign cover float, size, position, border and workspace. There is no opacity command; transparency needs a compositor."
+      },
+      "komorebi": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/window-managers/komorebi/recipes/window-rules.md",
+        "notes": "Float, ignore, force-manage and workspace rules match by exe, class, title or path. No per-window size or position rule; floating windows can only be centered and resized by an aspect ratio."
+      },
+      "niri": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/niri/recipes/window-rules.md"
+      },
+      "sway": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/sway/recipes/window-rules.md"
+      },
+      "yabai": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/yabai/recipes/window-rules.md"
+      }
+    },
+    "autostart": {
+      "aerospace": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/aerospace/recipes/autostart.md"
+      },
+      "glazewm": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/glazewm/recipes/autostart.md"
+      },
+      "hyprland": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/hyprland/recipes/autostart.md"
+      },
+      "i3": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/i3/recipes/autostart.md"
+      },
+      "komorebi": {
+        "support": "yes",
+        "os": [
+          "windows"
+        ],
+        "recipe": "catalog/window-managers/komorebi/recipes/autostart.md"
+      },
+      "niri": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/niri/recipes/autostart.md"
+      },
+      "sway": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/window-managers/sway/recipes/autostart.md"
+      },
+      "yabai": {
+        "support": "yes",
+        "os": [
+          "macos"
+        ],
+        "recipe": "catalog/window-managers/yabai/recipes/autostart.md"
       }
     }
   }

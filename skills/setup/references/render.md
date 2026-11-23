@@ -22,6 +22,11 @@ colors, font, background, opacity, padding, prompt, keybindings, and the tool's 
 command, with the date it was verified. Follow them over memory: config keys change
 between versions (check the detected version against the recipe's `verified` note).
 
+Placeholders in recipes are paths into look.json, filled in by you: `{palette.ansi.red}` and
+`{palette.background}` are `#rrggbb`, `{font.family}`, `{window.opacity}`,
+`{layout.gap}`, `{look.name}`. Suffixes convert a color: `.rgb` = decimal 0-255 in the
+separator the recipe shows (`R,G,B` in Konsole, `R G B` in zellij); `.rgb01` = 0-1 floats.
+
 ## Shell startup budget
 
 - Initialize prompt tools with their native init (`starship init`, `oh-my-posh init`), and
