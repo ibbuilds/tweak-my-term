@@ -1,0 +1,574 @@
+'use strict';
+// Inspire: search ~4,000 r/unixporn rices (public awesome-dotfiles JSON) and hand back a few
+// candidates, each with a screenshot link and its dotfiles repo.
+//
+// Data: https://github.com/0xN1nja/awesome-dotfiles (data/reddit/rice-details.json).
+// Screenshots are third-party: they are linked, never rehosted. `--save` downloads one into a
+// local folder, for use as the visual anchor only.
+//
+// TMT_RICES_FILE points at a local copy of the JSON (tests, offline); TMT_STATE moves the cache.
+
+const fs = require('fs');
+const path = require('path');
+const paths = require('../engine/paths');
+
+const DATA_URL = 'https://raw.githubusercontent.com/0xN1nja/awesome-dotfiles/master/data/reddit/rice-details.json';
+const MAX_AGE_MS = 7 * 24 * 3600 * 1000;
+const ATTRIBUTION = 'Data: awesome-dotfiles (r/unixporn), links to original posts.';
+const UA = 'tweak-my-term-inspire';
+
+// ---- tools ------------------------------------------------------------------------------------
+
+const TERMINALS = ['alacritty', 'kitty', 'wezterm', 'ghostty', 'windows-terminal', 'iterm2', 'foot', 'konsole', 'st', 'urxvt',
+  'termite', 'xterm', 'terminator', 'gnome-terminal', 'xfce4-terminal', 'cool-retro-term', 'hyper', 'tabby'];
+const SHELLS = ['zsh', 'fish', 'bash', 'powershell', 'nushell'];
+const OTHER_TOOLS = ['starship', 'oh-my-posh', 'oh-my-zsh', 'powerlevel10k', 'tmux', 'zellij', 'neovim', 'fastfetch', 'neofetch'];
+
+// key: raw name with everything but letters and digits stripped; value: canonical id
+const ALIASES = {};
+function alias(canon, ...raws) { for (const r of [canon, ...raws]) ALIASES[compact(r)] = canon; }
+function compact(s) { return String(s == null ? '' : s).toLowerCase().replace(/[^a-z0-9]+/g, ''); }
+
+[...TERMINALS, ...SHELLS, ...OTHER_TOOLS].forEach((t) => alias(t));
+alias('st', 'simple terminal', 'suckless terminal', 'st terminal');
+alias('urxvt', 'rxvt-unicode', 'rxvtunicode', 'urxvtc', 'rxvt');
+alias('iterm2', 'iterm');
+alias('windows-terminal', 'wt', 'microsoft terminal');
+alias('gnome-terminal', 'gnometerminal', 'gnome terminal');
+alias('xfce4-terminal', 'xfce terminal', 'xfce4terminal');
+alias('cool-retro-term', 'coolretroterm');
+alias('powershell', 'pwsh');
+alias('nushell', 'nu');
+alias('starship', 'starship prompt');
+alias('oh-my-posh', 'ohmyposh');
+alias('oh-my-zsh', 'ohmyzsh');
+alias('powerlevel10k', 'p10k', 'powerlevel10k');
+alias('neovim', 'nvim', 'lunarvim', 'astronvim', 'lazyvim', 'nvchad');
+alias('fish', 'fish shell');
+alias('zsh', 'zshell');
+
+const WORD_SCAN = new Set([...TERMINALS, ...SHELLS, ...OTHER_TOOLS].filter((t) => t !== 'st'));
+
+function canonTool(raw) {
+  const c = compact(raw);
+  if (!c) return null;
+  if (ALIASES[c]) return [ALIASES[c]];
+  if (c.startsWith('neovim') || c.startsWith('nvim')) return ['neovim'];
+  const out = [];
+  const words = String(raw).toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+  if (words.length > 1) for (const w of words) if (WORD_SCAN.has(ALIASES[w] || w)) out.push(ALIASES[w] || w);
+  return out.length ? out : [String(raw).toLowerCase().trim().replace(/\s+/g, ' ')];
+}
+
+function normalizeTools(list) {
+  const seen = new Set();
+  for (const raw of Array.isArray(list) ? list : []) {
+    for (const t of canonTool(raw) || []) if (t) seen.add(t);
+  }
+  return [...seen];
+}
+
+// Which things from a rice also exist on Windows (the look can be rebuilt there).
+const PORTABLE_TERMINALS = new Set(['alacritty', 'wezterm', 'windows-terminal', 'hyper', 'tabby']);
+const PORTABLE_LOOK = new Set([...PORTABLE_TERMINALS, 'starship', 'oh-my-posh', 'fastfetch', 'neofetch', 'powershell', 'nushell', 'neovim', 'zellij']);
+const TERMINAL_SET = new Set(TERMINALS);
+
+// ---- normalize --------------------------------------------------------------------------------
+
+const MAC_WMS = /^(yabai|aerospace|amethyst|chunkwm|rectangle|aqua|magnet|spectacle|skhd)$/i;
+const MAC_TOOLS = new Set(['iterm2', 'sketchybar', 'yabai', 'aerospace', 'ubersicht', 'alfred', 'amethyst', 'skhd']);
+const MAC_TITLE = /\[(macos|mac os|osx|mac|aqua)\]|\bmac ?os\b|\bosx\b/i;
+const WIN_TOOLS = new Set(['windows-terminal', 'rainmeter', 'komorebi', 'glazewm', 'windhawk', 'powertoys', 'explorerpatcher', 'whkd', 'yasb']);
+const WIN_TITLE = /\[windows\]|\bwindows ?(10|11|terminal|rice)\b|\bwin ?(10|11)\b|\bwsl2?\b|\brainmeter\b|\bkomorebi\b|\bglazewm\b|\bwindhawk\b/i;
+
+function inferOs({ distro, wm, title, tools }) {
+  const d = String(distro || '');
+  if (/windows/i.test(d)) return 'windows';
+  if (/mac ?os|osx|darwin/i.test(d)) return 'macos';
+  if (d) return 'linux';
+  if (tools.some((t) => WIN_TOOLS.has(t)) || WIN_TITLE.test(title)) return 'windows';
+  if (MAC_WMS.test(String(wm || '')) || tools.some((t) => MAC_TOOLS.has(t)) || MAC_TITLE.test(title)) return 'macos';
+  return 'linux';
+}
+
+const str = (v) => (typeof v === 'string' && v.trim() ? v.trim() : null);
+
+function absReddit(p) {
+  const s = str(p);
+  if (!s) return null;
+  return /^https?:\/\//i.test(s) ? s : `https://www.reddit.com${s.startsWith('/') ? '' : '/'}${s}`;
+}
+
+function normalize(entry) {
+  const e = entry || {};
+  const title = String(e.title || '').trim();
+  const tools = normalizeTools(e.utils_used);
+  const distro = str(e.distro);
+  const wm = str(e.wm);
+  const os = inferOs({ distro, wm, title, tools });
+  const colorscheme = str(e.colorscheme);
+  const image = str(e.preview_image) || str(e.url) || null;
+  const images = [...new Set([image, ...(Array.isArray(e.gallery_images) ? e.gallery_images : [])].filter((x) => typeof x === 'string' && x))];
+  const created = Number(e.created_utc);
+  const portable = os === 'windows' || (!tools.some((t) => TERMINAL_SET.has(t) && !PORTABLE_TERMINALS.has(t)) && (colorscheme !== null || tools.some((t) => PORTABLE_LOOK.has(t))));
+  return {
+    id: String(e.id || ''),
+    title,
+    url: absReddit(e.permalink),
+    author: str(e.author),
+    image,
+    images,
+    repo: str(e.github_url),
+    wm,
+    distro,
+    os,
+    colorscheme,
+    tools,
+    score: Number.isFinite(Number(e.score)) ? Number(e.score) : 0,
+    date: Number.isFinite(created) && created > 0 ? new Date(created * 1000).toISOString().slice(0, 10) : null,
+    portable,
+  };
+}
+
+// ---- load -------------------------------------------------------------------------------------
+
+function entriesOf(data) {
+  const list = Array.isArray(data) ? data : data && typeof data === 'object' ? Object.values(data) : [];
+  return list.filter((x) => x && typeof x === 'object' && (x.title || x.permalink));
+}
+
+function atomicWrite(file, text) {
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  const tmp = `${file}.${process.pid}.tmp`;
+  fs.writeFileSync(tmp, text);
+  fs.renameSync(tmp, file);
+}
+
+function readJson(file) {
+  try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return null; }
+}
+
+async function load(opts = {}) {
+  const local = process.env.TMT_RICES_FILE;
+  if (local) {
+    const data = readJson(local);
+    if (!data) throw new Error(`TMT_RICES_FILE ${local} is missing or is not valid JSON.`);
+    return result(entriesOf(data), { source: 'file', file: local });
+  }
+
+  const dir = opts.cacheDir || path.join(paths.stateRoot(), 'cache');
+  const file = path.join(dir, 'rices.json');
+  const metaFile = path.join(dir, 'rices.meta.json');
+  const now = opts.now || Date.now();
+  const meta = readJson(metaFile) || {};
+  const cached = fs.existsSync(file) ? readJson(file) : null;
+  const age = cached && meta.fetchedAt ? now - Date.parse(meta.fetchedAt) : Infinity;
+
+  if (cached && !opts.refresh && age < MAX_AGE_MS) {
+    return result(entriesOf(cached), { source: 'cache', file, fetchedAt: meta.fetchedAt });
+  }
+
+  const doFetch = opts.fetchImpl || globalThis.fetch;
+  const url = opts.url || DATA_URL;
+  try {
+    if (typeof doFetch !== 'function') throw new Error('this Node has no global fetch (need Node 20+)');
+    const headers = { 'user-agent': UA };
+    if (cached && meta.etag) headers['if-none-match'] = meta.etag;
+    const res = await doFetch(url, { headers, signal: AbortSignal.timeout(opts.timeoutMs || 60000) });
+    if (res.status === 304 && cached) {
+      const m = { ...meta, fetchedAt: new Date(now).toISOString() };
+      atomicWrite(metaFile, JSON.stringify(m, null, 2));
+      return result(entriesOf(cached), { source: 'cache', file, fetchedAt: m.fetchedAt, revalidated: true });
+    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const text = await res.text();
+    const data = JSON.parse(text);
+    if (!entriesOf(data).length) throw new Error('the downloaded file has no rice entries');
+    const m = { etag: res.headers.get('etag') || null, fetchedAt: new Date(now).toISOString(), url, count: entriesOf(data).length };
+    atomicWrite(file, text);
+    atomicWrite(metaFile, JSON.stringify(m, null, 2));
+    return result(entriesOf(data), { source: 'network', file, fetchedAt: m.fetchedAt });
+  } catch (e) {
+    const why = e && e.name === 'TimeoutError' ? 'the request timed out' : e && e.message ? e.message : String(e);
+    if (cached) {
+      return result(entriesOf(cached), { source: 'stale-cache', file, fetchedAt: meta.fetchedAt || null, warning: `Could not refresh the rice index (${why}); using the copy from ${meta.fetchedAt || 'an unknown date'}.` });
+    }
+    throw new Error(`Could not download the rice index (${why}) and there is no cached copy at ${file}. Connect to the network and retry, or set TMT_RICES_FILE to a local copy of ${url}.`);
+  }
+
+  function result(raw, info) {
+    return { entries: raw.map(normalize), count: raw.length, ...info };
+  }
+}
+
+// ---- search -----------------------------------------------------------------------------------
+
+const STOP = new Set(['a', 'an', 'the', 'and', 'or', 'with', 'on', 'in', 'for', 'my', 'me', 'to', 'of', 'like', 'something', 'looking',
+  'want', 'i', 'setup', 'rice', 'theme', 'terminal', 'using', 'style', 'vibe', 'vibes', 'look', 'looks', 'feel', 'please', 'make', 'it',
+  'is', 'that', 'some', 'kind', 'ish', 'term', 'shell', 'based', 'but', 'more', 'very', 'really', 'want', 'would', 'love', 'prompt']);
+
+// A vague word expands to concrete things that appear in rice metadata.
+const MOODS = {
+  cozy: ['warm', 'gruvbox', 'everforest', 'catppuccin', 'rosepine', 'kanagawa', 'autumn', 'coffee', 'comfy'],
+  warm: ['gruvbox', 'amber', 'orange', 'autumn', 'everforest', 'kanagawa'],
+  comfy: ['cozy', 'gruvbox', 'everforest', 'catppuccin'],
+  cyberpunk: ['neon', 'synthwave', 'tokyonight', 'cyber', 'hud', 'outrun', 'vaporwave', 'retrowave', 'glitch'],
+  neon: ['synthwave', 'cyberpunk', 'tokyonight', 'outrun', 'vaporwave'],
+  synthwave: ['neon', 'outrun', 'vaporwave', 'retrowave'],
+  futuristic: ['cyberpunk', 'neon', 'hud', 'scifi', 'cyber'],
+  hud: ['cyberpunk', 'futuristic', 'cyber', 'scifi'],
+  minimal: ['minimalist', 'clean', 'simple', 'nord', 'monochrome', 'plain'],
+  minimalist: ['minimal', 'clean', 'simple', 'nord', 'monochrome'],
+  clean: ['minimal', 'simple', 'nord', 'monochrome'],
+  simple: ['minimal', 'clean', 'nord', 'plain'],
+  retro: ['crt', 'amber', 'green', 'phosphor', 'vintage', 'coolretroterm', 'cathode'],
+  crt: ['retro', 'amber', 'phosphor', 'coolretroterm'],
+  hacker: ['matrix', 'green', 'cmatrix', 'phosphor', 'retro'],
+  matrix: ['green', 'cmatrix', 'hacker'],
+  pastel: ['catppuccin', 'rosepine', 'soft', 'pink', 'sweet'],
+  cute: ['pastel', 'pink', 'kawaii', 'anime', 'catppuccin', 'sweet'],
+  soft: ['pastel', 'catppuccin', 'rosepine', 'muted'],
+  forest: ['everforest', 'green', 'nature'],
+  nature: ['everforest', 'green', 'forest'],
+  ocean: ['nord', 'blue', 'iceberg', 'cold'],
+  cold: ['nord', 'blue', 'iceberg', 'ice'],
+  dark: ['black', 'oled', 'dracula', 'onedark', 'tokyonight', 'nord'],
+  light: ['white', 'solarized', 'latte', 'day', 'paper', 'bright'],
+  bright: ['light', 'white', 'latte'],
+  colorful: ['rainbow', 'vibrant', 'neon', 'dracula', 'pywal'],
+  muted: ['soft', 'nord', 'kanagawa', 'rosepine'],
+};
+
+const THEMES = new Set(['tokyonight', 'rosepine', 'onedark', 'onelight', 'gruvbox', 'catppuccin', 'solarized', 'everforest', 'kanagawa', 'oxocarbon', 'palenight']);
+const OS_WORDS = { mac: 'macos', macos: 'macos', osx: 'macos', macbook: 'macos', win: 'windows', win10: 'windows', win11: 'windows', windows: 'windows', linux: 'linux' };
+const FIELD_WEIGHT = { colorscheme: 3, tools: 2, wm: 2, distro: 1.5, title: 1.5, os: 1.5 };
+
+function parseQuery(query) {
+  const raw = Array.isArray(query) ? query.join(' ') : String(query || '');
+  const words = raw.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+  const terms = [];
+  for (let i = 0; i < words.length; i++) {
+    const pair = i + 1 < words.length ? compact(words[i] + words[i + 1]) : '';
+    if (pair && (ALIASES[pair] || THEMES.has(pair))) { terms.push(ALIASES[pair] || pair); i++; continue; }
+    if (STOP.has(words[i])) continue;
+    terms.push(ALIASES[words[i]] || words[i]);
+  }
+  return [...new Set(terms)].map((t) => ({ term: t, key: compact(t), expansions: (MOODS[t] || []).filter((x) => x !== t) }));
+}
+
+function tokenSet(...values) {
+  const set = new Set();
+  for (const v of values) {
+    const words = String(v == null ? '' : v).toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+    for (let i = 0; i < words.length; i++) {
+      set.add(words[i]);
+      if (i + 1 < words.length) set.add(words[i] + words[i + 1]);
+    }
+    const whole = compact(v);
+    if (whole) set.add(whole);
+  }
+  return set;
+}
+
+const indexCache = new WeakMap();
+function fieldsOf(e) {
+  let f = indexCache.get(e);
+  if (!f) {
+    f = { colorscheme: tokenSet(e.colorscheme), tools: tokenSet(...e.tools), wm: tokenSet(e.wm), distro: tokenSet(e.distro), title: tokenSet(e.title), os: new Set([e.os]) };
+    indexCache.set(e, f);
+  }
+  return f;
+}
+
+// Best (weight, field) for one concrete term on one entry.
+function best(f, key) {
+  let w = 0;
+  let field = null;
+  for (const name of Object.keys(FIELD_WEIGHT)) {
+    if (f[name].has(key) && FIELD_WEIGHT[name] > w) { w = FIELD_WEIGHT[name]; field = name; }
+  }
+  return { w, field };
+}
+
+function scoreEntry(e, terms) {
+  const f = fieldsOf(e);
+  let total = 0;
+  const matched = [];
+  for (const q of terms) {
+    const key = OS_WORDS[q.key] ? OS_WORDS[q.key] : q.key;
+    const d = best(f, key);
+    const syn = [];
+    for (const x of q.expansions) {
+      const s = best(f, compact(x));
+      if (s.w) syn.push({ x, w: s.w * 0.5, field: s.field });
+    }
+    syn.sort((a, b) => b.w - a.w);
+    const synScore = syn.length ? syn[0].w + 0.25 * syn.slice(1).reduce((n, s) => n + s.w, 0) : 0;
+    total += Math.max(d.w, synScore) + 0.25 * Math.min(d.w, synScore);
+    if (d.w) matched.push({ term: q.term, field: d.field, via: null });
+    for (const s of syn.slice(0, 2)) if (s.x !== q.term || s.field !== d.field) matched.push({ term: s.x, field: s.field, via: q.term });
+  }
+  return { relevance: terms.length ? total / terms.length : 0, matched, hit: total > 0 };
+}
+
+function canonOs(v) {
+  if (v == null || v === '') return null;
+  const c = compact(v);
+  const m = { windows: 'windows', win: 'windows', win10: 'windows', win11: 'windows', macos: 'macos', mac: 'macos', osx: 'macos', darwin: 'macos', linux: 'linux', unix: 'linux' }[c];
+  if (!m) throw new Error(`Unknown --os "${v}". Use linux, macos or windows.`);
+  return m;
+}
+
+function canonIn(v, list, label) {
+  if (v == null || v === '') return null;
+  const c = ALIASES[compact(v)] || String(v).toLowerCase();
+  if (!list.includes(c)) throw new Error(`Unknown ${label} "${v}". Known: ${list.join(', ')}.`);
+  return c;
+}
+
+const fmtCount = (n) => (n >= 1000 ? `${(n / 1000).toFixed(1).replace(/\.0$/, '')}k` : String(n));
+
+function explain(e, matched, filters, exact) {
+  const parts = [];
+  const seen = new Set();
+  for (const m of [...matched.filter((x) => !x.via), ...matched.filter((x) => x.via)]) {
+    const key = `${m.field} ${m.term}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    parts.push(m.via ? `${key} (fits "${m.via}")` : key);
+  }
+  const fl = [];
+  if (filters.os) fl.push(filters.os === 'windows' && e.os !== 'windows' ? 'portable to Windows' : `os ${e.os}`);
+  if (filters.terminal) fl.push(e.tools.includes(filters.terminal) ? `uses ${filters.terminal}` : `no ${filters.terminal}`);
+  if (filters.shell) fl.push(e.tools.includes(filters.shell) ? `uses ${filters.shell}` : `no ${filters.shell}`);
+  const out = [];
+  if (parts.length) out.push(`matches ${parts.slice(0, 4).join(', ')}`);
+  if (fl.length) out.push(fl.join(', '));
+  if (!parts.length) out.push('popular pick');
+  out.push(`${fmtCount(e.score)} upvotes`);
+  if (!exact) out.push('closest match, not exact');
+  return out.join('; ');
+}
+
+// Pure ranking over normalized entries.
+function rank(entries, query, opts = {}) {
+  const terms = parseQuery(query);
+  const filters = { os: canonOs(opts.os), terminal: canonIn(opts.terminal, TERMINALS, 'terminal'), shell: canonIn(opts.shell, SHELLS, 'shell') };
+  const active = Object.keys(filters).filter((k) => filters[k]);
+  const limit = Number.isInteger(opts.limit) && opts.limit > 0 ? opts.limit : 6;
+  const minScore = Number(opts.minScore) || 0;
+  const notes = [];
+
+  let times = entries.map((e) => Date.parse(e.date)).filter(Number.isFinite);
+  const t0 = times.length ? Math.min(...times) : 0;
+  const span = times.length ? Math.max(...times) - t0 || 1 : 1;
+
+  const pass = {
+    os: (e) => (filters.os === 'windows' ? e.os === 'windows' || e.portable : e.os === filters.os),
+    terminal: (e) => e.tools.includes(filters.terminal),
+    shell: (e) => e.tools.includes(filters.shell),
+  };
+
+  let pool = [];
+  for (const e of entries) {
+    if (e.score < minScore) continue;
+    const s = scoreEntry(e, terms);
+    if (terms.length && !s.hit) continue;
+    pool.push({ e, s, fm: active.filter((k) => pass[k](e)) });
+  }
+  if (terms.length && !pool.length) notes.push(`No rice matched "${terms.map((t) => t.term).join(' ')}". Try a mood (cozy, minimal, retro, cyberpunk), a colorscheme (gruvbox, nord) or a tool (kitty, zsh).`);
+
+  let exact = true;
+  if (active.length) {
+    const full = pool.filter((p) => p.fm.length === active.length);
+    if (full.length) pool = full;
+    else if (pool.length) {
+      exact = false;
+      notes.push(`No rice matches all of ${active.map((k) => `${k}=${filters[k]}`).join(', ')}${terms.length ? ' for this query' : ''}; showing the closest (partial matches first).`);
+    }
+  }
+  if (filters.os === 'windows' && exact && pool.length) {
+    const native = pool.filter((p) => p.e.os === 'windows').length;
+    notes.push(`${native ? `Only ${native} Windows-native rice${native === 1 ? '' : 's'} matched` : 'No Windows-native rices matched'}; the rest are Linux/macOS rices whose look only needs things that exist on Windows (colors, prompt, fetch tool, wezterm/alacritty).`);
+  }
+
+  for (const p of pool) {
+    const e = p.e;
+    const recency = (Date.parse(e.date) - t0) / span || 0;
+    p.rank = p.s.relevance * 10 + 1.5 * Math.log1p(Math.max(0, e.score)) + 1.5 * recency + p.fm.length * (exact ? 0 : 8)
+      + (filters.os === 'windows' ? (e.os === 'windows' ? 6 : e.portable ? 2 : 0) : 0);
+  }
+  pool.sort((a, b) => b.rank - a.rank || b.e.score - a.e.score || (a.e.id < b.e.id ? -1 : 1));
+
+  const results = pool.slice(0, limit).map((p) => ({
+    ...p.e,
+    relevance: Math.round(p.s.relevance * 100) / 100,
+    exact: exact || p.fm.length === active.length,
+    why: explain(p.e, p.s.matched, filters, exact || p.fm.length === active.length),
+  }));
+  return { query: terms.map((t) => t.term).join(' '), filters, matches: pool.length, notes, results };
+}
+
+async function searchDetailed(query, opts = {}) {
+  const data = opts.entries ? { entries: opts.entries } : await load(opts);
+  const r = rank(data.entries, query, opts);
+  if (data.warning) r.notes.unshift(data.warning);
+  r.source = data.source || 'given';
+  return r;
+}
+
+async function search(query, opts = {}) {
+  return (await searchDetailed(query, opts)).results;
+}
+
+// ---- facets -----------------------------------------------------------------------------------
+
+function tally(values, top) {
+  const m = new Map();
+  for (const v of values) if (v) m.set(v, (m.get(v) || 0) + 1);
+  return [...m.entries()].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1)).slice(0, top).map(([name, count]) => ({ name, count }));
+}
+
+function facetsOf(entries, top = 15) {
+  const lower = (s) => (s ? s : null);
+  return {
+    total: entries.length,
+    os: tally(entries.map((e) => e.os), 3),
+    colorschemes: tally(entries.map((e) => lower(e.colorscheme)), top),
+    terminals: tally(entries.flatMap((e) => e.tools.filter((t) => TERMINAL_SET.has(t))), top),
+    shells: tally(entries.flatMap((e) => e.tools.filter((t) => SHELLS.includes(t))), top),
+    wms: tally(entries.map((e) => e.wm), top),
+    distros: tally(entries.map((e) => e.distro), top),
+  };
+}
+
+async function facets(opts = {}) {
+  const data = opts.entries ? { entries: opts.entries } : await load(opts);
+  return facetsOf(data.entries, opts.top);
+}
+
+// ---- save one screenshot ----------------------------------------------------------------------
+
+const EXT = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/jpg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif' };
+
+async function saveImage(entry, dir, opts = {}) {
+  const url = entry && entry.image;
+  if (!url) throw new Error('This rice has no screenshot link.');
+  const doFetch = opts.fetchImpl || globalThis.fetch;
+  const res = await doFetch(url, { headers: { 'user-agent': UA }, signal: AbortSignal.timeout(opts.timeoutMs || 60000), redirect: 'follow' });
+  if (!res.ok) throw new Error(`Could not download the screenshot (HTTP ${res.status}): ${url}`);
+  const type = String(res.headers.get('content-type') || '').split(';')[0].trim().toLowerCase();
+  if (type && !type.startsWith('image/')) throw new Error(`The screenshot link did not return an image (${type}): ${url}`);
+  const buf = Buffer.from(await res.arrayBuffer());
+  if (buf.length > 25 * 1024 * 1024) throw new Error('The screenshot is larger than 25 MB; not saving it.');
+  let ext = EXT[type];
+  if (!ext) { const m = /\.(png|jpe?g|webp|gif)(?:[?#]|$)/i.exec(url); ext = m ? m[1].toLowerCase().replace('jpeg', 'jpg') : 'png'; }
+  const abs = path.resolve(dir);
+  fs.mkdirSync(abs, { recursive: true });
+  const file = path.join(abs, `rice-${String(entry.id).replace(/[^a-z0-9_-]/gi, '')}.${ext}`);
+  fs.writeFileSync(file, buf);
+  return { file, bytes: buf.length, source: url };
+}
+
+// ---- CLI --------------------------------------------------------------------------------------
+
+const USAGE = `Usage: tmt inspire <query...> [--os linux|macos|windows] [--terminal x] [--shell x] [--limit n] [--min-score n]
+                   [--json] [--refresh] [--facets] [--save <n> <dir>]
+Search r/unixporn rices by mood, colorscheme, tool or WM. Example: tmt inspire cozy gruvbox --terminal kitty`;
+
+function parseArgs(argv) {
+  const a = { query: [], flags: {} };
+  const valued = new Set(['os', 'terminal', 'shell', 'limit', 'min-score']);
+  const bool = new Set(['json', 'refresh', 'facets', 'help']);
+  const list = argv.filter((x) => x !== undefined && x !== null).map(String);
+  for (let i = 0; i < list.length; i++) {
+    const x = list[i];
+    if (x === '--') { a.query.push(...list.slice(i + 1)); break; }
+    if (!x.startsWith('--')) { a.query.push(x); continue; }
+    const eq = x.indexOf('=');
+    const name = (eq > 0 ? x.slice(2, eq) : x.slice(2));
+    const inline = eq > 0 ? x.slice(eq + 1) : null;
+    if (bool.has(name)) { a.flags[name] = true; continue; }
+    if (name === 'save') {
+      const n = inline !== null ? inline : list[++i];
+      const dir = list[++i];
+      if (n === undefined || dir === undefined || !/^\d+$/.test(n)) throw new Error('--save needs a result number and a folder: --save <n> <dir>');
+      a.flags.save = { n: Number(n), dir };
+      continue;
+    }
+    if (valued.has(name)) {
+      const v = inline !== null ? inline : list[++i];
+      if (v === undefined || v.startsWith('--')) throw new Error(`--${name} needs a value.`);
+      a.flags[name] = v;
+      continue;
+    }
+    throw new Error(`Unknown flag --${name}.\n${USAGE}`);
+  }
+  return a;
+}
+
+function intFlag(v, name) {
+  if (v === undefined) return undefined;
+  if (!/^\d+$/.test(String(v)) || Number(v) < 1) throw new Error(`--${name} must be a positive whole number.`);
+  return Number(v);
+}
+
+function formatResults(r) {
+  const lines = [];
+  if (!r.results.length) lines.push('No matches.');
+  r.results.forEach((x, i) => {
+    lines.push(`${i + 1}. ${x.title}  (${x.score} upvotes, ${x.date || 'n/a'})`);
+    lines.push(`   colorscheme: ${x.colorscheme || 'n/a'} | wm: ${x.wm || 'n/a'} | distro: ${x.distro || 'n/a'} | os: ${x.os}${x.portable && x.os !== 'windows' ? ' (portable to Windows)' : ''}`);
+    lines.push(`   tools: ${x.tools.length ? x.tools.join(', ') : 'n/a'}`);
+    lines.push(`   screenshot: ${x.image || 'n/a'}`);
+    lines.push(`   reddit: ${x.url || 'n/a'}`);
+    lines.push(`   repo: ${x.repo || 'n/a'}`);
+    lines.push(`   why: ${x.why}`);
+  });
+  if (r.notes.length) lines.push('', ...r.notes.map((n) => `Note: ${n}`));
+  lines.push('', ATTRIBUTION);
+  return lines.join('\n');
+}
+
+function formatFacets(f) {
+  const row = (title, list) => `${title}: ${list.map((x) => `${x.name} ${x.count}`).join(', ')}`;
+  return [`${f.total} rices`, row('OS', f.os), row('Colorschemes', f.colorschemes), row('Terminals', f.terminals), row('Shells', f.shells), row('WMs', f.wms), row('Distros', f.distros), '', ATTRIBUTION].join('\n');
+}
+
+async function main(argv = []) {
+  const { query, flags } = parseArgs(argv);
+  const out = (s) => process.stdout.write(`${s}\n`);
+  if (flags.help) { out(USAGE); return 0; }
+  const loadOpts = { refresh: Boolean(flags.refresh) };
+
+  if (flags.facets) {
+    const f = await facets(loadOpts);
+    out(flags.json ? JSON.stringify({ facets: f, attribution: ATTRIBUTION }, null, 2) : formatFacets(f));
+    return 0;
+  }
+
+  const limit = intFlag(flags.limit, 'limit');
+  const minScore = flags['min-score'] === undefined ? undefined : Number(flags['min-score']);
+  if (minScore !== undefined && !Number.isFinite(minScore)) throw new Error('--min-score must be a number.');
+  const r = await searchDetailed(query, { ...loadOpts, os: flags.os, terminal: flags.terminal, shell: flags.shell, limit, minScore });
+
+  let saved = null;
+  if (flags.save) {
+    const pick = r.results[flags.save.n - 1];
+    if (!pick) throw new Error(`--save ${flags.save.n}: there are only ${r.results.length} results.`);
+    saved = { n: flags.save.n, id: pick.id, ...(await saveImage(pick, flags.save.dir)) };
+  }
+
+  if (flags.json) {
+    out(JSON.stringify({ query: r.query, filters: r.filters, matches: r.matches, notes: r.notes, results: r.results, saved, attribution: ATTRIBUTION }, null, 2));
+  } else {
+    out(formatResults(r));
+    if (saved) out(`\nSaved screenshot ${saved.n} to ${saved.file} (${saved.bytes} bytes). Local reference only; do not redistribute.`);
+  }
+  return 0;
+}
+
+module.exports = {
+  DATA_URL, ATTRIBUTION, TERMINALS, SHELLS, MOODS,
+  load, normalize, normalizeTools, rank, search, searchDetailed, facets, facetsOf, saveImage, parseQuery, parseArgs, main,
+};
