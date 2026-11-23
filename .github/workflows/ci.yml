@@ -1,0 +1,38 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / node ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+        node: [20, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Catalog check and tests
+        run: npm run check
+      - name: Privacy scan
+        run: node tools/privacy.js
+      - name: CLI smoke test in a fake home
+        shell: bash
+        run: |
+          export TMT_HOME="$RUNNER_TEMP/home"
+          mkdir -p "$TMT_HOME"
+          node engine/cli.js new
+          node engine/cli.js stage preset quiet
+          node engine/cli.js plan > /dev/null
+          node engine/cli.js detect > /dev/null
+          node engine/cli.js preset list
