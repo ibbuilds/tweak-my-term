@@ -62,7 +62,7 @@ function cssFit(fit, align) {
 const SEG_COLOR = { path: 4, git: 5, duration: 3, status: 2, runtimes: 6, time: 8, user: 2, host: 5, venv: 6, battery: 3 };
 const SEG_TEXT = {
   path: () => '~/projects/tweak-my-term', git: () => 'main ±2', duration: () => '1.2s', runtimes: () => 'node 24.1',
-  time: () => '14:32', user: () => 'ib', host: () => 'studio', venv: () => '.venv', battery: () => '82%',
+  time: () => '14:32', user: () => 'dev', host: () => 'studio', venv: () => '.venv', battery: () => '82%',
   status: (ok) => (ok ? '✔' : '✘ 1'),
 };
 
@@ -109,12 +109,12 @@ function session(prompt) {
   };
   const cmd = (name, rest = '') => `<span class="a2 b">${esc(name)}</span>${rest ? ' ' + esc(rest) : ''}`;
   p(true, cmd('ls', '-la'));
-  L.push('<span class="a8">drwxr-xr-x</span> <span class="a2">ib</span>    <span class="a2">-</span> <span class="a4">Nov 23 10:12</span> <span class="a4 b">catalog/</span>');
-  L.push('<span class="a8">drwxr-xr-x</span> <span class="a2">ib</span>    <span class="a2">-</span> <span class="a4">Nov 22 18:40</span> <span class="a4 b">kit/</span>');
-  L.push('<span class="a8">-rw-r--r--</span> <span class="a2">ib</span> <span class="a2">1.2k</span> <span class="a4">Nov 23 09:58</span> package.json');
-  L.push('<span class="a8">-rwxr-xr-x</span> <span class="a2">ib</span> <span class="a2">4.1k</span> <span class="a4">Nov 21 17:02</span> <span class="a2 b">build.sh*</span>');
-  L.push('<span class="a8">lrwxrwxrwx</span> <span class="a2">ib</span>   <span class="a2">20</span> <span class="a4">Nov 20 08:15</span> <span class="a6">current</span> <span class="a8">-&gt;</span> presets/eclipse');
-  L.push('<span class="a8">-rw-r--r--</span> <span class="a2">ib</span> <span class="a2">880k</span> <span class="a4">Nov 19 14:30</span> <span class="a1">anchor.tar.gz</span>');
+  L.push('<span class="a8">drwxr-xr-x</span> <span class="a2">dev</span>    <span class="a2">-</span> <span class="a4">Nov 23 10:12</span> <span class="a4 b">catalog/</span>');
+  L.push('<span class="a8">drwxr-xr-x</span> <span class="a2">dev</span>    <span class="a2">-</span> <span class="a4">Nov 22 18:40</span> <span class="a4 b">kit/</span>');
+  L.push('<span class="a8">-rw-r--r--</span> <span class="a2">dev</span> <span class="a2">1.2k</span> <span class="a4">Nov 23 09:58</span> package.json');
+  L.push('<span class="a8">-rwxr-xr-x</span> <span class="a2">dev</span> <span class="a2">4.1k</span> <span class="a4">Nov 21 17:02</span> <span class="a2 b">build.sh*</span>');
+  L.push('<span class="a8">lrwxrwxrwx</span> <span class="a2">dev</span>   <span class="a2">20</span> <span class="a4">Nov 20 08:15</span> <span class="a6">current</span> <span class="a8">-&gt;</span> releases/v2');
+  L.push('<span class="a8">-rw-r--r--</span> <span class="a2">dev</span> <span class="a2">880k</span> <span class="a4">Nov 19 14:30</span> <span class="a1">anchor.tar.gz</span>');
   L.push('');
   p(true, cmd('git', 'status -sb'));
   L.push('<span class="a8">##</span> <span class="a2">main</span>...<span class="a1">origin/main</span> [ahead 1]');

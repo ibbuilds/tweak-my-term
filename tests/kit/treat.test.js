@@ -10,7 +10,7 @@ const R = require('../../kit/raster');
 const S = require('../../kit/scene');
 const H = require('./_helpers');
 
-const LOOK = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'presets', 'eclipse', 'look.json'), 'utf8'));
+const LOOK = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'look.json'), 'utf8'));
 const px = (img, x, y) => Array.from(img.data.subarray((y * img.width + x) * 4, (y * img.width + x) * 4 + 4));
 const meanLuma = (img) => R.stats(img).mean;
 const imageRow = (pal, img, opacity) => K.report(T.normalizePalette(pal), { image: img, opacity }).find((x) => x.pair.startsWith('foreground/image'));
@@ -110,8 +110,8 @@ test('parseStep / apply: look-spec strings and objects, in order', () => {
   assert.deepStrictEqual([out.width, out.height], [40, 40]);
   assert.deepStrictEqual(px(out, 20, 20), [102, 102, 102, 255]);
   const img = S.paint({ preset: 'synthwave', width: 140, height: 140 });
-  const eclipse = T.apply(img, LOOK.background.treatment, { palette: LOOK.palette });
-  assert.ok(meanLuma(eclipse) < meanLuma(img), 'the eclipse look treatment darkens');
+  const treated = T.apply(img, LOOK.background.treatment, { palette: LOOK.palette });
+  assert.ok(meanLuma(treated) < meanLuma(img), 'the fixture treatment darkens');
   const wash = T.apply(src, [{ op: 'tint', color: 'background', amount: 1 }], { palette: LOOK.palette });
   assert.deepStrictEqual(px(wash, 1, 1), [0x0b, 0x09, 0x09, 255]);
 });

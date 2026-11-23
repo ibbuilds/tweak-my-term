@@ -40,5 +40,5 @@ Tree/preview use in other tools: `eza --tree --level=2 --color=always --icons=al
 - `--hyperlink=auto` makes names clickable in terminals that support OSC 8 (Windows Terminal, WezTerm, kitty, iTerm2, Ghostty); safe elsewhere.
 - `--git` adds a per-file git column and costs time in large repos; omit it from the plain `ls`.
 - `--group-directories-first` is the eza flag name (also `--group-directories-last`).
-- `ls` colors for other tools: eza reads `LS_COLORS`; if the preset exports one, eza and fd stay consistent.
+- `ls` colors for other tools: eza reads `LS_COLORS`; if your shell exports one, eza and fd stay consistent.
 - Check: `eza --version`, `type ls` (alias/function), `ls --icons=always` renders icons.

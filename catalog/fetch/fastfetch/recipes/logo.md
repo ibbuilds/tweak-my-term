@@ -27,7 +27,7 @@ $1\/$2__
 ```
 Pre-colored art (already contains escape sequences, e.g. made by a converter): use `file-raw`, which does no placeholder replacement; give its size so the info column aligns:
 ```jsonc
-"logo": { "type": "file-raw", "source": "~/.config/eclipse/art/sigil.txt", "width": 25, "height": 12, "padding": { "left": 4, "right": 5 } }
+"logo": { "type": "file-raw", "source": "~/.config/fastfetch/logo.txt", "width": 25, "height": 12, "padding": { "left": 4, "right": 5 } }
 ```
 Image logos (`source` is an image file; the terminal must support the protocol, see its catalog entry):
 ```jsonc

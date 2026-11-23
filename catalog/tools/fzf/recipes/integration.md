@@ -2,7 +2,7 @@
 capability: integration
 tool: fzf
 os: windows, macos, linux
-verified: 2026-11-23 (docs; the bash form is the one used in the Eclipse preset on a Windows 11 machine)
+verified: 2026-11-23 (docs; the bash form was verified on a Windows 11 machine)
 sources: https://github.com/junegunn/fzf#environment-variables, https://github.com/junegunn/fzf#fuzzy-completion-for-bash-and-zsh, https://github.com/junegunn/fzf#key-bindings-for-command-line
 ---
 # Make fzf use fd, preview with bat and eza
@@ -36,6 +36,6 @@ Linux Debian/Ubuntu: the binaries are `fdfind` and `batcat`; create `fd`/`bat` s
 ## Notes
 - `--walker`, `--walker-root`, `--walker-skip` in `FZF_DEFAULT_OPTS` replace the external `fd` call entirely (README); use them when fd is not installed: `--walker=file,dir,follow,hidden --walker-skip=.git,node_modules,target`.
 - `{}` in `--preview` is the single-quoted current item; on Windows Git Bash use forward slashes. Do not put `--preview` in `FZF_DEFAULT_OPTS` globally (README warns it slows every call); use the per-widget `*_OPTS`.
-- Preview needs `bat` and `eza` installed; guard with `command -v` if a preset might lack them. `--icons=always` in the preview needs a Nerd Font (see the nerd-fonts entry).
+- Preview needs `bat` and `eza` installed; guard with `command -v` if a config might lack them. `--icons=always` in the preview needs a Nerd Font (see the nerd-fonts entry).
 - For clipboard in history: on WSL/Git Bash `clip.exe` (Windows), macOS `pbcopy`, Linux `xclip -selection clipboard`/`wl-copy`, e.g. `--bind='ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'`.
 - zoxide's interactive picker (`zi`) also uses fzf; tune it with `_ZO_FZF_OPTS`.

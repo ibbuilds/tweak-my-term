@@ -13,7 +13,7 @@ Top-level `actions`:
 ```jsonc
 { "command": { "action": "quakeMode" }, "id": "User.quake" }
 ```
-Top-level `keybindings` (a global hotkey; the verified preset uses the key left of 1, scancode 41):
+Top-level `keybindings` (a global hotkey; e.g. the key left of 1, scancode 41):
 ```jsonc
 { "id": "User.quake", "keys": "win+sc(41)" }
 ```

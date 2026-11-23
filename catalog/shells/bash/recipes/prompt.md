@@ -29,7 +29,7 @@ eval "$(oh-my-posh init bash --config ~/.config/omp.json)" # ohmyposh.dev
 ## Notes
 - Always wrap non-printing escapes in `\[ ... \]`; unwrapped escapes break line wrapping and history navigation.
 - `PROMPT_COMMAND` is an array since bash 5.1 (`PROMPT_COMMAND+=(fn)`); macOS /bin/bash 3.2 only accepts a string: `PROMPT_COMMAND="fn;$PROMPT_COMMAND"`.
-- No native right prompt or transient prompt. A transient prompt needs ble.sh (24-60 ms per keystroke on Windows, measured) or a `bind -x` hack; the Eclipse preset skips it for speed.
+- No native right prompt or transient prompt. A transient prompt needs ble.sh (24-60 ms per keystroke on Windows, measured) or a `bind -x` hack; skipping it is faster.
 - Cost: every `$(git ...)` in the prompt is a fork (10-60 ms on Windows). Run `git status` once per prompt, or read `.git/HEAD` with shell builtins.
 - `PS0` (bash 4.4+) is printed after Enter, before the command runs; `PS2` is the continuation prompt; `PS4` is the xtrace prefix.
 - Glyph width (Nerd Font icons, emoji) depends on the terminal; keep wide icons outside `\[ \]` so they count as printed.

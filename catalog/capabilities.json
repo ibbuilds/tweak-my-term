@@ -2041,7 +2041,7 @@
           "windows"
         ],
         "recipe": "catalog/terminals/windows-terminal/recipes/font-fallback.md",
-        "notes": "A comma-separated face list works; the docs describe face as a single name, so this relies on the verified Eclipse preset behaviour."
+        "notes": "A comma-separated face list works; the docs describe face as a single name, so this relies on behaviour verified on Windows 11."
       }
     },
     "line-height": {

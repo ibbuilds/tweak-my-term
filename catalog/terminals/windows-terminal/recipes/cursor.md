@@ -18,5 +18,5 @@ Shape map: look-spec `block` -> `filledBox`, `bar` -> `bar` (default), `underlin
 
 ## Notes
 - `cursorColor` set in a scheme (palette recipe) applies to every profile using it; a profile `cursorColor` overrides it.
-- `unfocusedAppearance` accepts `cursorShape`, `cursorColor` and `cursorHeight`, so an unfocused window can show a hollow box (used by the verified preset).
+- `unfocusedAppearance` accepts `cursorShape`, `cursorColor` and `cursorHeight`, so an unfocused window can show a hollow box (verified on Windows 11).
 - A blink setting is not documented on the profile pages; blinking is not controlled here (unverified).

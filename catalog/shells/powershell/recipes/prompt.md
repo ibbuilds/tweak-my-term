@@ -46,4 +46,4 @@ Set-PSReadLineKeyHandler -Key Enter -ScriptBlock {
 - Cost: `prompt` runs after every command. Avoid spawning `git` unless inside a repo (look for a `.git` dir by walking parents with `Test-Path`, then call git once). A process spawn is ~10-60 ms on Windows.
 - Window/tab title: `$Host.UI.RawUI.WindowTitle = ...` inside `prompt`.
 - Set `[Console]::OutputEncoding = [Text.Encoding]::UTF8` so glyphs print right in 5.1.
-- Multi-line prompts: set `-ExtraPromptLineCount` to the number of extra lines (the preset uses 1).
+- Multi-line prompts: set `-ExtraPromptLineCount` to the number of extra lines (e.g. 1).

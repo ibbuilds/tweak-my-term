@@ -17,7 +17,7 @@ sources: https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.s
 ```
 
 ## Notes
-- The value is a CSS length or percentage string (schema type `CSSLengthPercentage`); the verified Eclipse preset uses a quoted multiplier (`"1.25"`). Pixel and percentage strings are also accepted per the schema.
+- The value is a CSS length or percentage string (schema type `CSSLengthPercentage`); a quoted multiplier works (`"1.25"`). Pixel and percentage strings are also accepted per the schema.
 - `font.cellWidth` is the matching letter-spacing override.
 - `cellHeight` is documented in the JSON schema, not in the learn.microsoft.com profile pages.
 - Large values leave gaps between box-drawing characters in TUIs; 1.1 to 1.3 reads well with background art.

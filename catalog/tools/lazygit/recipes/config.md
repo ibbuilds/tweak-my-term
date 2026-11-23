@@ -35,7 +35,7 @@ os:
 Default config dir: see `install-init.md`; repo-level override in `<repo>/.git/lazygit.yml`. Merge several files: `LG_CONFIG_FILE="$HOME/.base.yml,$HOME/.theme.yml" lazygit`. Change the config directory with `CONFIG_DIR`.
 
 ## Notes
-- `disableStartupPopups: true` hides the update/news popups (top-level key, as in the Eclipse config).
+- `disableStartupPopups: true` hides the update/news popups (top-level key).
 - `update.method` and `git.autoFetch` are other noise sources if the user wants a quiet UI (see `lazygit --config`).
 - Config changes apply on the next launch; there is no live reload.
 - Verify: `lazygit --print-config-dir`, then start `lazygit` in a repo; a bad key prints an error and exits.

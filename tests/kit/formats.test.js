@@ -10,7 +10,20 @@ const gif = require('../../kit/gif');
 const image = require('../../kit/image');
 const H = require('./_helpers');
 
-const ECLIPSE = path.join(__dirname, '..', '..', 'presets', 'eclipse', 'files', 'home', '.config', 'eclipse', 'art', 'eclipse-art-v1.png');
+// A dark scene with one red light source, painted here so the tests own their input.
+const S = require('../../kit/scene');
+const redNight = () => S.paint({
+  width: 480, height: 300, seed: 3,
+  palette: { background: '#0B0909', foreground: '#D8D2CF', accent: '#E0201E', ansi: { red: '#B3141B' } },
+  layers: [
+    { type: 'sky', stops: [[0, { mix: ['background', '#000000', 0.7] }], [1, { mix: ['background', '#000000', 0.5] }]] },
+    { type: 'glow', x: 0.76, y: 0.14, r: 0.3, color: 'ansi.red', opacity: 0.22 },
+    { type: 'moon', x: 0.76, y: 0.14, r: 0.045, color: 'accent', glow: 0.3, glowRadius: 2.4 },
+    { type: 'hills', baseY: 0.65, amp: 0.08, color: 'ink', shade: 0 },
+    { type: 'hatch', wash: 0.42 },
+    { type: 'grain', amount: 0.8 },
+  ],
+});
 
 test('png: encode -> decode round trip is identical (incl. odd sizes)', () => {
   for (const [w, h, seed] of [[1, 1, 1], [2, 3, 2], [7, 5, 3], [33, 17, 4], [64, 64, 5], [101, 1, 6], [1, 77, 7]]) {
@@ -87,8 +100,8 @@ test('png: bad input throws clear errors', () => {
   assert.throws(() => png.encode({ width: 2, height: 2, data: new Uint8ClampedArray(3) }), /invalid image/);
 });
 
-test('png: decodes the Eclipse art', () => {
-  const img = png.decode(fs.readFileSync(ECLIPSE));
+test('png: a painted scene survives encode -> decode', () => {
+  const img = png.decode(png.encode(redNight()));
   assert.ok(img.width > 0 && img.height > 0);
   assert.strictEqual(img.data.length, img.width * img.height * 4);
 });

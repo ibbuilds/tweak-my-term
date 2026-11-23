@@ -17,4 +17,4 @@ Example: look spec `[16, 24, 16, 24]` -> `"padding": "24, 16, 24, 16"`.
 
 ## Notes
 - Accepted forms: `8` or `"8"` (all sides), `"8, 4"` (left-right, top-bottom), `"l, t, r, b"`. Default `"8, 8, 8, 8"`.
-- `scrollbarState` (`visible`, `hidden`; `always` from 1.17) controls the scrollbar; the verified preset hides it.
+- `scrollbarState` (`visible`, `hidden`; `always` from 1.17) controls the scrollbar; hiding it is a common choice.

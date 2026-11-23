@@ -11,7 +11,7 @@ const H = require('./_helpers');
 
 const ROOT = path.join(__dirname, '..', '..');
 const CLI = path.join(ROOT, 'engine', 'cli.js');
-const ECLIPSE = path.join(ROOT, 'presets', 'eclipse', 'look.json');
+const FIXTURE = path.join(__dirname, 'fixtures', 'look.json');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'tmt-art-'));
 test.after(() => fs.rmSync(tmp, { recursive: true, force: true }));
 
@@ -35,17 +35,15 @@ test('help lists every subcommand; unknown commands and options are rejected cle
 });
 
 test('scene: writes a decodable PNG of the asked size; same seed is byte-identical; seeds and presets differ', () => {
-  const out = j('scene', 'a.png', '--preset', 'eclipse', '--width', '320', '--height', '200', '--seed', '5');
-  assert.strictEqual(out.preset, 'eclipse');
+  const out = j('scene', 'a.png', '--preset', 'synthwave', '--width', '320', '--height', '200', '--seed', '5');
+  assert.strictEqual(out.preset, 'synthwave');
   assert.deepStrictEqual([out.width, out.height], [320, 200]);
   const img = decode('a.png');
   assert.deepStrictEqual([img.width, img.height], [320, 200]);
-  ok('scene', 'b.png', '--preset=eclipse', '--width=320', '--height=200', '--seed=5');
+  ok('scene', 'b.png', '--preset=synthwave', '--width=320', '--height=200', '--seed=5');
   assert.ok(fs.readFileSync(path.join(tmp, 'a.png')).equals(fs.readFileSync(path.join(tmp, 'b.png'))));
   ok('scene', 'c.png', '--preset', 'nord-mountains', '--width', '320', '--height', '200', '--seed', '5');
   assert.ok(!fs.readFileSync(path.join(tmp, 'a.png')).equals(fs.readFileSync(path.join(tmp, 'c.png'))));
-  const [r, g] = H.meanRgb(img);
-  assert.ok(r > 3 * g, 'eclipse is red');
 });
 
 test('scene: --palette repaints the preset in another palette; errors are readable', () => {
@@ -121,7 +119,7 @@ test('scheme: imports base16, alacritty, kitty, ghostty and iTerm2 files', () =>
 });
 
 function makeLook(name, bg, opacity) {
-  const look = JSON.parse(fs.readFileSync(ECLIPSE, 'utf8'));
+  const look = JSON.parse(fs.readFileSync(FIXTURE, 'utf8'));
   look.background = { image: bg, fit: 'cover', opacity };
   fs.mkdirSync(path.join(tmp, name), { recursive: true });
   fs.writeFileSync(path.join(tmp, name, 'look.json'), JSON.stringify(look));
@@ -185,16 +183,16 @@ test('ascii: writes art whose lines are exactly --cols wide; prints to stdout wi
   assert.ok(colored.includes('\x1b[0;38;2;'));
   const stripped = colored.replace(/\x1b\[[0-9;]*m/g, '').trimEnd().split('\n');
   for (const l of stripped) assert.strictEqual([...l].length, 20);
-  const lookPal = ok('ascii', 's.png', '--cols', '20', '--color', 'ansi16', '--palette', ECLIPSE).stdout;
+  const lookPal = ok('ascii', 's.png', '--cols', '20', '--color', 'ansi16', '--palette', FIXTURE).stdout;
   assert.match(lookPal, /\x1b\[0;(3|9)\dm/);
   assert.match(art('ascii', 's.png', '--charset', 'emoji').stderr, /unknown charset "emoji"/);
 });
 
-test('preview: writes a self-contained page and a swatch PNG for the Eclipse preset', () => {
-  const r = j('preview', ECLIPSE, '--out', 'prev/preview.html', '--swatch', 'prev/swatch.png');
+test('preview: writes a self-contained page and a swatch PNG for the fixture look', () => {
+  const r = j('preview', FIXTURE, '--out', 'prev/preview.html', '--swatch', 'prev/swatch.png');
   const page = fs.readFileSync(path.join(tmp, 'prev', 'preview.html'), 'utf8');
   assert.strictEqual(r.bytes, Buffer.byteLength(page));
-  assert.match(page, /<title>eclipse - terminal look preview<\/title>/);
+  assert.match(page, /<title>fixture - terminal look preview<\/title>/);
   assert.match(page, /url\(data:image\/png;base64,/, 'the look background (relative to the look file) is embedded');
   assert.match(page, /opacity:0\.9"/);
   for (const hex of ['#0B0909', '#D8D2CF', '#F2201C', '#4D1216', '#E0201E', '#B3141B', '#F2EEEA']) assert.ok(page.includes(hex), hex);
@@ -202,7 +200,7 @@ test('preview: writes a self-contained page and a swatch PNG for the Eclipse pre
   const sw = decode('prev/swatch.png');
   assert.deepStrictEqual([sw.width, sw.height], [884, 294]);
   assert.deepStrictEqual(px(sw, 30, 30), [0x0b, 0x09, 0x09, 255]);
-  assert.ok(ok('preview', ECLIPSE, '--out', 'p2.html').stdout.includes('approve the look'));
+  assert.ok(ok('preview', FIXTURE, '--out', 'p2.html').stdout.includes('approve the look'));
 });
 
 test('preview: a missing background image is an error that names the path, not a silent omission', () => {
@@ -215,8 +213,8 @@ test('preview: a missing background image is an error that names the path, not a
 });
 
 test('the acceptance commands from the repo root work and the PNG decodes', () => {
-  const out = path.join(tmp, 'acc', 'eclipse.png');
-  const r = spawnSync(process.execPath, [CLI, 'art', 'scene', out, '--preset', 'eclipse', '--width', '640', '--height', '400'], { encoding: 'utf8', cwd: ROOT });
+  const out = path.join(tmp, 'acc', 'scene.png');
+  const r = spawnSync(process.execPath, [CLI, 'art', 'scene', out, '--preset', 'nord-mountains', '--width', '640', '--height', '400'], { encoding: 'utf8', cwd: ROOT });
   assert.strictEqual(r.status, 0, r.stderr);
   const img = png.decode(fs.readFileSync(out));
   assert.deepStrictEqual([img.width, img.height], [640, 400]);

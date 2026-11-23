@@ -6,7 +6,7 @@ verified: 2026-11-23 (machine + docs, windows-terminal 1.25.3131.0)
 sources: https://learn.microsoft.com/windows/terminal/customize-settings/profile-appearance, https://learn.microsoft.com/windows/terminal/customize-settings/appearance
 ---
 # Background image in Windows Terminal
-Set `backgroundImage` plus alignment, stretch mode and opacity in `profiles.defaults` (or one profile). The image can be .jpg, .png or .gif. The key names below are the ones used by the verified Eclipse preset.
+Set `backgroundImage` plus alignment, stretch mode and opacity in `profiles.defaults` (or one profile). The image can be .jpg, .png or .gif. The key names below were verified on Windows 11.
 
 ## Config
 ```jsonc

@@ -95,7 +95,7 @@ bright red).
 4. Do not trust the scheme's name. Light/dark comes from `background` luminance, not the
    `variant` field alone.
 5. Keep the licence: copy colors only from entries whose licence permits it, and put the
-   source name and URL in `palette.source` and `anchor.source`/preset README.
+   source name and URL in `palette.source` and `anchor.source`/look README.
 
 ## Mapping a palette into tool themes
 

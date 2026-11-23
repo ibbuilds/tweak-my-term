@@ -12,8 +12,6 @@ starship, oh-my-posh, fzf, eza, Nerd Fonts, ...) and adds what's missing: a desi
 4,000+ real setups to draw ideas from, tested per-tool recipes, and an apply engine that
 cannot write anything you didn't approve.
 
-![The Eclipse preset: Git Bash in Windows Terminal](presets/eclipse/screenshot.png)
-
 ## Install (Claude Code plugin)
 
 ```
@@ -24,7 +22,7 @@ cannot write anything you didn't approve.
 `/plugin install tweak-my-term@tweak-my-term`.)
 
 Then just ask: *"make my terminal look like this"* (attach an image), *"show me some
-terminal setups"*, *"apply the quiet preset"*, *"why is my shell slow?"*, *"undo that"*.
+terminal setups"*, *"why is my shell slow?"*, *"undo that"*.
 
 Needs [Node.js](https://nodejs.org) 20 or newer. No npm packages are installed.
 
@@ -58,14 +56,8 @@ Needs [Node.js](https://nodejs.org) 20 or newer. No npm packages are installed.
 - The plugin blocks the agent from editing live terminal configs directly, and won't let
   it stop with a change applied but unchecked.
 
-## Presets
-
-| Preset | OS | Look |
-|---|---|---|
-| `eclipse` | Windows (Windows Terminal, Git Bash, PowerShell) | blood-moon engraving background, two-line prompt, fuzzy tools, tuned for startup speed |
-| `quiet` | Windows, macOS, Linux (WezTerm + starship) | calm cool-dark palette, no image, one-line prompt |
-
-`tmt preset list`, then ask the agent to apply one, or build your own look from scratch.
+There are no ready-made looks to copy. Every terminal is built for its user from their
+request, their machine and their anchor image.
 
 ## What's covered
 
@@ -83,11 +75,11 @@ CI, and their recipes are checked against official docs, not yet on real machine
 
 ```
 tmt new | status | runs | detect | capture
-tmt stage write|block|merge-json <target> <file> | install <mgr> <id> | font <name> | preset <name>
+tmt stage write|block|merge-json <target> <file> | install <mgr> <id> | install auto <tool> | font <name>
 tmt plan | approve <hash> | apply [--allow-installs] | verify | measure [--before] | restore [run]
 tmt art scene|treat|palette|scheme|contrast|ascii|preview ...
 tmt inspire <words> [--os x] [--terminal x] [--limit n] [--save n dir]
-tmt shot | preset list | catalog list|show|cap|paths | look check <file>
+tmt shot | catalog list|show|cap|paths | look check <file>
 ```
 
 `tmt help` for details. Add `--json` for machine-readable output.

@@ -18,7 +18,7 @@ Use the `font` object (Windows Terminal 1.10+) in `profiles.defaults`: `face`, `
 ```
 
 ## Notes
-- The comma-separated fallback list is the form used by the verified Eclipse preset; the reference docs only describe `face` as a single name. If a face is invalid or missing, Windows Terminal falls back to Consolas.
+- The comma-separated fallback list is a form verified on Windows 11; the reference docs only describe `face` as a single name. If a face is invalid or missing, Windows Terminal falls back to Consolas.
 - `weight`: normal (default), thin, extra-light, light, semi-light, medium, semi-bold, bold, extra-bold, black, extra-black, or an OpenType number. Map the look-spec weight onto these.
 - `size` is in points (default 12); the schema allows fractional values.
 - Before 1.10 the flat keys `fontFace`, `fontSize`, `fontWeight` were used.

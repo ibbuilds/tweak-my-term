@@ -2,7 +2,7 @@
 capability: keybindings
 tool: bash
 os: windows, macos, linux
-verified: 2026-11-23 (machine, bindings used in the Eclipse preset on Windows Terminal + Git Bash; docs for the rest)
+verified: 2026-11-23 (machine, Windows Terminal + Git Bash on Windows 11; docs for the rest)
 sources: https://tiswww.case.edu/php/chet/readline/rluserman.html, https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins
 ---
 # Key bindings in bash

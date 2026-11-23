@@ -42,7 +42,7 @@ Palette strip module for showing the active theme: `{ "type": "colors", "symbol"
 ## Notes
 - `bright_` is an alias for `bold_` (wiki), so `bright_black` is bold black, not gray: use `light_black` for dim gray text.
 - Verified output: `"keys": "#9A8E8F"` produced `38;2;154;142;143`, `"@244"` produced `38;5;244`, `bold_white` produced `1;37`.
-- Raw SGR also works and is what the Eclipse config uses (`38;2;R;G;B`), at the cost of readability; prefer hex.
+- Raw SGR also works and is also valid (`38;2;R;G;B`), at the cost of readability; prefer hex.
 - Hex in terminals without truecolor degrades per the terminal; use names there.
 - `display.percent.type` is a bitmask or array of flags (`num`, `bar`, `hide-others`, `num-color`, `bar-monochrome`); `["num"]` shows only a number, `9` is the default (colored number).
 - Check contrast of `keys` (`ansi.brightBlack`) on `background` (at least 3:1), keys are labels not body text.

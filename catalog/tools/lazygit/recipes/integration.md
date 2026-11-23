@@ -23,7 +23,7 @@ os:
   editPreset: vscode             # see presets below
 ```
 `{{width}}`, `{{columnWidth}}`, `{{colorScheme}}` (`dark`/`light`) are available in the renderer command (docs). Diff renderers are cycled with `|` and `\` (default keys `cycleDiffRenderers`, `cycleDiffRenderersReverse`).
-Presets: `vim nvim nvim-remote lvim emacs nano micro vscode sublime bbedit kakoune helix xcode zed acme`; custom commands: `os.edit: 'myeditor {{filename}}'`, `os.editAtLine: 'myeditor --line={{line}} {{filename}}'`, `os.editAtLineAndWait` (docs). Lazygit guesses the preset from `git config core.editor`, `$VISUAL` or `$EDITOR` when none is set.
+Presets: `vim nvim nvim-remote lvim emacs nano micro vscode sublime bbedit kakoune helix xcode zed acme`; custom commands: `os.edit: 'myeditor {{filename}}'`, `os.editAtLine: 'myeditor --line={{line}} {{filename}}'`, `os.editAtLineAndWait` (docs). Lazygit guesses the editor preset from `git config core.editor`, `$VISUAL` or `$EDITOR` when none is set.
 Shell alias: `alias lg=lazygit`; PowerShell `function lg { lazygit @args }`.
 Change shell directory on exit (repo switches): README documents an `lg` wrapper using `LAZYGIT_NEW_DIR_FILE`; see https://github.com/jesseduffield/lazygit#changing-directory-on-exit.
 

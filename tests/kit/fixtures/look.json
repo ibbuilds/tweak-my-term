@@ -1,0 +1,25 @@
+{
+  "name": "fixture",
+  "description": "Test fixture: a warm near-black look with one red accent and deliberately weak dark red, used to exercise contrast reporting.",
+  "mood": ["dark", "warm"],
+  "palette": {
+    "source": "test fixture",
+    "background": "#0B0909",
+    "foreground": "#D8D2CF",
+    "cursor": "#F2201C",
+    "selectionBackground": "#4D1216",
+    "accent": "#E0201E",
+    "ansi": {
+      "black": "#1A1415", "red": "#B3141B", "green": "#7F9172", "yellow": "#C2924A",
+      "blue": "#5E7186", "magenta": "#7E6A8F", "cyan": "#6A8C8A", "white": "#B8AFAC",
+      "brightBlack": "#6E6264", "brightRed": "#E0201E", "brightGreen": "#A3B394", "brightYellow": "#DDB26E",
+      "brightBlue": "#8597AD", "brightMagenta": "#A391B3", "brightCyan": "#92B0AD", "brightWhite": "#F2EEEA"
+    }
+  },
+  "font": { "family": "JetBrains Mono", "fallback": ["Symbols Nerd Font Mono"], "size": 12, "ligatures": true, "lineHeight": 1.25 },
+  "window": { "opacity": 1, "padding": [16, 24, 16, 24], "cursorShape": "block", "tabs": "always", "titlebar": "integrated", "scrollbar": "hidden" },
+  "background": { "image": "bg.png", "fit": "cover", "align": "topRight", "opacity": 0.9, "treatment": ["dim:0.34", "bloom:0.08", "ascii-glyphs:95", "vignette"] },
+  "prompt": { "engine": "hand-rolled", "lines": 2, "style": "boxed", "segments": ["path", "git", "duration", "status", "runtimes"] },
+  "shells": [{ "id": "bash", "default": true }],
+  "targets": { "windows": { "terminal": "windows-terminal", "shells": ["bash"] } }
+}

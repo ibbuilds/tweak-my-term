@@ -17,6 +17,6 @@ Put several family names in `font.face`, comma separated, most important first. 
 ```
 
 ## Notes
-- This comma-separated form is what the verified Eclipse preset uses (`JetBrains Mono, Symbols Nerd Font Mono`); the reference docs only list a single name. Treat as working but keep an eye on it after Windows Terminal upgrades.
+- This comma-separated form is a working form on Windows 11 (`JetBrains Mono, Symbols Nerd Font Mono`); the reference docs only list a single name. Treat as working but keep an eye on it after Windows Terminal upgrades.
 - The symbols font must be installed (the `Symbols Nerd Font Mono` family comes from the Nerd Fonts "NerdFontsSymbolsOnly" release).
 - An unresolvable face makes Windows Terminal use Consolas for the whole profile.

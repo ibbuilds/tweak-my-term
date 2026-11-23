@@ -32,7 +32,7 @@ jobs:
           export TMT_HOME="$RUNNER_TEMP/home"
           mkdir -p "$TMT_HOME"
           node engine/cli.js new
-          node engine/cli.js stage preset quiet
+          echo "smoke" > "$RUNNER_TEMP/smoke.txt"
+          node engine/cli.js stage write "~/.config/tmt-smoke/smoke.txt" "$RUNNER_TEMP/smoke.txt"
           node engine/cli.js plan > /dev/null
           node engine/cli.js detect > /dev/null
-          node engine/cli.js preset list

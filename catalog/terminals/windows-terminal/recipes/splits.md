@@ -27,5 +27,5 @@ Add to `keybindings`:
 ## Notes
 - Defaults: `Alt+Shift++` splits right (vertical), `Alt+Shift+-` splits down (horizontal), `Alt+Shift+D` auto; resize panes with `Alt+Shift+arrows`.
 - `"splitPane"` also takes `size` (0.0-1.0) and `profile`. From the command line: `wt sp -V -s .4`.
-- Use `toggleBroadcastInput` to type into all panes (bound by the verified preset).
+- Use `toggleBroadcastInput` to type into all panes.
 - Pane and window layouts at launch: see the startup-layout recipe.

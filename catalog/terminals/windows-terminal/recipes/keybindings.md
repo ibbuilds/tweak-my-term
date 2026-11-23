@@ -28,5 +28,5 @@ Look spec `keybindings: [{ keys, action }]`: write `keys` in lowercase `modifier
 ## Notes
 - Use `id` references, not inline `command` in `keybindings`: the id form is current. Older files put `{ "command": ..., "keys": ... }` directly in `keybindings` or `actions`; both parse, but merge into whichever style the file already uses.
 - To unbind a default, add `{ "id": "unbound", "keys": "alt+shift+-" }` or `{ "id": null, "keys": "ctrl+v" }`; the key then passes through to the application.
-- Binding `ctrl+c` to copy (the verified preset does) is safe: the docs say that with no selection the key chord is sent to the terminal, so interrupt still works.
+- Binding `ctrl+c` to copy (verified on Windows 11) is safe: the docs say that with no selection the key chord is sent to the terminal, so interrupt still works.
 - `sendInput` text: `\r` presses Enter.

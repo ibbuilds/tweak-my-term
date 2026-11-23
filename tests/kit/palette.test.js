@@ -10,7 +10,20 @@ const K = require('../../kit/contrast');
 const R = require('../../kit/raster');
 const H = require('./_helpers');
 
-const ECLIPSE = path.join(__dirname, '..', '..', 'presets', 'eclipse', 'files', 'home', '.config', 'eclipse', 'art', 'eclipse-art-v1.png');
+// A dark scene with one red light source, painted here so the tests own their input.
+const S = require('../../kit/scene');
+const redNight = () => S.paint({
+  width: 480, height: 300, seed: 3,
+  palette: { background: '#0B0909', foreground: '#D8D2CF', accent: '#E0201E', ansi: { red: '#B3141B' } },
+  layers: [
+    { type: 'sky', stops: [[0, { mix: ['background', '#000000', 0.7] }], [1, { mix: ['background', '#000000', 0.5] }]] },
+    { type: 'glow', x: 0.76, y: 0.14, r: 0.3, color: 'ansi.red', opacity: 0.22 },
+    { type: 'moon', x: 0.76, y: 0.14, r: 0.045, color: 'accent', glow: 0.3, glowRadius: 2.4 },
+    { type: 'hills', baseY: 0.65, amp: 0.08, color: 'ink', shade: 0 },
+    { type: 'hatch', wash: 0.42 },
+    { type: 'grain', amount: 0.8 },
+  ],
+});
 const HEX = /^#[0-9A-F]{6}$/;
 const hueDist = (a, b) => { const d = Math.abs(a - b) % 360; return d > 180 ? 360 - d : d; };
 const allColors = (p) => [p.background, p.foreground, p.cursor, p.selectionBackground, p.accent, ...Object.values(p.ansi)];
@@ -42,8 +55,8 @@ test('extract: merges near-duplicates, caps at k, ignores transparent pixels, ha
   assert.deepStrictEqual(P.extract(t).map((s) => s.hex), ['#00FF00']);
 });
 
-test('scheme: Eclipse art -> dark red-accent palette that passes after fix', () => {
-  const img = png.decode(fs.readFileSync(ECLIPSE));
+test('scheme: dark red-lit scene -> dark red-accent palette that passes after fix', () => {
+  const img = redNight();
   const sw = P.extract(img);
   const p = P.scheme(sw, { mode: 'dark' });
   checkShape(p);

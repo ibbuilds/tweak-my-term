@@ -25,6 +25,6 @@ With transparency, for example `{window.opacity}` x 100:
 - Since 1.12 the key is `opacity` (integer). Older `acrylicOpacity` (0.0-1.0) still works.
 - Unblurred opacity (`useAcrylic: false`) only works on Windows 11.
 - With Mica enabled in a theme, Mica shows underneath whenever `opacity` is below 100.
-- Verified preset setting: an opaque window (`opacity: 100`, `useAcrylic: false`) with animations off redraws least; use transparency sparingly.
+- Verified on Windows 11: an opaque window (`opacity: 100`, `useAcrylic: false`) with animations off redraws least; use transparency sparingly.
 - A transparent background reduces text contrast over busy desktops; keep opacity 85+ or add blur.
 - `unfocusedAppearance` may override `opacity`, `useAcrylic` and the background image settings when the window loses focus.

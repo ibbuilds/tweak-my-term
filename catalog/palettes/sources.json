@@ -7,7 +7,7 @@
     "count": 1003,
     "license": "MIT for the repo; each scheme has its own SPDX license (or unknown / nonfree) in licenses.yml at the repo root",
     "howToFetch": "One scheme: https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/windowsterminal/<Name>.json (URL-encode spaces as %20). List names: GET https://api.github.com/repos/mbadolato/iTerm2-Color-Schemes/git/trees/master?recursive=1 and filter paths under windowsterminal/. Everything at once: the latest release asset all-terminal-themes.tgz (also per-terminal archives such as alacritty-themes.tgz).",
-    "notes": "Largest and most current collection (verified 2026-11-23: 1003 .itermcolors, 912 generated ports per terminal format; a few newer schemes may lack a port, then read the .itermcolors). Windows Terminal JSON uses purple/brightPurple for magenta and cursorColor for cursor. Read licenses.yml before copying a scheme into a published preset: redistribute only entries with an open SPDX id. Most popular named themes (Dracula, Nord, Gruvbox, Tokyo Night, Solarized, One Dark, Catppuccin) are in here. Some themes set a light selectionBackground meant to be used with selectionForeground; keep both."
+    "notes": "Largest and most current collection (verified 2026-11-23: 1003 .itermcolors, 912 generated ports per terminal format; a few newer schemes may lack a port, then read the .itermcolors). Windows Terminal JSON uses purple/brightPurple for magenta and cursorColor for cursor. Read licenses.yml before copying a scheme into a published look: redistribute only entries with an open SPDX id. Most popular named themes (Dracula, Nord, Gruvbox, Tokyo Night, Solarized, One Dark, Catppuccin) are in here. Some themes set a light selectionBackground meant to be used with selectionForeground; keep both."
   },
   {
     "id": "tinted-schemes",
@@ -57,6 +57,6 @@
     "count": 447,
     "license": "GPL-3.0 for the repo; individual themes carry their own notices",
     "howToFetch": "https://raw.githubusercontent.com/kovidgoyal/kitty-themes/master/themes/<Name>.conf. List via GET https://api.github.com/repos/kovidgoyal/kitty-themes/git/trees/master?recursive=1 and filter themes/*.conf. `kitten themes` inside kitty browses them.",
-    "notes": "Verified 2026-11-23: 447 .conf files. Copyleft repo license: read colors as data to build a look spec, do not copy files into a differently licensed preset. Flat key/value format makes it trivial to parse (colorN is the ANSI index)."
+    "notes": "Verified 2026-11-23: 447 .conf files. Copyleft repo license: read colors as data to build a look spec, do not copy files into a differently licensed look. Flat key/value format makes it trivial to parse (colorN is the ANSI index)."
   }
 ]

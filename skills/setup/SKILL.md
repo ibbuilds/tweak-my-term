@@ -63,7 +63,7 @@ Read [references/style.md](references/style.md). From the anchor:
 ## 5. Look spec → `look.json`
 
 Write `look.json` in the run folder following `${CLAUDE_PLUGIN_ROOT}/schemas/look.schema.json`
-(example: `${CLAUDE_PLUGIN_ROOT}/presets/eclipse/look.json`). Check it:
+(example: `${CLAUDE_PLUGIN_ROOT}/tests/kit/fixtures/look.json`, a test fixture showing the shape, not a look to copy). Check it:
 `tmt look check look.json`, then `tmt stage look look.json`.
 
 ## 6. Fit: which tools deliver each part on this OS

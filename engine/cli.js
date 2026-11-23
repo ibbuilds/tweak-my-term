@@ -21,11 +21,11 @@ Stage (only into an open run; nothing touches the machine yet)
   tmt stage block <target> <file>          insert/replace a managed block in an rc file
   tmt stage merge-json <target> <file>     merge keys into a JSON(C) config (Windows Terminal)
   tmt stage install <manager> <id>         winget | scoop | brew | apt | dnf | pacman | zypper | flatpak | psgallery | git
+  tmt stage install auto <tool-id>         the catalog install for this OS, with a manager found here
   tmt stage font <NerdFontName>            per-user Nerd Font install (e.g. JetBrainsMono)
   tmt stage check -- <cmd> [args...]       extra check for verify
   tmt stage shell <id>                     shell to time in measure (bash, zsh, fish, powershell, pwsh, nu)
   tmt stage look <look.json>               attach the look spec (validated)
-  tmt stage preset <name>                  stage a tested preset for this OS
   Targets use ~ and tokens: {xdg-config} {appdata} {localappdata} {documents} {mac-app-support}
                             {wt-settings} {ps-profile} {pwsh-profile}
 
@@ -41,7 +41,6 @@ Design kit
   tmt art <command> ...                    palette, scheme, contrast, treat, scene, ascii, preview, swatch (tmt art help)
   tmt inspire <query...> [--limit N]       search 4,000+ r/unixporn rices with their dotfiles repos
   tmt shot [--title text] [--delay s]      screenshot the terminal window into the run
-  tmt preset list | show <name>
   tmt catalog list | show <id> | cap <capability> | paths
   tmt look check <look.json>
 
@@ -124,13 +123,19 @@ async function main() {
     case 'stage': {
       let r;
       if (['write', 'block', 'merge-json'].includes(sub)) { if (rest.length < 2) throw new run.GateError(`usage: tmt stage ${sub} <target> <file>`); r = run.stageFile(sub, rest[0], path.resolve(rest[1])); }
+      else if (sub === 'install' && rest[0] === 'auto') {
+        const st = run.current();
+        const osName = flags.os || (st && st.os);
+        const pick = require('./installers').resolve(rest[1], osName);
+        if (!pick) throw new run.GateError(`no install for ${rest[1]} on ${osName} with a package manager found here. See \`tmt catalog show ${rest[1]}\`; stage one with \`tmt stage install <manager> <id>\`.`);
+        r = run.stageInstall(pick.manager, pick.id);
+      }
       else if (sub === 'install') r = run.stageInstall(rest[0], rest.slice(1).join(' '));
       else if (sub === 'font') r = run.stageFont(rest[0]);
       else if (sub === 'check') { const i = pos.indexOf('--'); r = run.stageCheck(i >= 0 ? pos.slice(i + 1) : rest); }
       else if (sub === 'shell') r = run.stageShell(rest[0]);
       else if (sub === 'look') r = run.setLook(path.resolve(rest[0]));
-      else if (sub === 'preset') { const s = require('./presets').stage(rest[0], { osName: flags.os }); return out(s, json, (x) => `Staged preset ${x.name} for ${x.os}: ${x.files} files, ${x.installs} installs, ${x.fonts} fonts, ${x.checks} checks.${x.unresolved.length ? `\nNo package manager here for: ${x.unresolved.join(', ')}. See \`tmt catalog show <id>\`; install it another way or stage one with \`tmt stage install\`.` : ''}\nNext: tmt plan`); }
-      else throw new run.GateError('usage: tmt stage write|block|merge-json|install|font|check|shell|look|preset ...');
+      else throw new run.GateError('usage: tmt stage write|block|merge-json|install|font|check|shell|look ...');
       return out(run.status(), json, (s) => `Staged. ${s.staged.files} files, ${s.staged.installs} installs, ${s.staged.fonts} fonts, ${s.staged.checks} checks. Next: ${s.next}`);
     }
     case 'plan': return out(run.plan({ os: flags.os }), json, planText);
@@ -158,11 +163,6 @@ async function main() {
       const dir = st ? path.join(run.runDir(st.id), 'shots') : path.join(paths.stateRoot(), 'shots');
       const f = require('./shot').shot({ dir, title: flags.title || '', delay: Number(flags.delay || 0.5) });
       return out({ file: f }, json, (x) => `Screenshot: ${x.file}`);
-    }
-    case 'preset': {
-      const presets = require('./presets');
-      if (sub === 'show') { const { p, dir } = presets.load(rest[0]); return out({ ...p, dir }, true); }
-      return out(presets.list(), json, (l) => l.map((p) => `${p.name.padEnd(12)} ${p.os.join(',').padEnd(20)} ${p.description}`).join('\n'));
     }
     case 'catalog': {
       const catalog = require('./catalog');

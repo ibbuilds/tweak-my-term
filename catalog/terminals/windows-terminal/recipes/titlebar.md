@@ -31,7 +31,7 @@ Theme `window` object for the window chrome:
 ```
 
 ## Notes
-- `launchMode`: `default`, `maximized`, `fullscreen`, `focus`, `maximizedFocus`. Bind `toggleFocusMode` (the verified preset binds it) to switch at runtime.
-- `frame` and `unfocusedFrame` (window border colors) are documented as Windows 11 and Preview-only; they were present in the verified Eclipse preset. Leave them out when targeting the stable channel unless confirmed.
+- `launchMode`: `default`, `maximized`, `fullscreen`, `focus`, `maximizedFocus`. Bind `toggleFocusMode` (bindable) to switch at runtime.
+- `frame` and `unfocusedFrame` (window border colors) are documented as Windows 11 and Preview-only; they were accepted on Windows 11 in testing. Leave them out when targeting the stable channel unless confirmed.
 - `showTabsInTitlebar`, `useAcrylicInTabRow` and `showTerminalTitleInTitlebar` require a new terminal instance.
 - `useMica: true` needs Windows 11 build 22621+ and transparent layers above it (see the blur recipe).

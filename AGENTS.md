@@ -22,7 +22,7 @@ Hard rules:
 
 - Layout: `engine/` (apply engine and CLI), `kit/` (images, color, palette, scenes,
   preview, inspiration search), `catalog/` (per-tool facts and recipes), `schemas/`,
-  `presets/`, `skills/` + `agents/` + `hooks/` + `.claude-plugin/` (Claude Code plugin),
+  `skills/` + `agents/` + `hooks/` + `.claude-plugin/` (Claude Code plugin),
   `tools/catalog.js` (catalog checker and capability builder). See PLAN.md.
 - Zero npm dependencies. CommonJS, `'use strict'`, Node 20+.
 - Tests: `npm test` (node:test). `npm run check` adds the catalog check. Tests never

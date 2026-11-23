@@ -8,7 +8,7 @@
   "docs": "https://github.com/fastfetch-cli/fastfetch/wiki/Configuration",
   "license": "MIT",
   "configFormat": "JSONC (config.jsonc) with a JSON schema; presets via -c <name>",
-  "startupCostMs": "Measured 2026-11-23, Windows 11, fastfetch 2.71.0 via scoop shim, median of 10 runs: default config 41 ms; a 3-module custom config 34 ms; `fastfetch --version` 47 ms; an empty `cmd /c rem` 23 ms. A working 11-module dossier config in the Eclipse preset is documented at ~55 ms. Slow modules are network ones (PublicIp, Weather, Wifi, LocalIp) and GPU/Packages on some systems: leave them out of a shell-start config.",
+  "startupCostMs": "Measured 2026-11-23, Windows 11, fastfetch 2.71.0 via scoop shim, median of 10 runs: default config 41 ms; a 3-module custom config 34 ms; `fastfetch --version` 47 ms; an empty `cmd /c rem` 23 ms. An 11-module config measured ~55 ms. Slow modules are network ones (PublicIp, Weather, Wifi, LocalIp) and GPU/Packages on some systems: leave them out of a shell-start config.",
   "os": {
     "windows": {
       "supported": true,

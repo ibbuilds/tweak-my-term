@@ -74,7 +74,7 @@ export EZA_COLORS="di=1;38;2;R;G;B:ex=38;2;R;G;B:da=38;5;244:uu=0:gu=0"
 Style keys of `theme.yml`: `foreground`, `background`, `is_bold`, `is_dimmed`, `is_italic`, `is_underline`, `is_blink`, `is_reverse`, `is_hidden`, `is_strikethrough`, `prefix_with_reset`. Icons per name or extension: `extensions: { rs: {icon: {glyph: "X"}} }`.
 
 ## Notes
-- Precedence (observed on eza 0.23.5): `EZA_COLORS` and `LS_COLORS` set in the environment override `theme.yml`. If a theme "does nothing", run `env | grep -E '^(EZA|EXA|LS)_COLORS'` first; presets that export `LS_COLORS` (for fd, bat, ls) will mask the file.
+- Precedence (observed on eza 0.23.5): `EZA_COLORS` and `LS_COLORS` set in the environment override `theme.yml`. If a theme "does nothing", run `env | grep -E '^(EZA|EXA|LS)_COLORS'` first; configs that export `LS_COLORS` (for fd, bat, ls) will mask the file.
 - `EXA_COLORS` is read when `EZA_COLORS` is unset.
 - A syntax error silently drops properties (docs): validate the YAML with any linter and check one color visually.
 - `LS_COLORS` set to truecolor values also colors `fd` and GNU `ls`; one string for all three keeps them consistent (see the fd recipe).

@@ -32,5 +32,5 @@ sources: https://learn.microsoft.com/windows/terminal/customize-settings/profile
 - Profile order sets the `Ctrl+Shift+1..9` slots; `newTabMenu` entry types: `profile`, `folder`, `separator`, `matchProfiles`, `remainingProfiles`, `action`.
 - `commandline` defaults to `cmd.exe`; backslashes must be escaped in JSON; set `"hidden": true` rather than deleting a built-in profile.
 - Profile `icon` should be about 32x32 (PNG, GIF or ICO); `%USERPROFILE%` expands in it.
-- `"pathTranslationStyle": "msys2"` (used by the verified preset for Git Bash) translates dropped paths to MSYS2 form.
+- `"pathTranslationStyle": "msys2"` (verified on Windows 11 for Git Bash) translates dropped paths to MSYS2 form.
 - Dynamic profile sources can be disabled with `disabledProfileSources`. JSON fragment extensions let a package ship profiles without editing `settings.json`.

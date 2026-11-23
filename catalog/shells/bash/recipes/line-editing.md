@@ -2,7 +2,7 @@
 capability: line-editing
 tool: bash
 os: windows, macos, linux
-verified: 2026-11-23 (machine, readline settings used in the Eclipse preset on bash 5.3.9; docs for the rest)
+verified: 2026-11-23 (machine, readline settings on bash 5.3.9; docs for the rest)
 sources: https://tiswww.case.edu/php/chet/readline/rluserman.html, https://www.gnu.org/software/bash/manual/html_node/Readline-Init-File-Syntax
 ---
 # Line editing in bash (GNU Readline)

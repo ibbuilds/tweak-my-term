@@ -4,7 +4,7 @@
 // Layers are painted in order; colors are palette roles ('background', 'foreground', 'accent', 'ansi.red',
 // 'red', 'ink') or hex strings, or { mix: [a, b, t] } / { dark: [a, t] } / { light: [a, t] }.
 //
-//   paint({ width, height, seed, palette, layers })   or   paint({ preset: 'eclipse', ... })
+//   paint({ width, height, seed, palette, layers })   or   paint({ preset: 'nord-mountains', ... })
 //
 // Layer types: sky, stars, moon, sun, glow, haze, hills, grid, waves, fog (alias noise), hatch, blades, grain.
 const C = require('./color');
@@ -482,22 +482,6 @@ LAYERS.grain = (ctx, s) => {
 // ------------------------------------------------------------------ presets
 
 const presets = {
-  eclipse: {
-    description: 'Blood moon over a black sky and a hatched, red-lit hill with dark foreground blades (engraving look).',
-    palette: {
-      background: '#0B0909', foreground: '#D8D2CF', cursor: '#F2201C', accent: '#E0201E',
-      ansi: { red: '#B3141B', yellow: '#C2924A', blue: '#5E7186', magenta: '#7E6A8F', cyan: '#6A8C8A', brightRed: '#E0201E' },
-    },
-    layers: [
-      { type: 'sky', stops: [[0, { mix: ['background', '#000000', 0.7] }], [1, { mix: ['background', '#000000', 0.5] }]] },
-      { type: 'glow', x: 0.76, y: 0.14, r: 0.3, color: 'ansi.red', opacity: 0.22 },
-      { type: 'moon', x: 0.76, y: 0.14, r: 0.045, color: 'accent', glow: 0.3, glowRadius: 2.4 },
-      { type: 'hills', points: [[0, 0.588], [0.12, 0.598], [0.27, 0.618], [0.45, 0.655], [0.66, 0.728], [0.83, 0.79], [1, 0.885]], color: 'ink', shade: 0, jitter: 0.004 },
-      { type: 'hatch', wash: 0.42 },
-      { type: 'blades', clumps: 150 },
-      { type: 'grain', amount: 0.8 },
-    ],
-  },
   synthwave: {
     description: 'Striped sun over a neon perspective grid, with a starry violet sky and dark mountain silhouettes.',
     palette: {

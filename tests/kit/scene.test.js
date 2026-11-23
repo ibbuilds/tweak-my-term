@@ -10,7 +10,7 @@ const luma = (img) => { const [r, g, b] = H.meanRgb(img); return 0.2126 * r + 0.
 const px = (img, x, y) => Array.from(img.data.subarray((y * img.width + x) * 4, (y * img.width + x) * 4 + 4));
 
 test('presets: the named recipes exist', () => {
-  assert.deepStrictEqual(Object.keys(S.presets).sort(), ['eclipse', 'minimal-gradient', 'night-ocean', 'nord-mountains', 'synthwave']);
+  assert.deepStrictEqual(Object.keys(S.presets).sort(), ['minimal-gradient', 'night-ocean', 'nord-mountains', 'synthwave']);
   for (const p of Object.values(S.presets)) { assert.ok(p.description.length > 10); assert.ok(p.palette.background && p.palette.accent); assert.ok(p.layers.length >= 2); }
 });
 
@@ -34,16 +34,6 @@ test('paint: every preset renders an opaque image of the asked size', () => {
     const mean = H.meanRgb(img);
     assert.ok(mean.some((v) => v > 2), `${name} is not all black`);
   }
-});
-
-test('eclipse: dark, and red is the only hue that carries (blood moon, red-lit hill)', () => {
-  const img = S.paint({ preset: 'eclipse', width: 640, height: 400 });
-  const [r, g, b] = H.meanRgb(img);
-  assert.ok(luma(img) < 40, `mean luma ${luma(img)}`);
-  assert.ok(r > 3 * g && r > 3 * b, `rgb ${r} ${g} ${b}`);
-  const moon = px(img, Math.round(0.76 * 640), Math.round(0.14 * 400));
-  assert.ok(moon[0] > 120 && moon[1] < 60 && moon[2] < 60, `moon pixel ${moon}`);
-  assert.ok(px(img, 20, 20)[0] < 12, 'sky corner stays near black');
 });
 
 test('palette drives the colors: synthwave with a green palette is green, with its own palette magenta', () => {
@@ -95,9 +85,9 @@ test('paint: bad input fails with a clear message', () => {
   assert.throws(() => S.paint({ width: 2, height: 2 }), /invalid size/);
 });
 
-test('performance: 2560x1600 eclipse paints in well under the 10 s budget', () => {
+test('performance: 2560x1600 nord-mountains paints in well under the 10 s budget', () => {
   const t0 = Date.now();
-  const img = S.paint({ preset: 'eclipse', width: 2560, height: 1600 });
+  const img = S.paint({ preset: 'nord-mountains', width: 2560, height: 1600 });
   const ms = Date.now() - t0;
   assert.strictEqual(img.width, 2560);
   assert.ok(ms < 15000, `took ${ms} ms`);

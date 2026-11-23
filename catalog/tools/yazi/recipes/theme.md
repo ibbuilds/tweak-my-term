@@ -67,7 +67,7 @@ rules = [
   { url = "*/", fg = "{palette.ansi.blue}" },
 ]
 ```
-Terminal background from yazi (needs OSC 11): `[app] overall = { bg = "{palette.background}" }`. Other tables (`[which] [confirm] [spot] [notify] [pick] [input] [cmp] [tasks] [help]`) fall back to the preset if omitted.
+Terminal background from yazi (needs OSC 11): `[app] overall = { bg = "{palette.background}" }`. Other tables (`[which] [confirm] [spot] [notify] [pick] [input] [cmp] [tasks] [help]`) fall back to the built-in defaults if omitted.
 Terminal-following: use the named colors (`"blue"`, `"lightblue"`, ...) instead of hex.
 Own flavor: start from https://github.com/yazi-rs/flavor-template (`flavor.toml` + `tmtheme.xml`).
 

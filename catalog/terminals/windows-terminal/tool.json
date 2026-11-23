@@ -25,7 +25,7 @@
     "palette": { "support": "yes", "recipe": "recipes/palette.md" },
     "font": { "support": "yes", "recipe": "recipes/font.md" },
     "ligatures": { "support": "yes", "recipe": "recipes/ligatures.md" },
-    "font-fallback": { "support": "yes", "recipe": "recipes/font-fallback.md", "notes": "A comma-separated face list works; the docs describe face as a single name, so this relies on the verified Eclipse preset behaviour." },
+    "font-fallback": { "support": "yes", "recipe": "recipes/font-fallback.md", "notes": "A comma-separated face list works; the docs describe face as a single name, so this relies on behaviour verified on Windows 11." },
     "line-height": { "support": "yes", "recipe": "recipes/line-height.md" },
     "opacity": { "support": "yes", "recipe": "recipes/opacity.md", "notes": "Unblurred opacity needs Windows 11." },
     "blur": { "support": "yes", "recipe": "recipes/blur.md", "notes": "Acrylic per profile, Mica via a theme (Windows 11 build 22621+)." },

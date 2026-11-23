@@ -27,6 +27,6 @@ unset _m
 
 ## Notes
 - Which file runs: interactive login = `/etc/profile` then one of `.bash_profile/.bash_login/.profile`; interactive non-login = `.bashrc`; non-interactive = only the file named by `$BASH_ENV`. Test with `shopt -q login_shell && echo login`.
-- Git Bash (Windows): Windows Terminal and VS Code profiles usually run `bash.exe --login -i`, so `.bash_profile` runs. Starting `C:\Program Files\Git\usr\bin\bash.exe -i` directly is a non-login shell: `/etc/profile` is skipped (first content ~0.35 s instead of ~0.9 s via `git-bash.exe`, measured), and MSYSTEM/PATH must be rebuilt in `.bashrc` (see the Eclipse preset `profile.bash`: `export MSYSTEM=MINGW64; . /etc/msystem; export PATH=...`).
+- Git Bash (Windows): Windows Terminal and VS Code profiles usually run `bash.exe --login -i`, so `.bash_profile` runs. Starting `C:\Program Files\Git\usr\bin\bash.exe -i` directly is a non-login shell: `/etc/profile` is skipped (first content ~0.35 s instead of ~0.9 s via `git-bash.exe`, measured), and MSYSTEM/PATH must be rebuilt in `.bashrc` (e.g. `export MSYSTEM=MINGW64; . /etc/msystem; export PATH=...`).
 - macOS: bash 3.2 at `/bin/bash`; Terminal.app is always a login shell, so without the `.bash_profile` -> `.bashrc` bridge your `.bashrc` is never read. macOS default shell is zsh; to change it add the brew bash to `/etc/shells`, then `chsh -s <path>`.
 - Debug: `bash --norc` (skip rc), `bash --noprofile`, `bash --rcfile file`. Syntax check without running: `bash -n file`.

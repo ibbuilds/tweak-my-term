@@ -19,4 +19,4 @@ style = "Regular"
 - Check the installed family name with the OS font list (`fc-list` on Linux); the patched family is named "<Font> Nerd Font" or "<Font> Nerd Font Mono".
 - Whether a separately installed "Symbols Nerd Font Mono" is picked up through OS fallback is not confirmed for Windows; do not rely on it there.
 - Powerline separator glyphs U+E0B0-E0B3 are drawn by Alacritty itself (`font.builtin_box_drawing = true`, the default).
-- A WezTerm or Windows Terminal preset can instead list a symbols font after the primary one.
+- A WezTerm or Windows Terminal config can instead list a symbols font after the primary one.

@@ -38,7 +38,7 @@ Add a one-line hint row: the `Custom` module with a `format` string. `Colors` dr
 ## Notes
 - Show only what is real and cheap: avoid `PublicIp`, `Weather`, `Wifi`, `LocalIp`, `Packages` (slow on some systems) and `Command` (runs a shell command) in a shell-start banner. Measure with `time fastfetch -c <file>` / the PowerShell `Measure-Command`.
 - Module lists differ by OS: `Packages`, `WM`, `DE` matter on Linux; on Windows `OS`, `Host`, `CPU`, `GPU`, `Memory`, `Disk`, `Shell`, `Terminal` are the useful ones.
-- Disk module takes `folders` (Windows `C:\`, Unix `/`); the Eclipse config uses `"folders": "C:\\"`.
+- Disk module takes `folders` (Windows `C:\`, Unix `/`); e.g. `"folders": "C:\\"`.
 - `hideType: "integrated"` on GPU hides integrated GPUs (used in a working config).
 - A key with `"type"` unknown or a misspelled option is an error (`--show-errors`).
 - Percent display: `percent.type` bitmask (num, bar, colored); see `theme.md`.

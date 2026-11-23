@@ -15,4 +15,4 @@ No setting. Tools with a protocol switch need it set explicitly, for example fas
 - Sixel support landed during 2025 (Windows Terminal 1.22 era; exact version unverified here); active sixel fixes were merged in 2026, so the installed 1.25 stable has it.
 - Large Sixel images are slow; keep them small. Images do not reflow on resize.
 - No configuration key exists for image size limits or protocols.
-- Support depends on the installed release channel; check with an image tool before relying on it in a preset.
+- Support depends on the installed release channel; check with an image tool before relying on it in a config.

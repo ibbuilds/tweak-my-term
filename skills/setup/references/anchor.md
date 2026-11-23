@@ -12,7 +12,7 @@ as `anchor.png` in the run folder (convert other formats with `tmt art treat in 
    (`tmt art treat in.png anchor.png --crop x,y,w,h` if supported, else describe the
    crop and use `--fit`).
 3. **Generated.** No external service needed:
-   - `tmt art scene anchor.png --preset <eclipse|synthwave|nord-mountains|minimal-gradient> --seed n --palette look.json`
+   - `tmt art scene anchor.png --preset <synthwave|nord-mountains|night-ocean|minimal-gradient> --seed n --palette look.json`
    - custom: write `paint.js` in the run folder using `${CLAUDE_PLUGIN_ROOT}/kit/raster.js`
      (gradients, discs, lines, noise, blur, glow) and `kit/scene.js` layers, then
      `node paint.js`. Keep it deterministic (seeded).

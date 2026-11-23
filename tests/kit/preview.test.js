@@ -7,14 +7,14 @@ const png = require('../../kit/png');
 const V = require('../../kit/preview');
 const H = require('./_helpers');
 
-const LOOK = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'presets', 'eclipse', 'look.json'), 'utf8'));
+const LOOK = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'look.json'), 'utf8'));
 const px = (img, x, y) => '#' + [0, 1, 2].map((k) => img.data[(y * img.width + x) * 4 + k].toString(16).padStart(2, '0')).join('').toUpperCase();
 
 test('html: valid-ish document with title, viewport and no external loads', () => {
   const page = V.html({ look: LOOK });
   assert.match(page, /^<!doctype html>/i);
   assert.match(page, /<html lang="en">[\s\S]*<\/html>\s*$/);
-  assert.match(page, /<title>eclipse - terminal look preview<\/title>/);
+  assert.match(page, /<title>fixture - terminal look preview<\/title>/);
   assert.match(page, /<meta name="viewport" content="width=device-width, initial-scale=1">/);
   assert.ok(!/(src|href)=["']https?:/i.test(page), 'no external src/href');
   assert.ok(!/@import|url\(\s*["']?https?:/i.test(page), 'no external css');
@@ -89,7 +89,7 @@ test('html: sample session shows the prompt segments, colored ls, git status, a 
   assert.match(page, /<span class="a2">\+  const sx/);
   const pl = V.html({ look: { ...LOOK, prompt: { style: 'powerline', lines: 1, segments: ['user', 'host', 'path', 'time', 'venv'] } } });
   assert.ok(pl.includes('class="pl"') && pl.includes('class="pl n"'));
-  for (const s of ['ib', 'studio', '14:32', '.venv']) assert.ok(pl.includes(`>${s}</span>`), s);
+  for (const s of ['dev', 'studio', '14:32', '.venv']) assert.ok(pl.includes(`>${s}</span>`), s);
   const rounded = V.html({ look: { ...LOOK, prompt: { style: 'rounded', segments: ['path'] } } });
   assert.ok(rounded.includes('class="pill"'));
 });
