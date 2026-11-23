@@ -18,22 +18,26 @@ There is no installer. These are plain config files: read them, copy what you wa
 - **Dossier**: on each new tab, an ASCII Templar cross and a short system block, drawn
   first so the tab has content in ~0.3 s ([fastfetch](https://github.com/fastfetch-cli/fastfetch)).
 - **Prompt**: two lines, the same in bash and PowerShell: path, git branch and state, how
-  long the last command took, its exit code, and the project's runtimes. After a command
-  runs, the prompt collapses to `❯ cmd`, so scrollback reads cleanly.
-- **Line editing**: [ble.sh](https://github.com/akinomyoga/ble.sh) in bash (syntax
-  highlighting, autosuggestions) and PSReadLine in PowerShell (history predictions).
+  long the last command took, its exit code, and the project's runtimes.
+- **Line editing**: plain readline in bash, so typing costs nothing (as in `cmd`); ↑/↓
+  search history by what you've typed. PSReadLine in PowerShell adds history predictions.
 - **Fuzzy tools**: [fzf](https://github.com/junegunn/fzf) on `ctrl+r` (history), `ctrl+t`
   (files) and `alt+c` (cd), [zoxide](https://github.com/ajeetdsouza/zoxide) `z`, plus `fe`,
   `rgf`, `gb`, `glog`, `fkill` and `port`. Run `keys` for the full sheet.
-- **Windows Terminal**: color scheme and theme, a readability shader (a soft halo behind
-  text), tab icons, shell integration (jump between commands, select the last output) and
-  a quake drop-down window.
+- **Windows Terminal**: color scheme and theme, tab icons, shell integration (jump between
+  commands, select the last output) and a quake drop-down window. No animations, no
+  acrylic, no transparency and no shader: an opaque window redraws the least.
 
-| Startup (measured on one machine) | Stock Git Bash and profile | This setup |
+| Measured on one machine | Stock Git Bash and profile | This setup |
 |---|---|---|
-| Git Bash, first content on screen | ~0.9 s | ~0.35 s |
-| Git Bash, prompt ready | ~1.65 s | ~1.3 s (≈0.95 s of that is ble.sh) |
+| Git Bash, prompt ready | ~1.65 s | ~0.4 s |
+| Git Bash, cost per keystroke | ~0 ms | ~0 ms |
+| Git Bash, Enter in a git repo | – | ~45 ms (one `git status`); ~2 ms on an empty Enter |
 | PowerShell, profile | ~0.55 s | ~0.47 s |
+
+Why no [ble.sh](https://github.com/akinomyoga/ble.sh) (inline hints and syntax colors
+for bash)? On Windows it costs 24–60 ms per keystroke and ~0.9 s per new tab. Inline
+hints are left to PowerShell, where PSReadLine draws them natively.
 
 Most of the bash gain comes from starting `usr\bin\bash.exe` directly, which skips Git's
 launcher and `/etc/profile`; [`profile.bash`](home/.config/bash/profile.bash) sets up the
@@ -47,8 +51,6 @@ same environment without extra processes.
 - CLI tools on `PATH`: `fzf fd ripgrep eza bat delta zoxide fastfetch lazygit`
   (any package manager works: winget, scoop or choco). The aliases (`ls` → eza,
   `diff` → delta) and the dossier expect them.
-- Optional: [ble.sh](https://github.com/akinomyoga/ble.sh) in `~/.local/share/blesh/`.
-  Without it bash uses plain readline and the prompt still works.
 - Optional: PSReadLine 2.2 or newer for history predictions in PowerShell
   (`Install-Module PSReadLine -Scope CurrentUser -Force`). Windows ships 2.0, which works
   without them.
@@ -81,16 +83,16 @@ Back up your own files first; these replace them.
 |---|---|
 | Your own background | `powershell -File ~/.config/eclipse/art/build.ps1 -Base my-picture.png` (needs Node.js) builds a new image, points Windows Terminal at it and removes the previous build. Tune it with `-BaseDim`, `-Pixel`, `-GlyphA` and `-Bloom`. Add `-OutFile art.png` to only write the image. |
 | Machine-specific paths and aliases | Copy [`local.example.bash`](home/.config/bash/local.example.bash) to `~/.config/bash/local.bash` and keep it out of version control. |
-| A quieter tab | `ECLIPSE_QUIET=1` hides the dossier; `ECLIPSE_NOBLE=1` starts bash without ble.sh. |
+| A quieter tab | `ECLIPSE_QUIET=1` hides the dossier. |
 
 ## Layout
 
 ```
 home/                      mirrors your home folder
-  .bashrc                  load order: fast profile -> env -> dossier -> ble.sh -> modules
+  .bashrc                  load order: fast profile -> env -> dossier -> modules
   .config/bash/            env, profile, shell, history, theme, completion, tools,
-                           aliases, functions, prompt, ble
-  .config/eclipse/         eclipse.ps1 (PowerShell), dossier.jsonc, shaders/, art/
+                           aliases, functions, prompt
+  .config/eclipse/         eclipse.ps1 (PowerShell), dossier.jsonc, art/
   .config/git/             eclipse.gitconfig (delta colors), git-prompt.sh (keeps Git's
                            default prompt out of the way)
   .config/bat, lazygit     their configs, in the same palette
