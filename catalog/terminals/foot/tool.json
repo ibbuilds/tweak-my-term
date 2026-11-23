@@ -1,0 +1,59 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "foot",
+  "name": "foot",
+  "category": "terminal",
+  "summary": "Fast, lightweight Wayland-only terminal with sixel, fontconfig fallback, server mode and an INI config. No tabs, splits, ligatures or background images.",
+  "homepage": "https://codeberg.org/dnkl/foot",
+  "docs": "https://man.archlinux.org/man/foot.ini.5",
+  "license": "MIT",
+  "configFormat": "foot.ini (INI)",
+  "os": {
+    "windows": { "supported": false, "notes": "Wayland only." },
+    "macos": { "supported": false, "notes": "Wayland only." },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "pacman", "id": "foot", "notes": "Distro package name; not confirmed from the official pages (Codeberg blocked automated fetches), the Arch man pages were used." },
+        { "manager": "apt", "id": "foot", "notes": "Debian/Ubuntu; may lag the latest release (1.28.0 at verification). Unverified here." },
+        { "manager": "dnf", "id": "foot", "notes": "Fedora. Unverified here." }
+      ],
+      "detect": ["foot", "--version"],
+      "config": ["{xdg-config}/foot/foot.ini"],
+      "validate": ["foot", "--check-config", "--config={file}"],
+      "notes": "Wayland compositors only; no X11. --check-config exits 0 when valid and 230 when not. An example foot.ini with every default commented out is usually installed at /etc/xdg/foot/foot.ini. Config is read at start; there is no live reload. Sections [colors-dark]/[colors-light] need foot 1.26+; [colors] and [colors2] were removed in 1.28.0."
+    }
+  },
+  "capabilities": {
+    "palette": { "support": "yes", "recipe": "recipes/palette.md" },
+    "font": { "support": "yes", "recipe": "recipes/font.md" },
+    "ligatures": { "support": "no", "notes": "The foot.ini(5) man page read has no ligature option (only `grapheme-shaping` under [tweak], for grapheme clusters). Foot is widely documented as not supporting ligatures, but that statement was not found in the pages fetched. Use kitty, Ghostty or iTerm2 for ligatures." },
+    "font-fallback": { "support": "yes", "recipe": "recipes/font-fallback.md" },
+    "line-height": { "support": "yes", "recipe": "recipes/line-height.md" },
+    "opacity": { "support": "yes", "recipe": "recipes/opacity.md" },
+    "blur": { "support": "partial", "recipe": "recipes/blur.md", "notes": "1.26.0+, needs a build against wayland-protocols 1.45+ and a compositor with ext-background-effect-v1." },
+    "background-image": { "support": "no", "notes": "Not available; the config reference has no image option. Use alpha with a compositor-drawn wallpaper, or kitty/Ghostty/iTerm2 for images." },
+    "background-animated": { "support": "no", "notes": "No images or shaders. Use kitty (custom_shaders) or Ghostty (custom-shader)." },
+    "shader": { "support": "no", "notes": "No shader support. Use Ghostty or kitty." },
+    "padding": { "support": "yes", "recipe": "recipes/padding.md" },
+    "cursor": { "support": "yes", "recipe": "recipes/cursor.md" },
+    "tabs": { "support": "no", "notes": "No tabs. Use tmux/zellij, or one window per task under a tiling compositor." },
+    "titlebar": { "support": "yes", "recipe": "recipes/titlebar.md" },
+    "splits": { "support": "no", "notes": "No built-in splits. Use tmux/zellij or compositor tiling." },
+    "quake": { "support": "no", "notes": "No drop-down mode. Set `app-id` and use a compositor scratchpad or window rule (compositor-specific, unverified), or use kitty's quick-access-terminal." },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "shell-integration": { "support": "yes", "recipe": "recipes/shell-integration.md" },
+    "startup-layout": { "support": "no", "notes": "No sessions or layouts. Start a multiplexer layout with `shell=`/command, or set `initial-window-size-chars`." },
+    "inline-images": { "support": "yes", "recipe": "recipes/inline-images.md", "notes": "Sixel. The kitty and iTerm2 image protocols are not documented." },
+    "profiles": { "support": "no", "notes": "No profiles. Use `foot -c <file>`, `include=` in foot.ini, or `-o section.key=value` per launch." },
+    "default-shell": { "support": "yes", "recipe": "recipes/default-shell.md" },
+    "config-reload": { "support": "no", "notes": "No live reload; restart foot (in server mode restart the server). Runtime color theme switching works: key bindings color-theme-switch-dark / color-theme-switch-light / color-theme-toggle, or SIGUSR1/SIGUSR2 to the foot process." }
+  },
+  "verified": { "date": "2026-11-23", "version": "1.28.0", "how": "docs" },
+  "sources": [
+    "https://man.archlinux.org/man/foot.ini.5",
+    "https://man.archlinux.org/man/foot.1",
+    "https://codeberg.org/dnkl/foot/raw/branch/master/foot.ini",
+    "https://codeberg.org/dnkl/foot/releases"
+  ]
+}

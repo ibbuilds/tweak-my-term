@@ -1,0 +1,61 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "windows-terminal",
+  "name": "Windows Terminal",
+  "category": "terminal",
+  "summary": "Microsoft's tabbed GPU-rendered terminal for Windows 10/11. JSON (JSONC) settings with per-profile background images, acrylic/Mica, an experimental HLSL pixel-shader hook, quake mode and Sixel images.",
+  "homepage": "https://github.com/microsoft/terminal",
+  "docs": "https://learn.microsoft.com/windows/terminal/",
+  "license": "MIT",
+  "configFormat": "jsonc",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "Microsoft.WindowsTerminal", "notes": "Stable. Preview channel: Microsoft.WindowsTerminal.Preview. Also in the Microsoft Store." }
+      ],
+      "detect": ["powershell", "-NoProfile", "-Command", "(Get-AppxPackage Microsoft.WindowsTerminal).Version"],
+      "config": ["{wt-settings}"],
+      "notes": "settings.json is JSONC (comments and trailing commas allowed) and the Settings UI rewrites the file: always merge into the existing JSON, never overwrite it. Packaged stable path: {localappdata}/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json. Preview: {localappdata}/Packages/Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe/LocalState/settings.json. Unpackaged (Scoop, Chocolatey, GitHub zip): {localappdata}/Microsoft/Windows Terminal/settings.json. %USERPROFILE% is expanded inside backgroundImage, experimental.pixelShaderPath and icon. Windows Terminal has no CLI config validator and wt --version is not a reliable detector, so detect reads the Appx package version and validation means parsing the JSONC and checking keys against the schema (https://aka.ms/terminal-profiles-schema). Saved changes reload live in open windows. Some documented features are marked Preview-only in the docs (window frame colors, enableUnfocusedAcrylic, allowHeadless); check them against the installed channel."
+    },
+    "macos": { "supported": false, "notes": "Windows only." },
+    "linux": { "supported": false, "notes": "Windows only." }
+  },
+  "capabilities": {
+    "palette": { "support": "yes", "recipe": "recipes/palette.md" },
+    "font": { "support": "yes", "recipe": "recipes/font.md" },
+    "ligatures": { "support": "yes", "recipe": "recipes/ligatures.md" },
+    "font-fallback": { "support": "yes", "recipe": "recipes/font-fallback.md", "notes": "A comma-separated face list works; the docs describe face as a single name, so this relies on the verified Eclipse preset behaviour." },
+    "line-height": { "support": "yes", "recipe": "recipes/line-height.md" },
+    "opacity": { "support": "yes", "recipe": "recipes/opacity.md", "notes": "Unblurred opacity needs Windows 11." },
+    "blur": { "support": "yes", "recipe": "recipes/blur.md", "notes": "Acrylic per profile, Mica via a theme (Windows 11 build 22621+)." },
+    "background-image": { "support": "yes", "recipe": "recipes/background-image.md", "notes": "Images are cached by path: a regenerated image needs a new file name." },
+    "background-animated": { "support": "partial", "recipe": "recipes/background-animated.md", "notes": "backgroundImage accepts .gif but animated playback is not confirmed by the docs; a time-driven pixel shader (Time constant) is the reliable route." },
+    "shader": { "support": "yes", "recipe": "recipes/shader.md", "notes": "Experimental: experimental.pixelShaderPath (HLSL). Continued existence is not guaranteed by Microsoft." },
+    "padding": { "support": "yes", "recipe": "recipes/padding.md" },
+    "cursor": { "support": "yes", "recipe": "recipes/cursor.md" },
+    "tabs": { "support": "yes", "recipe": "recipes/tabs.md" },
+    "titlebar": { "support": "yes", "recipe": "recipes/titlebar.md" },
+    "splits": { "support": "yes", "recipe": "recipes/splits.md" },
+    "quake": { "support": "yes", "recipe": "recipes/quake.md" },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "shell-integration": { "support": "yes", "recipe": "recipes/shell-integration.md" },
+    "startup-layout": { "support": "yes", "recipe": "recipes/startup-layout.md" },
+    "inline-images": { "support": "partial", "recipe": "recipes/inline-images.md", "notes": "Sixel only; no iTerm2 or Kitty image protocols." },
+    "profiles": { "support": "yes", "recipe": "recipes/profiles.md" },
+    "default-shell": { "support": "yes", "recipe": "recipes/default-shell.md" },
+    "config-reload": { "support": "yes", "recipe": "recipes/config-reload.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "1.25.3131.0", "how": "docs" },
+  "sources": [
+    "https://learn.microsoft.com/windows/terminal/install",
+    "https://learn.microsoft.com/windows/terminal/customize-settings/profile-appearance",
+    "https://learn.microsoft.com/windows/terminal/customize-settings/appearance",
+    "https://learn.microsoft.com/windows/terminal/customize-settings/startup",
+    "https://learn.microsoft.com/windows/terminal/customize-settings/actions",
+    "https://learn.microsoft.com/windows/terminal/customize-settings/themes",
+    "https://learn.microsoft.com/windows/terminal/tips-and-tricks",
+    "https://github.com/microsoft/terminal/tree/main/samples/PixelShaders",
+    "https://github.com/microsoft/terminal/blob/main/doc/cascadia/profiles.schema.json"
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "wezterm",
+  "name": "WezTerm",
+  "category": "terminal",
+  "summary": "GPU-accelerated cross-platform terminal and multiplexer configured in Lua. Layered backgrounds (images, GIFs, gradients), tabs, splits, ligatures, inline images and a bundled JetBrains Mono plus Nerd Font Symbols fallback.",
+  "homepage": "https://wezterm.org/",
+  "docs": "https://wezterm.org/config/files.html",
+  "license": "MIT",
+  "configFormat": "lua",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "wez.wezterm" },
+        { "manager": "scoop", "id": "wezterm", "notes": "Needs the extras bucket: scoop bucket add extras" },
+        { "manager": "choco", "id": "wezterm" }
+      ],
+      "detect": ["wezterm", "--version"],
+      "config": ["~/.wezterm.lua", "~/.config/wezterm/wezterm.lua"],
+      "notes": "Default shell on Windows is %COMSPEC% (cmd.exe), not PowerShell or bash: set default_prog (see default-shell recipe). Stable 20240203 is the latest tagged release; many docs on the main branch describe nightly-only options, each recipe states the version a key needs. No dedicated config validator: wezterm.config_builder() (since 20230320) warns or errors on unknown keys when the config loads, and load errors are shown in an on-screen overlay."
+    },
+    "macos": {
+      "supported": true,
+      "install": [
+        { "manager": "brew", "id": "cask:wezterm" }
+      ],
+      "detect": ["wezterm", "--version"],
+      "config": ["~/.wezterm.lua", "~/.config/wezterm/wezterm.lua"],
+      "notes": "The brew cask installs WezTerm.app and links the wezterm CLI. The nightly cask is wezterm@nightly."
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "flatpak", "id": "org.wezfurlong.wezterm", "notes": "Sandboxed; run via flatpak run org.wezfurlong.wezterm. Some host integration is limited." },
+        { "manager": "pacman", "id": "wezterm", "notes": "Arch extra repository" },
+        { "manager": "apt", "id": "wezterm", "notes": "Needs the upstream apt repo (apt.fury.io/wez) added first, see install docs" },
+        { "manager": "dnf", "id": "wezterm", "notes": "Needs the Copr repo: dnf copr enable wezfurlong/wezterm-nightly (that Copr tracks nightly builds)" }
+      ],
+      "detect": ["wezterm", "--version"],
+      "config": ["~/.wezterm.lua", "{xdg-config}/wezterm/wezterm.lua", "~/.config/wezterm/wezterm.lua"],
+      "notes": "Wayland blur (wayland_window_background_blur) is nightly-only. On X11 translucency needs a compositor."
+    }
+  },
+  "capabilities": {
+    "palette": { "support": "yes", "recipe": "recipes/palette.md" },
+    "font": { "support": "yes", "recipe": "recipes/font.md", "notes": "JetBrains Mono and Nerd Font Symbols are bundled." },
+    "ligatures": { "support": "yes", "recipe": "recipes/ligatures.md" },
+    "font-fallback": { "support": "yes", "recipe": "recipes/font-fallback.md" },
+    "line-height": { "support": "yes", "recipe": "recipes/line-height.md" },
+    "opacity": { "support": "yes", "recipe": "recipes/opacity.md" },
+    "blur": { "support": "partial", "recipe": "recipes/blur.md", "notes": "Windows (Acrylic, Mica, Tabbed) and macOS work on stable; Wayland blur needs nightly; no blur on X11." },
+    "background-image": { "support": "yes", "recipe": "recipes/background-image.md" },
+    "background-animated": { "support": "partial", "recipe": "recipes/background-animated.md", "notes": "Animated GIF or PNG layers animate only while the window has focus; costs GPU and VRAM. No video backgrounds." },
+    "shader": { "support": "no", "notes": "No user shader hook is documented. Approximate with background layers (gradients plus image hsb dimming), or use Windows Terminal experimental.pixelShaderPath on Windows." },
+    "padding": { "support": "yes", "recipe": "recipes/padding.md" },
+    "cursor": { "support": "yes", "recipe": "recipes/cursor.md" },
+    "tabs": { "support": "yes", "recipe": "recipes/tabs.md" },
+    "titlebar": { "support": "yes", "recipe": "recipes/titlebar.md" },
+    "splits": { "support": "yes", "recipe": "recipes/splits.md" },
+    "quake": { "support": "no", "notes": "No built-in drop-down or quake window is documented. Use an OS-level launcher or window-manager rule, or Windows Terminal (quakeMode action) on Windows." },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "shell-integration": { "support": "yes", "recipe": "recipes/shell-integration.md" },
+    "startup-layout": { "support": "yes", "recipe": "recipes/startup-layout.md" },
+    "inline-images": { "support": "yes", "recipe": "recipes/inline-images.md", "notes": "iTerm2 image protocol (wezterm imgcat) is documented. Sixel and Kitty graphics support level is not confirmed here." },
+    "profiles": { "support": "partial", "recipe": "recipes/profiles.md", "notes": "No profile concept. launch_menu entries and domains (WSL, SSH) fill the role." },
+    "default-shell": { "support": "yes", "recipe": "recipes/default-shell.md" },
+    "config-reload": { "support": "yes", "recipe": "recipes/config-reload.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "20240203-110809-5046fc22", "how": "docs" },
+  "sources": [
+    "https://wezterm.org/config/files.html",
+    "https://wezterm.org/config/appearance.html",
+    "https://wezterm.org/config/lua/config/background.html",
+    "https://wezterm.org/config/fonts.html",
+    "https://wezterm.org/install/windows.html",
+    "https://wezterm.org/install/macos.html",
+    "https://wezterm.org/install/linux.html",
+    "https://github.com/wezterm/wezterm/releases/latest"
+  ]
+}

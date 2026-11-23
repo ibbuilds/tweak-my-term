@@ -1,0 +1,80 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "alacritty",
+  "name": "Alacritty",
+  "category": "terminal",
+  "summary": "Minimal GPU-accelerated terminal configured in TOML. Fast and simple: colors, font, opacity, padding, cursor and key bindings, but deliberately no tabs, splits, background images, ligatures or shaders.",
+  "homepage": "https://alacritty.org/",
+  "docs": "https://alacritty.org/config-alacritty.html",
+  "license": "Apache-2.0",
+  "configFormat": "toml",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "Alacritty.Alacritty" }
+      ],
+      "detect": ["alacritty", "--version"],
+      "config": ["{appdata}/alacritty/alacritty.toml"],
+      "validate": ["alacritty", "migrate", "--dry-run", "--config-file", "{file}"],
+      "notes": "Alacritty does not create the config file or folder. The validate command parses the TOML and prints the migrated config to stdout without writing; it checks syntax and renamed keys, and whether unknown keys fail is not confirmed (Alacritty also logs warnings for unused keys at startup). Default shell on Windows is powershell. Needs ConPTY (Windows 10 1809+) and OpenGL ES 2.0."
+    },
+    "macos": {
+      "supported": true,
+      "install": [
+        { "manager": "brew", "id": "cask:alacritty" }
+      ],
+      "detect": ["alacritty", "--version"],
+      "config": ["{xdg-config}/alacritty/alacritty.toml", "~/.config/alacritty/alacritty.toml", "~/.alacritty.toml"],
+      "validate": ["alacritty", "migrate", "--dry-run", "--config-file", "{file}"],
+      "notes": "Unix lookup order: $XDG_CONFIG_HOME/alacritty/alacritty.toml, $XDG_CONFIG_HOME/alacritty.toml, ~/.config/alacritty/alacritty.toml, ~/.alacritty.toml, /etc/alacritty/alacritty.toml. macOS has native tab actions (CreateNewTab, SelectNextTab) bindable in keyboard.bindings; there is no tab bar styling."
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "pacman", "id": "alacritty" },
+        { "manager": "dnf", "id": "alacritty" },
+        { "manager": "apt", "id": "alacritty", "notes": "Available in recent Debian and Ubuntu releases; older ones lack it. Check apt policy alacritty." }
+      ],
+      "detect": ["alacritty", "--version"],
+      "config": ["{xdg-config}/alacritty/alacritty.toml", "~/.config/alacritty/alacritty.toml", "~/.alacritty.toml"],
+      "validate": ["alacritty", "migrate", "--dry-run", "--config-file", "{file}"],
+      "notes": "Blur works only on KDE Wayland. Needs a compositor for opacity on X11. Package availability per distribution release was not individually checked; INSTALL.md on GitHub lists the packagers."
+    }
+  },
+  "capabilities": {
+    "palette": { "support": "yes", "recipe": "recipes/palette.md" },
+    "font": { "support": "yes", "recipe": "recipes/font.md" },
+    "ligatures": { "support": "no", "notes": "Alacritty renders one glyph at a time and has no ligature support (maintainer statement in issue #50). Use WezTerm or Windows Terminal for ligatures." },
+    "font-fallback": { "support": "partial", "recipe": "recipes/font-fallback.md", "notes": "No fallback list option. Missing glyphs come from OS font fallback, so use a patched Nerd Font as the main family." },
+    "line-height": { "support": "yes", "recipe": "recipes/line-height.md", "notes": "Only as an integer pixel offset (font.offset.y)." },
+    "opacity": { "support": "yes", "recipe": "recipes/opacity.md" },
+    "blur": { "support": "partial", "recipe": "recipes/blur.md", "notes": "window.blur works on macOS and KDE Wayland only; not on Windows or X11." },
+    "background-image": { "support": "no", "notes": "Not supported and not planned (maintainers closed the requests). Use WezTerm or Windows Terminal, or draw the art in a separate window layer." },
+    "background-animated": { "support": "no", "notes": "No image or animation support. Use WezTerm or Windows Terminal." },
+    "shader": { "support": "no", "notes": "No custom shader option. Windows Terminal (experimental.pixelShaderPath) supports shaders." },
+    "padding": { "support": "yes", "recipe": "recipes/padding.md", "notes": "Only symmetric x/y padding." },
+    "cursor": { "support": "yes", "recipe": "recipes/cursor.md" },
+    "tabs": { "support": "no", "notes": "No tabs on Windows or Linux by design; use tmux or zellij. macOS has native tab actions only." },
+    "titlebar": { "support": "partial", "recipe": "recipes/titlebar.md", "notes": "Full or None everywhere; Transparent and Buttonless are macOS only. No integrated tab bar." },
+    "splits": { "support": "no", "notes": "No splits by design; use tmux or zellij." },
+    "quake": { "support": "no", "notes": "No drop-down mode. Use an OS-level launcher or window-manager rule, or Windows Terminal (quakeMode) on Windows." },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "shell-integration": { "support": "no", "notes": "No OSC 133 prompt marks or directory tracking features. Use WezTerm or Windows Terminal." },
+    "startup-layout": { "support": "no", "notes": "Single window, single shell. Run tmux or zellij with a layout file as the shell command (see default-shell recipe)." },
+    "inline-images": { "support": "no", "notes": "No Sixel, iTerm2 or Kitty image protocol. Use WezTerm or Windows Terminal (Sixel)." },
+    "profiles": { "support": "no", "notes": "No profiles. Run alacritty --config-file <file> or -o 'key=value' per use case, or import shared files with general.import." },
+    "default-shell": { "support": "yes", "recipe": "recipes/default-shell.md" },
+    "config-reload": { "support": "yes", "recipe": "recipes/config-reload.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "0.17.0", "how": "docs" },
+  "sources": [
+    "https://alacritty.org/config-alacritty.html",
+    "https://github.com/alacritty/alacritty/blob/master/extra/man/alacritty.5.scd",
+    "https://github.com/alacritty/alacritty/blob/master/extra/man/alacritty.1.scd",
+    "https://github.com/alacritty/alacritty/blob/master/README.md",
+    "https://github.com/alacritty/alacritty/blob/master/CHANGELOG.md",
+    "https://github.com/alacritty/alacritty/issues/50",
+    "https://github.com/alacritty/alacritty/issues/565"
+  ]
+}

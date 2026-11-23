@@ -1,0 +1,74 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "ghostty",
+  "name": "Ghostty",
+  "category": "terminal",
+  "summary": "GPU-accelerated terminal for macOS and Linux with native UI, custom GLSL shaders, background images, splits, quick terminal and Kitty graphics.",
+  "homepage": "https://ghostty.org",
+  "docs": "https://ghostty.org/docs",
+  "license": "MIT",
+  "configFormat": "key = value text (config.ghostty)",
+  "os": {
+    "windows": {
+      "supported": false,
+      "notes": "No official Windows build. Ghostty 1.4 release notes say the GUI roadmap for Windows was dropped (libghostty still supports Windows). Community forks exist but are not covered here. On Windows use Windows Terminal or WezTerm."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "cask:ghostty", "notes": "Community-maintained cask that repackages the official .dmg." }],
+      "detect": ["ghostty", "+version"],
+      "config": ["{xdg-config}/ghostty/config.ghostty", "{mac-app-support}/com.mitchellh.ghostty/config.ghostty"],
+      "validate": ["ghostty", "+validate-config", "--config-file={file}"],
+      "notes": "macOS also reads the XDG path; the Application Support file loads last and wins on conflicts. The file was named `config` (no extension) before 1.2.3; both names are read. If `ghostty` is not on PATH use /Applications/Ghostty.app/Contents/MacOS/ghostty."
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "pacman", "id": "ghostty", "notes": "Arch [extra]." },
+        { "manager": "apt", "id": "ghostty", "notes": "Official Ubuntu repo from 26.04; community .deb for older Ubuntu/Debian." },
+        { "manager": "dnf", "id": "ghostty", "notes": "Needs `dnf copr enable scottames/ghostty` first (Terra is an alternative)." },
+        { "manager": "snap", "id": "ghostty", "notes": "snap install ghostty --classic" }
+      ],
+      "detect": ["ghostty", "+version"],
+      "config": ["{xdg-config}/ghostty/config.ghostty"],
+      "validate": ["ghostty", "+validate-config", "--config-file={file}"],
+      "notes": "GTK4 app. Quick terminal needs a Wayland compositor with wlr-layer-shell (not GNOME). Flatpak is not listed on the official install page."
+    }
+  },
+  "capabilities": {
+    "palette": { "support": "yes", "recipe": "recipes/palette.md" },
+    "font": { "support": "yes", "recipe": "recipes/font.md" },
+    "ligatures": { "support": "yes", "recipe": "recipes/ligatures.md" },
+    "font-fallback": { "support": "yes", "recipe": "recipes/font-fallback.md" },
+    "line-height": { "support": "yes", "recipe": "recipes/line-height.md" },
+    "opacity": { "support": "yes", "recipe": "recipes/opacity.md" },
+    "blur": { "support": "yes", "recipe": "recipes/blur.md" },
+    "background-image": { "support": "yes", "recipe": "recipes/background-image.md", "notes": "PNG/JPEG only, since 1.2.0." },
+    "background-animated": { "support": "partial", "recipe": "recipes/background-animated.md", "notes": "No animated image formats; animate through a custom shader." },
+    "shader": { "support": "yes", "recipe": "recipes/shader.md" },
+    "padding": { "support": "yes", "recipe": "recipes/padding.md" },
+    "cursor": { "support": "yes", "recipe": "recipes/cursor.md" },
+    "tabs": { "support": "yes", "recipe": "recipes/tabs.md" },
+    "titlebar": { "support": "yes", "recipe": "recipes/titlebar.md" },
+    "splits": { "support": "yes", "recipe": "recipes/splits.md" },
+    "quake": { "support": "yes", "recipe": "recipes/quake.md", "notes": "Quick terminal. Linux needs Wayland + wlr-layer-shell." },
+    "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
+    "shell-integration": { "support": "yes", "recipe": "recipes/shell-integration.md" },
+    "startup-layout": { "support": "no", "notes": "No session or layout file. Use tmux/zellij for pane layouts, `window-width`/`window-height` for size, or the macOS AppleScript dictionary (listed on the features page) to script windows and tabs." },
+    "inline-images": { "support": "yes", "recipe": "recipes/inline-images.md", "notes": "Kitty graphics protocol. Sixel is not documented." },
+    "profiles": { "support": "no", "notes": "One config, no profile concept. Use `config-file = ?other` includes or launch with a different `--config-file`." },
+    "default-shell": { "support": "yes", "recipe": "recipes/default-shell.md" },
+    "config-reload": { "support": "yes", "recipe": "recipes/config-reload.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "1.4.0", "how": "docs" },
+  "sources": [
+    "https://ghostty.org/docs/config",
+    "https://ghostty.org/docs/config/reference",
+    "https://ghostty.org/docs/config/keybind/reference",
+    "https://ghostty.org/docs/install/binary",
+    "https://ghostty.org/docs/install/release-notes/1-4-0",
+    "https://ghostty.org/docs/features/theme",
+    "https://ghostty.org/docs/features/shell-integration",
+    "https://man.archlinux.org/man/ghostty.1"
+  ]
+}

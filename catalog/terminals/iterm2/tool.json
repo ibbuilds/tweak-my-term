@@ -1,0 +1,61 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "iterm2",
+  "name": "iTerm2",
+  "category": "terminal",
+  "summary": "macOS-only terminal with profiles, Dynamic Profiles (JSON), color presets, background images, blur, hotkey window, shell integration and inline images.",
+  "homepage": "https://iterm2.com",
+  "docs": "https://iterm2.com/documentation.html",
+  "license": "GPL-2.0",
+  "configFormat": "plist preferences; Dynamic Profiles as JSON/plist files",
+  "os": {
+    "windows": { "supported": false, "notes": "macOS only." },
+    "linux": { "supported": false, "notes": "macOS only." },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "cask:iterm2", "notes": "Direct download from https://iterm2.com/downloads.html also works. Latest stable 3.7.9 needs macOS 13+." }],
+      "detect": ["defaults", "read", "/Applications/iTerm.app/Contents/Info", "CFBundleShortVersionString"],
+      "config": ["{mac-app-support}/iTerm2/DynamicProfiles/", "~/Library/Preferences/com.googlecode.iterm2.plist"],
+      "validate": ["plutil", "-lint", "{file}"],
+      "notes": "Agents should write a Dynamic Profile JSON file into DynamicProfiles/ (loaded live; no restart); do not edit the binary preferences plist while iTerm2 runs. A malformed file in that folder makes iTerm2 skip all Dynamic Profile changes, so lint first. `plutil -lint` accepting JSON input is assumed, not confirmed in the docs read; if it rejects the file use `python3 -m json.tool {file}`. Errors are logged in Console.app. Preference-level (non-profile) settings such as tab bar position are not Dynamic Profile keys."
+    }
+  },
+  "capabilities": {
+    "palette": { "support": "yes", "recipe": "recipes/palette.md" },
+    "font": { "support": "yes", "recipe": "recipes/font.md" },
+    "ligatures": { "support": "yes", "recipe": "recipes/ligatures.md", "notes": "Enabling ligatures disables the GPU renderer." },
+    "font-fallback": { "support": "partial", "notes": "Profiles > Text has a Non-ASCII font and Special Exceptions (range remap, with an Install Nerd Font Bundle option). Exact Dynamic Profile key names for these were not confirmed; configure once in the UI and export the profile as JSON to read them. Simplest path: use a Nerd Font as Normal Font." },
+    "line-height": { "support": "yes", "recipe": "recipes/line-height.md" },
+    "opacity": { "support": "yes", "recipe": "recipes/opacity.md" },
+    "blur": { "support": "yes", "recipe": "recipes/blur.md" },
+    "background-image": { "support": "yes", "recipe": "recipes/background-image.md" },
+    "background-animated": { "support": "no", "notes": "Only a static image (or a rotating folder of images) is documented for backgrounds. Use another terminal (Ghostty, kitty) for shader-driven animation." },
+    "shader": { "support": "no", "notes": "No custom shader support. Use Ghostty or kitty for shaders." },
+    "cursor": { "support": "yes", "recipe": "recipes/cursor.md" },
+    "padding": { "support": "partial", "notes": "No padding setting in the Window profile docs. iTerm2 has Advanced settings for side and top/bottom margins (TerminalMargin, TerminalVMargin via `defaults write com.googlecode.iterm2`); names unverified here, check Settings > Advanced and search 'margin'." },
+    "tabs": { "support": "partial", "notes": "Tab bar position and visibility are global preferences (Settings > Appearance > Tabs), not profile keys, so Dynamic Profiles cannot set them. A per-profile tab color exists (Colors tab) as `tab_color` in the Python API." },
+    "titlebar": { "support": "partial", "notes": "Window style (normal, no title bar, full screen, ...) is the Style option in Settings > Profiles > Window; the Dynamic Profile key is `Window Type` (enum-backed number, values not confirmed). Export a profile to read the value for the style you want." },
+    "splits": { "support": "yes", "recipe": "recipes/splits.md" },
+    "quake": { "support": "partial", "recipe": "recipes/quake.md", "notes": "Hotkey window is created through the UI; Dynamic Profile keys for hotkeys were not confirmed." },
+    "keybindings": { "support": "partial", "notes": "Key mappings live in Settings > Keys (global) and Profiles > Keys (per profile, stored in the profile as a key map). The serialized format was not verified; set once in the UI and export the profile JSON, or use the Python API." },
+    "shell-integration": { "support": "yes", "recipe": "recipes/shell-integration.md" },
+    "startup-layout": { "support": "partial", "notes": "Window arrangements (Window > Save Window Arrangement; restore at launch via Settings > General > Startup) and the Python/AppleScript APIs. Not expressible as a plain config file; format not verified." },
+    "inline-images": { "support": "yes", "recipe": "recipes/inline-images.md" },
+    "profiles": { "support": "yes", "recipe": "recipes/profiles.md" },
+    "default-shell": { "support": "yes", "recipe": "recipes/default-shell.md" },
+    "config-reload": { "support": "yes", "recipe": "recipes/config-reload.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "3.7.9", "how": "docs" },
+  "sources": [
+    "https://iterm2.com/downloads.html",
+    "https://iterm2.com/documentation-dynamic-profiles.html",
+    "https://iterm2.com/documentation-preferences-profiles-colors.html",
+    "https://iterm2.com/documentation-preferences-profiles-text.html",
+    "https://iterm2.com/documentation-preferences-profiles-window.html",
+    "https://iterm2.com/documentation-escape-codes.html",
+    "https://iterm2.com/documentation-images.html",
+    "https://iterm2.com/documentation-shell-integration.html",
+    "https://iterm2.com/documentation-hotkey.html",
+    "https://iterm2.com/python-api/profile.html"
+  ]
+}
