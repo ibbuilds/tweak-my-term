@@ -65,7 +65,8 @@ async function detect() {
     if (!o || !o.supported) continue;
     if (o.detect && o.detect.length) {
       jobs.push(run(o.detect[0], o.detect.slice(1)).then((out) => {
-        result.tools[t.id] = out === null ? { installed: false } : { installed: true, version: version(out), raw: firstLine(out) };
+        // no output (e.g. an Appx query for a package that isn't there) means not installed
+        result.tools[t.id] = !out ? { installed: false } : { installed: true, version: version(out), raw: firstLine(out) };
       }));
     }
   }

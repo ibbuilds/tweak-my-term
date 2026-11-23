@@ -177,8 +177,8 @@ async function main() {
       out({ ok: !errs.length, errors: errs }, json, (r) => (r.ok ? 'look spec is valid' : `look spec is invalid:\n  ${r.errors.join('\n  ')}`));
       return errs.length ? process.exit(1) : undefined;
     }
-    case 'art': return require('../kit/cli').art([sub, ...rest], flags);
-    case 'inspire': return require('../kit/cli').inspire([sub, ...rest].filter((x) => x !== undefined), flags);
+    case 'art': return require('../kit/cli').art(process.argv.slice(3));
+    case 'inspire': return require('../kit/cli').inspire(process.argv.slice(3));
     case 'hook': return undefined; // hooks call engine/hook.js directly
     default: throw new run.GateError(`unknown command "${cmd}". Run tmt help.`);
   }
