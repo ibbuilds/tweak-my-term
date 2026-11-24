@@ -38,7 +38,7 @@
     "tabs": { "support": "yes", "recipe": "recipes/tabs.md" },
     "titlebar": { "support": "partial", "recipe": "recipes/titlebar.md" },
     "splits": { "support": "no", "notes": "No split panes. Use tmux/zellij, or Ptyxis/Konsole." },
-    "quake": { "support": "no", "notes": "No drop-down mode. GNOME users use the Guake or Tilix terminals, or a Shell extension." },
+    "quake": { "support": "no", "notes": "No drop-down mode. On GNOME use ddterm (Shell extension) or Guake, both in this catalog." },
     "keybindings": { "support": "yes", "recipe": "recipes/keybindings.md" },
     "shell-integration": { "support": "partial", "recipe": "recipes/shell-integration.md" },
     "startup-layout": { "support": "no", "notes": "No layout or session file. gnome-terminal(1) accepts per-launch options (such as --tab, --window, --working-directory and profile selection; not re-read here), or use tmux/zellij." },

@@ -1,0 +1,42 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "guake",
+  "name": "Guake",
+  "category": "terminal",
+  "summary": "Drop-down (quake-style) terminal for GNOME and other GTK desktops (Python, GTK3, VTE) with tabs, splits, transparency, background image and a global show/hide hotkey. Settings live in dconf, not in a file.",
+  "homepage": "https://github.com/Guake/guake",
+  "docs": "https://guake.readthedocs.io/en/latest/",
+  "license": "GPL-2.0-or-later",
+  "configFormat": "dconf/gsettings (schemas guake.*, path /org/guake/), no config file",
+  "os": {
+    "windows": { "supported": false, "notes": "GTK/Linux only." },
+    "macos": { "supported": false, "notes": "GTK/Linux only." },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "guake", "notes": "Debian/Ubuntu (sudo apt install guake); the docs also list a PPA, ppa:linuxuprising/guake, for newer releases." },
+        { "manager": "dnf", "id": "guake", "notes": "Fedora (sudo dnf install guake)." },
+        { "manager": "pacman", "id": "guake", "notes": "Arch/Manjaro (sudo pacman -S guake)." },
+        { "manager": "pipx", "id": "guake", "notes": "PyPI route (pipx install guake); needs the GTK/VTE/keybinder system packages listed in the docs. Prefer the distro package." }
+      ],
+      "detect": ["guake", "--version"],
+      "notes": "No config file: all settings are dconf keys in schemas guake, guake.general, guake.style, guake.style.font, guake.style.background, guake.keybindings.* (installed system-wide with the package, so plain gsettings works). Back up first with `dconf dump /org/guake/ > backup.ini` (restore: `dconf load /org/guake/ < backup.ini`). Requires a running dconf/D-Bus session of the desktop user. On Wayland the built-in global hotkey (keybinder) does not work: the docs say to add a GNOME custom keyboard shortcut running `guake-toggle` instead. Start it with `guake` (autostart: set guake.general start-at-login true). Whether running instances pick up every key change live is unverified; restart Guake if a change does not show."
+    }
+  },
+  "capabilities": {
+    "palette": { "support": "yes", "recipe": "recipes/palette.md" },
+    "font": { "support": "yes", "recipe": "recipes/font.md" },
+    "opacity": { "support": "yes", "recipe": "recipes/opacity.md" },
+    "background-image": { "support": "yes", "recipe": "recipes/background-image.md" },
+    "quake": { "support": "yes", "recipe": "recipes/quake.md" }
+  },
+  "verified": { "date": "2026-11-23", "version": "3.10.1", "how": "docs" },
+  "sources": [
+    "https://github.com/Guake/guake",
+    "https://github.com/Guake/guake/blob/master/guake/data/org.guake.gschema.xml",
+    "https://github.com/Guake/guake/blob/master/docs/source/user/installing.rst",
+    "https://github.com/Guake/guake/blob/master/guake/guake_app.py",
+    "https://github.com/Guake/guake/blob/master/guake/prefs.py",
+    "https://github.com/Guake/guake/blob/master/guake/data/prefs.glade"
+  ]
+}

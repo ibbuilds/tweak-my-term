@@ -251,6 +251,19 @@
         "how": "docs"
       }
     },
+    "ddterm": {
+      "name": "ddterm",
+      "category": "terminal",
+      "path": "catalog/terminals/ddterm",
+      "os": [
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "64.1.0",
+        "how": "docs"
+      }
+    },
     "foot": {
       "name": "foot",
       "category": "terminal",
@@ -288,6 +301,19 @@
       "verified": {
         "date": "2026-11-23",
         "version": "3.60.0",
+        "how": "docs"
+      }
+    },
+    "guake": {
+      "name": "Guake",
+      "category": "terminal",
+      "path": "catalog/terminals/guake",
+      "os": [
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "3.10.1",
         "how": "docs"
       }
     },
@@ -1865,6 +1891,13 @@
         ],
         "recipe": "catalog/terminals/alacritty/recipes/palette.md"
       },
+      "ddterm": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ddterm/recipes/palette.md"
+      },
       "foot": {
         "support": "yes",
         "os": [
@@ -1886,6 +1919,13 @@
           "linux"
         ],
         "recipe": "catalog/terminals/gnome-terminal/recipes/palette.md"
+      },
+      "guake": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/guake/recipes/palette.md"
       },
       "iterm2": {
         "support": "yes",
@@ -2463,6 +2503,13 @@
         ],
         "recipe": "catalog/terminals/alacritty/recipes/font.md"
       },
+      "ddterm": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ddterm/recipes/font.md"
+      },
       "foot": {
         "support": "yes",
         "os": [
@@ -2484,6 +2531,13 @@
           "linux"
         ],
         "recipe": "catalog/terminals/gnome-terminal/recipes/font.md"
+      },
+      "guake": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/guake/recipes/font.md"
       },
       "iterm2": {
         "support": "yes",
@@ -2780,6 +2834,13 @@
         ],
         "recipe": "catalog/terminals/alacritty/recipes/opacity.md"
       },
+      "ddterm": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ddterm/recipes/opacity.md"
+      },
       "foot": {
         "support": "yes",
         "os": [
@@ -2801,6 +2862,13 @@
           "linux"
         ],
         "notes": "The profile schema has no transparency key; the GNOME wiki FAQ says the option was removed from Preferences in 3.7. Ptyxis has a per-profile `opacity` key (org.gnome.Ptyxis.Profile, 0.0-1.0), or use kitty/WezTerm/Konsole/Alacritty."
+      },
+      "guake": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/guake/recipes/opacity.md"
       },
       "iterm2": {
         "support": "yes",
@@ -2942,6 +3010,13 @@
         ],
         "notes": "Not supported and not planned (maintainers closed the requests). Use WezTerm or Windows Terminal, or draw the art in a separate window layer."
       },
+      "ddterm": {
+        "support": "no",
+        "os": [
+          "linux"
+        ],
+        "notes": "No background image key in the settings schema. Use Guake, kitty, WezTerm or Konsole."
+      },
       "foot": {
         "support": "no",
         "os": [
@@ -2964,6 +3039,13 @@
           "linux"
         ],
         "notes": "No background image. Use Konsole, kitty, WezTerm or iTerm2."
+      },
+      "guake": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/guake/recipes/background-image.md"
       },
       "iterm2": {
         "support": "yes",
@@ -3576,6 +3658,13 @@
         ],
         "notes": "No drop-down mode. Use an OS-level launcher or window-manager rule, or Windows Terminal (quakeMode) on Windows."
       },
+      "ddterm": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/ddterm/recipes/quake.md"
+      },
       "foot": {
         "support": "no",
         "os": [
@@ -3597,7 +3686,14 @@
         "os": [
           "linux"
         ],
-        "notes": "No drop-down mode. GNOME users use the Guake or Tilix terminals, or a Shell extension."
+        "notes": "No drop-down mode. On GNOME use ddterm (Shell extension) or Guake, both in this catalog."
+      },
+      "guake": {
+        "support": "yes",
+        "os": [
+          "linux"
+        ],
+        "recipe": "catalog/terminals/guake/recipes/quake.md"
       },
       "iterm2": {
         "support": "partial",

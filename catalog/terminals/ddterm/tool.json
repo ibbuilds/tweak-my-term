@@ -1,0 +1,40 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "ddterm",
+  "name": "ddterm",
+  "category": "terminal",
+  "summary": "Drop-down (quake) terminal as a GNOME Shell extension, VTE-based with tabs, splits, per-edge position and size, animations, opacity and a command line / D-Bus control interface. Settings live in dconf, not in a file.",
+  "homepage": "https://github.com/ddterm/gnome-shell-extension-ddterm",
+  "docs": "https://github.com/ddterm/gnome-shell-extension-ddterm/blob/master/docs/Install.md",
+  "license": "GPL-3.0-or-later",
+  "configFormat": "dconf/gsettings (schema org.gnome.shell.extensions.ddterm, path /com/github/amezin/ddterm/), no config file",
+  "os": {
+    "windows": { "supported": false, "notes": "GNOME Shell extension, Linux only." },
+    "macos": { "supported": false, "notes": "GNOME Shell extension, Linux only." },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "gnome-extensions", "id": "ddterm@amezin.github.com", "notes": "Easiest route is https://extensions.gnome.org/extension/3780/ddterm/ (browser integration or the Extension Manager app); the site may lag the latest GitHub release. From a downloaded bundle: gnome-extensions install -f ddterm@amezin.github.com.shell-extension.zip (then it is not auto-updated)." },
+        { "manager": "aur", "id": "gnome-shell-extension-ddterm", "notes": "Arch Linux AUR package; a binary repo is also described in docs/Install.md." }
+      ],
+      "detect": ["gnome-extensions", "info", "ddterm@amezin.github.com"],
+      "notes": "Requires GNOME Shell 48 to 51 (shell_versions in meson.build on master at the verified date); it is not a standalone app and does nothing on KDE, Sway or other desktops. No config file: all settings are dconf keys. The schema id is org.gnome.shell.extensions.ddterm (com.github.amezin.ddterm is the application id, not the settings schema). The schema ships inside the extension, not system-wide, so if gsettings reports No such schema, point it at the extension's schemas folder (for a per-user install, likely ~/.local/share/gnome-shell/extensions/ddterm@amezin.github.com/schemas, unverified) via GSETTINGS_SCHEMA_DIR, or write the same keys with `dconf write /com/github/amezin/ddterm/KEY VALUE`. Back up first with `dconf dump /com/github/amezin/ddterm/ > backup.ini`. Enable with `gnome-extensions enable ddterm@amezin.github.com`; after a first install GNOME Shell may need a log out and in. Requires a running dconf/D-Bus session of the desktop user. Control from the command line: `gapplication action com.github.amezin.ddterm toggle` (also show, hide)."
+    }
+  },
+  "capabilities": {
+    "palette": { "support": "yes", "recipe": "recipes/palette.md" },
+    "font": { "support": "yes", "recipe": "recipes/font.md" },
+    "opacity": { "support": "yes", "recipe": "recipes/opacity.md" },
+    "quake": { "support": "yes", "recipe": "recipes/quake.md" },
+    "background-image": { "support": "no", "notes": "No background image key in the settings schema. Use Guake, kitty, WezTerm or Konsole." }
+  },
+  "verified": { "date": "2026-11-23", "version": "64.1.0", "how": "docs" },
+  "sources": [
+    "https://github.com/ddterm/gnome-shell-extension-ddterm",
+    "https://github.com/ddterm/gnome-shell-extension-ddterm/blob/master/schemas/org.gnome.shell.extensions.ddterm.gschema.xml",
+    "https://github.com/ddterm/gnome-shell-extension-ddterm/blob/master/docs/Install.md",
+    "https://github.com/ddterm/gnome-shell-extension-ddterm/blob/master/docs/CommandLine.md",
+    "https://github.com/ddterm/gnome-shell-extension-ddterm/blob/master/meson.build",
+    "https://extensions.gnome.org/extension/3780/ddterm/"
+  ]
+}
