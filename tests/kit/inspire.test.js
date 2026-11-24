@@ -52,6 +52,7 @@ test('normalize: full shape for a typical entry', () => {
     score: 900,
     date: '2024-09-09',
     portable: false,
+    seen: null,
   });
 });
 
@@ -306,14 +307,14 @@ test('cli: tmt inspire cozy --json has the documented shape', () => {
   const r = tmt(['cozy', '--json']);
   assert.strictEqual(r.status, 0, r.stderr);
   const j = JSON.parse(r.stdout);
-  assert.deepStrictEqual(Object.keys(j), ['query', 'filters', 'matches', 'notes', 'results', 'saved', 'attribution']);
+  assert.deepStrictEqual(Object.keys(j), ['query', 'filters', 'matches', 'notes', 'results', 'saved', 'crops', 'attribution']);
   assert.strictEqual(j.query, 'cozy');
-  assert.deepStrictEqual(j.filters, { os: null, terminal: null, shell: null, layout: null });
+  assert.deepStrictEqual(j.filters, { os: null, terminal: null, shell: null, layout: null, has: null, complexity: null });
   assert.strictEqual(j.matches, 7);
   assert.strictEqual(j.saved, null);
   assert.strictEqual(j.attribution, 'Data: awesome-dotfiles (r/unixporn), links to original posts.');
   assert.deepStrictEqual(j.results.map((x) => x.id), ['fx0001', 'fx0003', 'fx0007', 'fx0011', 'fx0013', 'fx0012'], 'varied: Catppuccin and Hyprland do not repeat while others match');
-  assert.deepStrictEqual(Object.keys(j.results[0]), ['id', 'title', 'url', 'author', 'image', 'images', 'repo', 'wm', 'distro', 'os', 'colorscheme', 'tools', 'score', 'date', 'portable', 'relevance', 'exact', 'why']);
+  assert.deepStrictEqual(Object.keys(j.results[0]), ['id', 'title', 'url', 'author', 'image', 'images', 'repo', 'wm', 'distro', 'os', 'colorscheme', 'tools', 'score', 'date', 'portable', 'seen', 'relevance', 'exact', 'why']);
   assert.strictEqual(j.results[0].image, 'https://example.invalid/img/fx0001.png');
   assert.strictEqual(j.results[0].repo, 'https://github.com/example-user-01/dotfiles');
 });
@@ -410,7 +411,7 @@ test('rank: layout explains itself, falls back softly, rejects unknown kinds', (
   const r = I.rank(entries, 'gruvbox', { layout: 'floating' });
   assert.deepStrictEqual(ids(r.results), ['fx0012']);
   assert.match(r.results[0].why, /layout floating \(stock windows\)/);
-  assert.ok(r.notes.includes('Layout is inferred from the window manager and tools; confirm it on each screenshot.'));
+  assert.ok(r.notes.some((n) => n.startsWith("1 of 1 result(s) have not been looked at yet")), r.notes.join(" | "));
   const soft = I.rank(entries, 'gruvbox', { layout: 'scrolling' });
   assert.strictEqual(soft.results.every((x) => x.exact === false), true);
   assert.match(soft.results[0].why, /not scrolling/);

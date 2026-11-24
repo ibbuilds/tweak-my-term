@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rice-annotation.schema.json",
+  "title": "What a rice screenshot shows about its terminals",
+  "description": "One entry per r/unixporn screenshot, written by looking at the picture once. Facts only, no images. Boxes are fractions of the screenshot (0-1) so they work at any resolution.",
+  "type": "object",
+  "required": ["id", "focus", "terminals", "layout", "complexity", "tone", "prompt", "mood", "note"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+$" },
+    "focus": { "enum": ["terminal", "mixed", "other"], "description": "terminal: the terminals are the point of the shot; mixed: terminals share it with other apps/widgets; other: terminals are absent, tiny or covered" },
+    "terminals": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["box", "shows"],
+        "additionalProperties": false,
+        "properties": {
+          "box": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "number", "minimum": 0, "maximum": 1 }, "description": "x, y, width, height as fractions of the screenshot" },
+          "panes": { "type": "integer", "minimum": 1, "maximum": 12, "description": "splits inside this window (tmux/zellij/terminal splits), 1 if none" },
+          "shows": { "type": "array", "minItems": 1, "maxItems": 6, "items": { "$ref": "#/$defs/content" } },
+          "surface": { "enum": ["opaque", "translucent", "image"], "description": "solid bg, see-through to the wallpaper, or an image inside the terminal" }
+        }
+      }
+    },
+    "layout": { "enum": ["single", "panes", "tiling", "floating", "dashboard", "scrolling", "none"], "description": "how the terminals are arranged: one window; one window split into panes; several tiled windows; several overlapping/floating windows; many small windows each with one job (monitor, clock, fetch...); a horizontally scrolling strip; no terminal visible" },
+    "complexity": { "type": "integer", "minimum": 1, "maximum": 5, "description": "1 one terminal with a shell; 2 one terminal with fetch/art, or 2 areas; 3 three or four areas, or a full TUI app; 4 four to six areas with several TUI apps; 5 a wall of six or more" },
+    "tone": { "enum": ["dark", "light", "mixed"] },
+    "accent": { "type": "string", "pattern": "^#[0-9A-F]{6}$", "description": "the one accent color in the terminals, if there is a clear one" },
+    "prompt": { "enum": ["not-visible", "minimal", "two-line", "powerline", "boxed", "other"] },
+    "mood": { "type": "array", "maxItems": 3, "items": { "$ref": "#/$defs/mood" } },
+    "note": { "type": "string", "maxLength": 200, "description": "one line: what makes the terminal part work (or fail)" },
+    "checked": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "by": { "type": "string", "maxLength": 40, "description": "annotator model or person" }
+  },
+  "$defs": {
+    "content": { "enum": ["shell", "fetch", "monitor", "editor", "file-manager", "clock", "visualizer", "music", "pipes", "matrix", "art", "git", "chat", "mail", "calendar", "weather", "logs", "notes", "browser", "other"] },
+    "mood": { "enum": ["minimal", "cozy", "retro", "cyberpunk", "pastel", "monochrome", "nature", "vaporwave", "hacker", "elegant", "playful", "anime", "cold", "warm", "dark", "bright"] }
+  }
+}

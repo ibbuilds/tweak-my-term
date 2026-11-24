@@ -7,6 +7,10 @@
 // local folder, for use as the visual anchor only.
 //
 // TMT_RICES_FILE points at a local copy of the JSON (tests, offline); TMT_STATE moves the cache.
+//
+// What each screenshot shows (terminal boxes, panes, what runs in them, layout, complexity) comes
+// from catalog/inspiration/annotations.json (tools/annotate.js): it is joined as `entry.seen`, and
+// search, filters and ranking trust it over the tags. TMT_ANNOTATIONS_FILE overrides the path.
 
 const fs = require('fs');
 const path = require('path');
@@ -127,7 +131,41 @@ function normalize(entry) {
     score: Number.isFinite(Number(e.score)) ? Number(e.score) : 0,
     date: Number.isFinite(created) && created > 0 ? new Date(created * 1000).toISOString().slice(0, 10) : null,
     portable,
+    seen: null,
   };
+}
+
+// ---- what the screenshots show ----------------------------------------------------------------
+
+const ANNOTATIONS = path.join(__dirname, '..', 'catalog', 'inspiration', 'annotations.json');
+const CONTENTS = ['shell', 'fetch', 'monitor', 'editor', 'file-manager', 'clock', 'visualizer', 'music', 'pipes', 'matrix', 'art', 'git',
+  'chat', 'mail', 'calendar', 'weather', 'logs', 'notes', 'browser', 'other'];
+
+function loadSeen(file = process.env.TMT_ANNOTATIONS_FILE || ANNOTATIONS) {
+  const data = readJson(file);
+  return data && Array.isArray(data.entries) ? data.entries : [];
+}
+
+/** Attach annotations (what each screenshot shows) to entries as `seen`; entries without one get null. */
+function withSeen(entries, list = loadSeen()) {
+  const by = new Map(list.map((a) => [a.id, a]));
+  for (const e of entries) e.seen = by.get(e.id) || null;
+  return entries;
+}
+
+const shows = (s) => [...new Set(s.terminals.flatMap((t) => t.shows || []))];
+
+// "complexity" spec: "4", "4+", "2-3", "high" (4+), "low" (1-2).
+function parseComplexity(v) {
+  if (v == null || v === '') return null;
+  const s = String(v).toLowerCase().trim();
+  if (s === 'high') return [4, 5];
+  if (s === 'low') return [1, 2];
+  let m;
+  if ((m = /^([1-5])\+$/.exec(s))) return [+m[1], 5];
+  if ((m = /^([1-5])-([1-5])$/.exec(s))) return [+m[1], +m[2]];
+  if ((m = /^([1-5])$/.exec(s))) return [+m[1], +m[1]];
+  throw new Error(`--complexity must be 1-5, n+, n-m, high or low; got "${v}".`);
 }
 
 // ---- load -------------------------------------------------------------------------------------
@@ -197,7 +235,8 @@ async function load(opts = {}) {
   }
 
   function result(raw, info) {
-    return { entries: raw.map(normalize), count: raw.length, ...info };
+    const entries = withSeen(raw.map(normalize));
+    return { entries, count: raw.length, seen: entries.filter((e) => e.seen).length, ...info };
   }
 }
 
@@ -241,7 +280,22 @@ const MOODS = {
 
 const THEMES = new Set(['tokyonight', 'rosepine', 'onedark', 'onelight', 'gruvbox', 'catppuccin', 'solarized', 'everforest', 'kanagawa', 'oxocarbon', 'palenight']);
 const OS_WORDS = { mac: 'macos', macos: 'macos', osx: 'macos', macbook: 'macos', win: 'windows', win10: 'windows', win11: 'windows', windows: 'windows', linux: 'linux' };
-const FIELD_WEIGHT = { colorscheme: 3, tools: 2, wm: 2, distro: 1.5, title: 1.5, os: 1.5 };
+const FIELD_WEIGHT = { colorscheme: 3, seen: 2.5, tools: 2, wm: 2, distro: 1.5, title: 1.5, os: 1.5 };
+
+// Words about how much is on screen; matched against the screenshot's complexity when it was seen.
+const COMPLEXITY_WORDS = {
+  complex: 'high', busy: 'high', advanced: 'high', rich: 'high', dense: 'high', loaded: 'high', maximal: 'high', maximalist: 'high',
+  detailed: 'high', elaborate: 'high', fancy: 'high', dashboard: 'high', widgets: 'high', cockpit: 'high', productive: 'high',
+  minimal: 'low', minimalist: 'low', simple: 'low', clean: 'low', plain: 'low', calm: 'low', focused: 'low', zen: 'low',
+};
+// Words for what runs in a terminal; matched against what the screenshot shows.
+const CONTENT_WORDS = {
+  clock: 'clock', clocks: 'clock', time: 'clock', visualizer: 'visualizer', visualiser: 'visualizer', audio: 'visualizer', cava: 'visualizer',
+  monitor: 'monitor', monitoring: 'monitor', btop: 'monitor', htop: 'monitor', stats: 'monitor', pipes: 'pipes', matrix: 'matrix',
+  fetch: 'fetch', neofetch: 'fetch', fastfetch: 'fetch', editor: 'editor', vim: 'editor', neovim: 'editor', nvim: 'editor',
+  files: 'file-manager', filemanager: 'file-manager', ranger: 'file-manager', yazi: 'file-manager', lf: 'file-manager',
+  music: 'music', ncmpcpp: 'music', git: 'git', lazygit: 'git', calendar: 'calendar', weather: 'weather', mail: 'mail', chat: 'chat', art: 'art',
+};
 
 function parseQuery(query) {
   const raw = Array.isArray(query) ? query.join(' ') : String(query || '');
@@ -253,7 +307,10 @@ function parseQuery(query) {
     if (STOP.has(words[i])) continue;
     terms.push(ALIASES[words[i]] || words[i]);
   }
-  return [...new Set(terms)].map((t) => ({ term: t, key: compact(t), expansions: (MOODS[t] || []).filter((x) => x !== t) }));
+  return [...new Set(terms)].map((t) => ({
+    term: t, key: compact(t), expansions: (MOODS[t] || []).filter((x) => x !== t),
+    complexity: COMPLEXITY_WORDS[t] || null, content: CONTENT_WORDS[t] || null,
+  }));
 }
 
 function tokenSet(...values) {
@@ -274,7 +331,8 @@ const indexCache = new WeakMap();
 function fieldsOf(e) {
   let f = indexCache.get(e);
   if (!f) {
-    f = { colorscheme: tokenSet(e.colorscheme), tools: tokenSet(...e.tools), wm: tokenSet(e.wm), distro: tokenSet(e.distro), title: tokenSet(e.title), os: new Set([e.os]) };
+    f = { colorscheme: tokenSet(e.colorscheme), tools: tokenSet(...e.tools), wm: tokenSet(e.wm), distro: tokenSet(e.distro), title: tokenSet(e.title), os: new Set([e.os]),
+      seen: e.seen ? tokenSet(...e.seen.mood, e.seen.layout, ...shows(e.seen)) : new Set() };
     indexCache.set(e, f);
   }
   return f;
@@ -297,6 +355,20 @@ function scoreEntry(e, terms) {
   for (const q of terms) {
     const key = OS_WORDS[q.key] ? OS_WORDS[q.key] : q.key;
     const d = best(f, key);
+    // What the screenshot shows beats tags: complexity words and content words.
+    if (q.complexity || q.content) {
+      let w = 0;
+      if (e.seen && q.complexity) {
+        const c = e.seen.complexity;
+        w = q.complexity === 'high' ? (c >= 4 ? 3 : c === 3 ? 1.5 : 0) : (c <= 2 ? 3 : c === 3 ? 0.5 : 0);
+        if (q.complexity === 'low' && w === 0) { total -= 2; continue; } // seen as busy: not minimal, whatever the tags say
+      } else if (!e.seen && q.complexity === 'high') {
+        w = e.tools.filter((t) => WIDGET_TOOLS.has(t)).length >= 2 ? 1 : 0;
+      }
+      if (e.seen && q.content && shows(e.seen).includes(q.content)) w = Math.max(w, 3);
+      if (w > d.w) { d.w = w; d.field = 'seen'; }
+      if (e.seen && q.complexity === 'high' && w === 0) { continue; } // seen as simple: not complex
+    }
     const syn = [];
     for (const x of q.expansions) {
       const s = best(f, compact(x));
@@ -341,7 +413,9 @@ function explain(e, matched, filters, exact) {
   if (filters.os) fl.push(filters.os === 'windows' && e.os !== 'windows' ? 'portable to Windows' : `os ${e.os}`);
   if (filters.terminal) fl.push(e.tools.includes(filters.terminal) ? `uses ${filters.terminal}` : `no ${filters.terminal}`);
   if (filters.shell) fl.push(e.tools.includes(filters.shell) ? `uses ${filters.shell}` : `no ${filters.shell}`);
-  if (filters.layout) { const ev = LAYOUTS[filters.layout](e); fl.push(ev ? `layout ${filters.layout} (${String(ev).toLowerCase()})` : `not ${filters.layout}`); }
+  if (filters.layout) { const ev = layoutEvidence(filters.layout, e); fl.push(ev ? `layout ${filters.layout} (${String(ev).toLowerCase()})` : `not ${filters.layout}`); }
+  if (filters.has) fl.push(e.seen ? `shows ${filters.has.filter((h) => shows(e.seen).includes(h)).join(', ') || 'none of ' + filters.has.join(', ')}` : 'not looked at yet');
+  if (filters.complexity) fl.push(e.seen ? `complexity ${e.seen.complexity} (seen)` : 'complexity unknown');
   const out = [];
   if (parts.length) out.push(`matches ${parts.slice(0, 4).join(', ')}`);
   if (fl.length) out.push(fl.join(', '));
@@ -376,6 +450,30 @@ const LAYOUTS = {
   scrolling: (e) => (SCROLLING_WMS.test(wmKey(e)) ? e.wm : /\bscrolling\b/i.test(e.title) ? 'title' : null),
 };
 const LAYOUT_NAMES = Object.keys(LAYOUTS);
+
+// From the screenshot when it was looked at, otherwise inferred from WM and tools.
+const SEEN_LAYOUT = {
+  panes: (s) => s.layout === 'panes' || s.terminals.some((t) => (t.panes || 1) > 1),
+  dashboard: (s) => s.layout === 'dashboard' || s.complexity >= 4,
+  tiling: (s) => s.layout === 'tiling',
+  floating: (s) => s.layout === 'floating',
+  scrolling: (s) => s.layout === 'scrolling',
+};
+function layoutEvidence(name, e) {
+  if (e.seen) return SEEN_LAYOUT[name](e.seen) ? 'seen in the screenshot' : null;
+  return LAYOUTS[name](e);
+}
+
+// Shots where the terminals are the point rank up; shots with no terminal in them sink.
+const FOCUS_BOOST = { terminal: 3, mixed: 1, other: -12 };
+
+function canonHas(v) {
+  if (v == null || v === '') return null;
+  const list = (Array.isArray(v) ? v : String(v).split(',')).map((x) => String(x).toLowerCase().trim()).filter(Boolean)
+    .map((x) => CONTENT_WORDS[x] || x);
+  for (const x of list) if (!CONTENTS.includes(x)) throw new Error(`Unknown --has "${x}". Known: ${CONTENTS.join(', ')}.`);
+  return [...new Set(list)];
+}
 
 function canonLayout(v) {
   if (v == null || v === '') return null;
@@ -435,7 +533,10 @@ function rank(entries, query, opts = {}) {
   const sort = opts.sort || 'relevance';
   if (!['relevance', 'new', 'random'].includes(sort)) throw new Error(`sort must be relevance, new or random, got "${sort}"`);
   const terms = parseQuery(query);
-  const filters = { os: canonOs(opts.os), terminal: canonIn(opts.terminal, TERMINALS, 'terminal'), shell: canonIn(opts.shell, SHELLS, 'shell'), layout: canonLayout(opts.layout) };
+  const filters = {
+    os: canonOs(opts.os), terminal: canonIn(opts.terminal, TERMINALS, 'terminal'), shell: canonIn(opts.shell, SHELLS, 'shell'), layout: canonLayout(opts.layout),
+    has: canonHas(opts.has), complexity: parseComplexity(opts.complexity),
+  };
   const active = Object.keys(filters).filter((k) => filters[k]);
   const limit = Number.isInteger(opts.limit) && opts.limit > 0 ? opts.limit : 6;
   const minScore = Number(opts.minScore) || 0;
@@ -449,9 +550,10 @@ function rank(entries, query, opts = {}) {
     os: (e) => (filters.os === 'windows' ? e.os === 'windows' || e.portable : e.os === filters.os),
     terminal: (e) => e.tools.includes(filters.terminal),
     shell: (e) => e.tools.includes(filters.shell),
-    layout: (e) => LAYOUTS[filters.layout](e) !== null,
+    layout: (e) => layoutEvidence(filters.layout, e) !== null,
+    has: (e) => Boolean(e.seen) && filters.has.every((h) => shows(e.seen).includes(h)),
+    complexity: (e) => Boolean(e.seen) && e.seen.complexity >= filters.complexity[0] && e.seen.complexity <= filters.complexity[1],
   };
-  if (filters.layout) notes.push('Layout is inferred from the window manager and tools; confirm it on each screenshot.');
 
   let pool = [];
   for (const e of entries) {
@@ -480,8 +582,10 @@ function rank(entries, query, opts = {}) {
     const e = p.e;
     const recency = (Date.parse(e.date) - t0) / span || 0;
     p.rank = p.s.relevance * 10 + 1.5 * Math.log1p(Math.max(0, e.score)) + 1.5 * recency + p.fm.length * (exact ? 0 : 8)
-      + (filters.os === 'windows' ? (e.os === 'windows' ? 6 : e.portable ? 2 : 0) : 0);
+      + (filters.os === 'windows' ? (e.os === 'windows' ? 6 : e.portable ? 2 : 0) : 0)
+      + (e.seen ? FOCUS_BOOST[e.seen.focus] || 0 : 0);
   }
+  if (sort !== 'relevance') for (const p of pool) if (p.e.seen && p.e.seen.focus === 'other') p.sink = true;
   if (sort === 'new') for (const p of pool) p.rank = (Date.parse(p.e.date) || 0) + p.fm.length * (exact ? 0 : 1e13);
   if (sort === 'random') {
     const rnd = seededRandom(opts.seed ?? Date.now());
@@ -489,7 +593,7 @@ function rank(entries, query, opts = {}) {
     // a fresh draw each time, tilted toward posts people rated well
     for (const p of pool.sort((a, b) => (a.e.id < b.e.id ? -1 : 1))) p.rank = rnd() + 0.6 * (Math.log1p(Math.max(0, p.e.score)) / top) + p.fm.length * (exact ? 0 : 10);
   }
-  pool.sort((a, b) => b.rank - a.rank || b.e.score - a.e.score || (a.e.id < b.e.id ? -1 : 1));
+  pool.sort((a, b) => (a.sink ? 1 : 0) - (b.sink ? 1 : 0) || b.rank - a.rank || b.e.score - a.e.score || (a.e.id < b.e.id ? -1 : 1));
   const chosen = opts.diverse === false ? pool.slice(0, limit) : diversify(pool, limit);
 
   const results = chosen.map((p) => ({
@@ -498,6 +602,10 @@ function rank(entries, query, opts = {}) {
     exact: exact || p.fm.length === active.length,
     why: explain(p.e, p.s.matched, filters, exact || p.fm.length === active.length),
   }));
+  const unseen = results.filter((x) => !x.seen).length;
+  if ((filters.layout || terms.some((t) => t.complexity || t.content)) && unseen) {
+    notes.push(`${unseen} of ${results.length} result(s) have not been looked at yet: their layout and contents are guessed from tags; check the screenshot.`);
+  }
   return { query: terms.map((t) => t.term).join(' '), filters, matches: pool.length, notes, results };
 }
 
@@ -562,6 +670,27 @@ async function saveImage(entry, dir, opts = {}) {
   return { file, bytes: buf.length, source: url };
 }
 
+// Cuts each annotated terminal window out of a saved screenshot: <name>-t1.png, -t2.png...
+// The agent then judges the terminals, not the desktop around them.
+function cropTerminals(file, seen, outDir = path.dirname(file)) {
+  if (!seen || !seen.terminals || !seen.terminals.length) return [];
+  const image = require('./image');
+  const img = image.load(file);
+  const base = path.basename(file).replace(/\.[a-z]+$/i, '');
+  return seen.terminals.map((t, i) => {
+    const [bx, by, bw, bh] = t.box;
+    const x = Math.min(img.width - 1, Math.max(0, Math.round(bx * img.width)));
+    const y = Math.min(img.height - 1, Math.max(0, Math.round(by * img.height)));
+    const w = Math.max(1, Math.min(img.width - x, Math.round(bw * img.width)));
+    const h = Math.max(1, Math.min(img.height - y, Math.round(bh * img.height)));
+    const out = { width: w, height: h, data: new Uint8ClampedArray(w * h * 4) };
+    for (let r = 0; r < h; r++) out.data.set(img.data.subarray(((y + r) * img.width + x) * 4, ((y + r) * img.width + x + w) * 4), r * w * 4);
+    const f = path.join(outDir, `${base}-t${i + 1}.png`);
+    image.save(out, f);
+    return { file: f, box: t.box, shows: t.shows };
+  });
+}
+
 // Downloads every result's screenshot (sequentially, politely) for a visual review.
 async function saveAll(list, dir, opts = {}) {
   const saved = [], failed = [];
@@ -574,15 +703,18 @@ async function saveAll(list, dir, opts = {}) {
 // ---- CLI --------------------------------------------------------------------------------------
 
 const USAGE = `Usage: tmt inspire <query...> [--os linux|macos|windows] [--terminal x] [--shell x] [--layout ${LAYOUT_NAMES.join('|')}] [--limit n] [--min-score n]
-                   [--sort relevance|new|random] [--seed n] [--json] [--refresh] [--facets] [--save <n|all> <dir>]
+                   [--has clock,monitor,...] [--complexity 1-5|n+|n-m|high|low]
+                   [--sort relevance|new|random] [--seed n] [--json] [--refresh] [--facets] [--save <n|all> <dir> [--crop]]
 Results vary by design: no repeated colorscheme, window manager or author while other matches exist.
---sort random --seed n draws a different set each time; --save all <dir> downloads every screenshot to review.
+--sort random --seed n draws a different set each time; --save all <dir> downloads every screenshot to review;
+--crop also cuts out each terminal window seen in it (rice-<id>-t1.png...). Words like complex, busy, dashboard,
+minimal, clean, and clock, monitor, visualizer, fetch match what the screenshots were seen to show.
 Search r/unixporn rices by mood, colorscheme, tool or WM. Example: tmt inspire cozy gruvbox --terminal kitty`;
 
 function parseArgs(argv) {
   const a = { query: [], flags: {} };
-  const valued = new Set(['os', 'terminal', 'shell', 'layout', 'limit', 'min-score', 'sort', 'seed']);
-  const bool = new Set(['json', 'refresh', 'facets', 'help']);
+  const valued = new Set(['os', 'terminal', 'shell', 'layout', 'limit', 'min-score', 'sort', 'seed', 'has', 'complexity']);
+  const bool = new Set(['json', 'refresh', 'facets', 'help', 'crop']);
   const list = argv.filter((x) => x !== undefined && x !== null).map(String);
   for (let i = 0; i < list.length; i++) {
     const x = list[i];
@@ -627,6 +759,13 @@ function formatResults(r) {
     lines.push(`   reddit: ${x.url || 'n/a'}`);
     lines.push(`   repo: ${x.repo || 'n/a'}`);
     lines.push(`   why: ${x.why}`);
+    if (x.seen) {
+      const t = x.seen.terminals;
+      const focus = { terminal: 'terminals are the point', mixed: 'terminals share the shot', other: 'no real terminal in the shot' }[x.seen.focus];
+      lines.push(`   seen: ${x.seen.layout}, complexity ${x.seen.complexity}, ${focus}; prompt ${x.seen.prompt}; mood ${x.seen.mood.join(', ') || 'n/a'}`);
+      if (t.length) lines.push(`   terminals: ${t.map((w, j) => `t${j + 1} [${w.box.join(',')}] ${w.shows.join('+')}${(w.panes || 1) > 1 ? ` ${w.panes} panes` : ''}`).join(' | ')}`);
+      lines.push(`   note: ${x.seen.note}`);
+    }
   });
   if (r.notes.length) lines.push('', ...r.notes.map((n) => `Note: ${n}`));
   lines.push('', ATTRIBUTION);
@@ -653,7 +792,7 @@ async function main(argv = []) {
   const limit = intFlag(flags.limit, 'limit');
   const minScore = flags['min-score'] === undefined ? undefined : Number(flags['min-score']);
   if (minScore !== undefined && !Number.isFinite(minScore)) throw new Error('--min-score must be a number.');
-  const r = await searchDetailed(query, { ...loadOpts, os: flags.os, terminal: flags.terminal, shell: flags.shell, layout: flags.layout, limit, minScore, sort: flags.sort, seed: flags.seed === undefined ? undefined : Number(flags.seed) });
+  const r = await searchDetailed(query, { ...loadOpts, os: flags.os, terminal: flags.terminal, shell: flags.shell, layout: flags.layout, has: flags.has, complexity: flags.complexity, limit, minScore, sort: flags.sort, seed: flags.seed === undefined ? undefined : Number(flags.seed) });
 
   let saved = null;
   if (flags.save && flags.save.n === 'all') {
@@ -664,17 +803,29 @@ async function main(argv = []) {
     saved = { n: flags.save.n, id: pick.id, ...(await saveImage(pick, flags.save.dir)) };
   }
 
+  let crops = null;
+  if (flags.crop) {
+    if (!flags.save) throw new Error('--crop needs --save <n|all> <dir>.');
+    crops = [];
+    for (const sv of saved.saved ? saved.saved : [saved]) {
+      const e = r.results.find((x) => x.id === sv.id);
+      if (!e || !e.seen || !e.seen.terminals.length) continue;
+      try { crops.push(...cropTerminals(sv.file, e.seen).map((c) => ({ id: e.id, ...c }))); } catch (err) { crops.push({ id: e.id, error: err.message }); }
+    }
+  }
+
   if (flags.json) {
-    out(JSON.stringify({ query: r.query, filters: r.filters, matches: r.matches, notes: r.notes, results: r.results, saved, attribution: ATTRIBUTION }, null, 2));
+    out(JSON.stringify({ query: r.query, filters: r.filters, matches: r.matches, notes: r.notes, results: r.results, saved, crops, attribution: ATTRIBUTION }, null, 2));
   } else {
     out(formatResults(r));
     if (saved && saved.saved) out(`\nSaved ${saved.saved.length} screenshot(s) to ${flags.save.dir} for review${saved.failed.length ? `; failed: ${saved.failed.map((x) => x.id).join(', ')}` : ''}. Local reference only; do not redistribute. Look at the terminal window in each, not the whole desktop.`);
-    else if (saved) out(`\nSaved screenshot ${saved.n} to ${saved.file} (${saved.bytes} bytes). Local reference only; do not redistribute.`);
+    if (saved && !saved.saved) out(`\nSaved screenshot ${saved.n} to ${saved.file} (${saved.bytes} bytes). Local reference only; do not redistribute.`);
+    if (crops) out(`Cut out ${crops.filter((c) => c.file).length} terminal window(s) as rice-<id>-t<n>.png: judge these, not the whole desktop.${crops.filter((c) => c.error).map((c) => `\n  ${c.id}: could not crop (${c.error})`).join('')}`);
   }
   return 0;
 }
 
 module.exports = {
   DATA_URL, ATTRIBUTION, TERMINALS, SHELLS, MOODS,
-  load, normalize, normalizeTools, rank, search, searchDetailed, facets, facetsOf, saveImage, saveAll, parseQuery, parseArgs, main,
+  load, normalize, normalizeTools, withSeen, loadSeen, cropTerminals, formatResults, CONTENTS, rank, search, searchDetailed, facets, facetsOf, saveImage, saveAll, parseQuery, parseArgs, main,
 };
