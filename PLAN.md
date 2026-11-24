@@ -334,6 +334,16 @@ verify → measure → restore. Check: run reaches `done`, restore byte-identica
 has no console errors.
 
 **M14 Release.** History rewrite (author's go-ahead), push, CI green on three OSes.
+CI also runs the behavior evals: on Windows the eval runner refuses Bash-granting cases
+(no shell sandbox), so they need a Linux or macOS runner.
+
+**Status (2026-11-23).** M9-M12 done. M11: 398 of the top ~400 screenshots annotated
+(boxes spot-checked on crops; 42 have no real terminal and sink). M13: dogfood on a
+copied fake home ran capture → audit → stage → plan → approve → apply → verify →
+re-audit → restore, byte-identical; it found and fixed a gap (verify now fails when a
+startup pane runs a missing program). Two new evals written; not yet run (see M14).
+Next: annotate further down the list as needed (`tools/annotate.js prepare --top N`
+skips annotated ids), a preview-in-browser check in the dogfood, then M14.
 
 ## 6. Risks
 
