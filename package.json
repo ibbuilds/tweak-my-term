@@ -7,7 +7,7 @@
   "engines": { "node": ">=20" },
   "bin": { "tmt": "engine/cli.js" },
   "scripts": {
-    "test": "node --test \"tests/**/*.test.js\"",
-    "check": "node tools/catalog.js check && node --test \"tests/**/*.test.js\""
+    "test": "node tools/test.js",
+    "check": "node tools/catalog.js check && node tools/test.js"
   }
 }
