@@ -42,15 +42,65 @@ function stripInlineText(cmd) {
     .replace(/@(['"])\r?\n[\s\S]*?\r?\n\1@/g, '@\'\'@');
 }
 
-function commandHits(cmd, entries) {
-  const c = stripInlineText(cmd).replace(/\\/g, '/').replace(HARMLESS_REDIRECT, ' ');
-  if (!WRITE_CMD.test(c)) return null;
-  const lower = c.toLowerCase();
-  for (const e of entries) {
-    const n = needle(e.abs).toLowerCase();
-    if (n.length > 3 && lower.includes(n)) return e;
+// Split a command line into simple commands (; && || | and newlines), keeping quoted text whole.
+function segments(cmd) {
+  const out = [];
+  let cur = '';
+  let q = null;
+  for (let i = 0; i < cmd.length; i++) {
+    const ch = cmd[i];
+    if (q) { cur += ch; if (ch === q) q = null; continue; }
+    if (ch === '"' || ch === "'") { q = ch; cur += ch; continue; }
+    if (ch === ';' || ch === '\n' || ch === '|' || (ch === '&' && cmd[i + 1] === '&')) {
+      out.push(cur); cur = '';
+      if (cmd[i + 1] === ch) i++;
+      continue;
+    }
+    cur += ch;
   }
-  if (/\$profile\b/i.test(c)) return { abs: '$PROFILE' };
+  out.push(cur);
+  return out.map((s) => s.trim()).filter(Boolean);
+}
+
+const TMT_SEGMENT = /^(tmt|node\s+\S*(engine\/)?cli\.js)\b/;
+
+// A path token as the shell would see it, made absolute; null when it can't be known
+// (an unexpanded variable), which counts as a hit to stay on the safe side.
+function resolveToken(tok, cwd) {
+  const home = require('./paths').home();
+  if (/\$/.test(tok)) return null;
+  if (tok === '~' || tok.startsWith('~/')) return path.join(home, tok.slice(2));
+  const gitBash = /^\/([a-z])\/(.*)$/i.exec(tok);
+  if (process.platform === 'win32' && gitBash) return `${gitBash[1]}:/${gitBash[2]}`;
+  if (/^[A-Za-z]:\//.test(tok) || tok.startsWith('/')) return tok;
+  return path.resolve(cwd, tok);
+}
+
+function commandHits(cmd, entries, cwd = process.cwd()) {
+  const vars = {};
+  for (const seg of segments(stripInlineText(cmd).replace(/\\/g, '/'))) {
+    const asg = /^(?:export\s+)?([A-Za-z_]\w*)=(["']?)(.*)\2$/.exec(seg);
+    if (asg) { vars[asg[1]] = asg[3]; continue; }
+    if (TMT_SEGMENT.test(seg)) continue; // tmt stages and backs up; it is the way in
+    // Expand variables, then blank single-quoted text (sed/awk programs, not paths).
+    const c = seg.replace(/\$\{?([A-Za-z_]\w*)\}?/g, (m, v) => (v in vars ? vars[v] : m))
+      .replace(/'[^']*'/g, "''").replace(HARMLESS_REDIRECT, ' ');
+    const cd = /^(?:cd|Set-Location|pushd)\s+"?([^"\s]+)"?\s*$/i.exec(c);
+    if (cd) { const to = resolveToken(cd[1], cwd); if (to) cwd = to; continue; }
+    if (!WRITE_CMD.test(c)) continue;
+    if (/\$profile\b/i.test(c)) return { abs: '$PROFILE' };
+    const lower = c.toLowerCase();
+    for (const e of entries) {
+      const n = needle(e.abs).toLowerCase();
+      if (n.length <= 3 || !lower.includes(n)) continue;
+      // The name appears: check whether any path token naming it resolves to the guarded file.
+      const toks = c.match(/[^\s"'<>|;&()]+/g) || [];
+      for (const tok of toks.filter((t) => t.toLowerCase().includes(path.basename(n)))) {
+        const abs = resolveToken(tok, cwd);
+        if (!abs || isProtected(abs, [e])) return e;
+      }
+    }
+  }
   return null;
 }
 
@@ -72,7 +122,7 @@ function preToolUse(input) {
   } else if (input.tool_name === 'Bash' || input.tool_name === 'PowerShell') {
     const cmd = String(ti.command || '');
     if (/^\s*(tmt|node\s+\S*(engine[\\/])?cli\.js)\b/.test(cmd) && !/[;&|]/.test(cmd.replace(/\|\|/g, ''))) return null;
-    hit = commandHits(cmd, entries);
+    hit = commandHits(cmd, entries, input.cwd || process.cwd());
   }
   if (!hit) return null;
   return { hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: REASON(hit.abs === '$PROFILE' ? '$PROFILE' : require('./paths').pretty(hit.abs)) } };

@@ -58,6 +58,35 @@ test('a heredoc written into a guarded file is still denied', () => {
   assert.strictEqual(handle('pre-tool-use', { tool_name: 'Bash', tool_input: { command: cmd } }).hookSpecificOutput.permissionDecision, 'deny');
 });
 
+// Real false alarms from agent runs: the guarded file was only an argument to tmt, or the
+// `>` sat inside a quoted sed expression of a read-only command.
+const T = () => target.replace(/\\/g, '/');
+const bashAllows = (command) => assert.strictEqual(handle('pre-tool-use', { tool_name: 'Bash', tool_input: { command } }), null, command);
+const bashDenies = (command) => assert.strictEqual(handle('pre-tool-use', { tool_name: 'Bash', tool_input: { command } }).hookSpecificOutput.permissionDecision, 'deny', command);
+
+test('a write into the run folder chained with tmt staging the guarded file is allowed', () => {
+  bashAllows(`cd /tmp/run; cat > out/demo.conf <<'EOF'\nx\nEOF\ntmt stage write ${T()} out/demo.conf && tmt plan`);
+  bashAllows(`echo x > out/demo.conf; tmt stage block ${T()} out/demo.conf`);
+});
+
+test('a > inside a quoted expression of a read-only command is not a write', () => {
+  bashAllows(`grep -v secret ${T()} | sed 's/=.*/= <redacted>/' | head -40`);
+  bashAllows(`cat ${T()} | sed "s/token=.*/token=<redacted>/I"`);
+});
+
+test('a write to the guarded file through a variable or a later chained command is denied', () => {
+  bashDenies(`P="${T()}"; echo x >> "$P"`);
+  bashDenies(`tmt status; echo x > ${T()}`);
+  bashDenies(`cat ${T()} | tee ${T()}.new && mv ${T()}.new ${T()}`);
+});
+
+test('a draft with the config\'s file name is fine elsewhere, not inside the config folder', () => {
+  bashAllows('cd /tmp/run && echo x > out/demo.conf');
+  bashDenies(`cd ${path.dirname(target).replace(/\\/g, '/')} && echo x > demo.conf`);
+  const deny = handle('pre-tool-use', { tool_name: 'Bash', cwd: path.dirname(target), tool_input: { command: 'echo x >> demo.conf' } });
+  assert.strictEqual(deny.hookSpecificOutput.permissionDecision, 'deny');
+});
+
 test('lets plain tmt commands through', () => {
   assert.strictEqual(handle('pre-tool-use', { tool_name: 'Bash', tool_input: { command: 'tmt stage write ~/.config/demo/demo.conf /tmp/x > /dev/null' } }), null);
 });
