@@ -23,6 +23,19 @@ keeps their aliases, functions, keybindings and env.
 Don't ask about things with a sensible default: font size (12-13), padding, cursor
 style. Decide, then show in the preview.
 
+How to ask:
+- Read the request against [moods.md](moods.md) first: each mood lists the one or two
+  choices it leaves open (e.g. vaporwave: dark night or bright pastel; CRT: amber or green).
+  Those, plus the three above, are the only candidates.
+- One message, all questions at once, each as 2-4 short options with your recommended
+  default first, so "go with your picks" is a valid answer. Use the host's question tool
+  (e.g. AskUserQuestion) when it has one; otherwise a numbered list.
+- A mood with no anchor image: in the same message, show 3-6 differing inspiration picks
+  (title, link, one line on what you'd take) and ask which is closest, or "none".
+- After the answers, don't ask again until the preview: decide everything else.
+- The user said "surprise me", "you choose" or "I trust you": ask nothing; pick, and say
+  what you picked in the preview message.
+
 ## brief.md template
 
 ```markdown
@@ -40,6 +53,9 @@ Out of scope: ...
 ```
 
 ## Reading requests
+
+Mood and aesthetic words (vaporwave, lofi, paper, CRT, y2k, noir...): [moods.md](moods.md).
+
 
 | User says | Means |
 |---|---|

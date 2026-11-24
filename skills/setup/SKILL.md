@@ -37,8 +37,10 @@ values (hexes, font, padding) and reuse them in look.json for whatever you keep.
 Read [references/brief.md](references/brief.md). Capture in the user's words: what they
 want it to look and feel like, which terminal and shells, what must keep working (aliases,
 keybindings, habits), speed budget, and whether installs are allowed. Ask at most 3 short
-questions, only for what changes the result. If the user is vague or says "surprise me",
-go to Inspire.
+questions, only for what changes the result, as options with your recommended default
+(see "How to ask" there). Mood words ("vaporwave", "cozy", "like paper") mean concrete
+palettes, art, fonts and layouts: read [references/moods.md](references/moods.md). If the
+user is vague or says "surprise me", go to Inspire.
 
 Record style and layout separately, and the scope: a layout-only request keeps the
 user's palette, font and prompt and skips the anchor and palette work (the palette in
