@@ -39,7 +39,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y fish tmux kitty alacritty
+          sudo apt-get install -y fish tmux kitty alacritty dconf-cli
           sudo snap install ghostty --classic
           curl -fsSL https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz | sudo tar -xz -C /usr/local/bin zellij
           curl -fsSL https://starship.rs/install.sh | sudo sh -s -- -y
@@ -53,9 +53,19 @@ jobs:
           echo "/Applications/Ghostty.app/Contents/MacOS" >> "$GITHUB_PATH"
           echo "/Applications/kitty.app/Contents/MacOS" >> "$GITHUB_PATH"
 
+      - name: Install tools (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Invoke-RestMethod get.scoop.sh -OutFile install-scoop.ps1
+          .\install-scoop.ps1 -RunAsAdmin
+          $shims = Join-Path $env:USERPROFILE 'scoop\shims'
+          & (Join-Path $shims 'scoop.cmd') install btop lazygit
+          $shims | Out-File -Append -Encoding utf8 $env:GITHUB_PATH
+
       - name: Tool versions
         shell: bash
-        run: for t in fish tmux kitty alacritty ghostty zellij starship wezterm; do printf '%-10s ' $t; ($t --version 2>/dev/null || echo missing) | head -1; done
+        run: for t in fish tmux kitty alacritty ghostty zellij starship wezterm dconf btop lazygit; do printf '%-10s ' $t; ($t --version 2>/dev/null || echo missing) | head -1; done
 
       - name: Replay
         shell: bash
