@@ -1,4 +1,4 @@
-# Annotator brief (v2)
+# Annotator brief (v3)
 
 You annotate r/unixporn screenshots for tweak-my-term. Each screenshot is a whole desktop:
 wallpaper, bars, docks, browsers, widgets, and somewhere in it zero or more **terminal
@@ -73,6 +73,11 @@ color that recurs in prompt/borders/highlights, as `#RRGGBB` uppercase, only if 
 - Collages (several screenshots stacked or tiled in one image): annotate every terminal in
   every part; boxes stay fractions of the whole image. Judge layout and complexity by the
   busiest part, not the sum of all parts.
+- Borderless dark tiles with terminal content (a prompt, cava bars, a fetch block) are
+  terminals. GUI Emacs and GUI editors are not, and neither is VS Code's integrated terminal.
+- `panes` counts tmux/zellij/terminal splits only, not splits inside vim.
+- Collage focus: `mixed` when any part is mostly a GUI app; dark and light variants of
+  one rice: `tone: mixed`. No terminal at all: `mood: []` is fine.
 - Tiny terminals (overview thumbnails, under about 5% of the image width): still box them,
   but set `focus` to `other` unless a bigger terminal is also visible.
 
