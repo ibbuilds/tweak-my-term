@@ -5,6 +5,7 @@
 // Dev only: needs the `claude` CLI and spends API credit.
 //
 //   node tools/rehearse.js <scenario.json> [--out dir] [--budget usd] [--rounds n]
+//   node tools/rehearse.js --generate <n> --out <dir>     write n varied scenarios
 //
 // Scenario: { id, os, home: "<dir under rehearsals/homes>", request,
 //             persona: { who, wants } }
@@ -157,12 +158,38 @@ function rehearse(scenarioFile, { out, budget = 8, rounds = 8 } = {}) {
   return { dir, grade: g };
 }
 
+/** Write n new varied scenarios into dir with a model, so rehearsals are not a fixed list. */
+function generate(n, dir, { seed = Date.now() } = {}) {
+  const homes = fs.readdirSync(path.join(ROOT, 'rehearsals', 'homes'));
+  const prompt = [
+    `Write ${n} different requests that real people might give an AI agent to change their terminal, as JSON.`,
+    'Vary them widely: moods and aesthetics (common and obscure), a film/game/place/era as reference, a named color scheme,',
+    'a layout (splits, dashboard, tiling, dropdown, single window), specific tools, "make it better", "surprise me",',
+    'vague and precise wording, typos, short and long. Also vary OS and terminal.',
+    `Each item: {"id": kebab-case, "os": "windows"|"macos"|"linux", "home": one of ${JSON.stringify(homes)} matching the os,`,
+    '"request": the words the person types (start with "Use the tweak-my-term plugin."),',
+    '"persona": {"who": one line about them and their setup, "wants": the concrete wishes they have but did not say}}.',
+    `Variation seed: ${seed}. Output only a JSON array.`,
+  ].join('\n');
+  const r = claude(['-p', prompt, '--model', 'sonnet', '--tools', '', '--setting-sources', 'local', '--no-session-persistence', '--output-format', 'json'], { env: process.env, timeout: 300000 });
+  const text = JSON.parse(r.stdout).result;
+  const items = JSON.parse(text.slice(text.indexOf('['), text.lastIndexOf(']') + 1));
+  fs.mkdirSync(dir, { recursive: true });
+  return items.filter((s) => homes.includes(s.home) && s.request && s.persona).map((s) => {
+    const f = path.join(dir, `${s.id}.json`);
+    fs.writeFileSync(f, JSON.stringify(s, null, 2) + '\n');
+    return f;
+  });
+}
+
 if (require.main === module) {
   const argv = process.argv.slice(2);
   const flag = (k, d) => { const i = argv.indexOf(`--${k}`); return i >= 0 ? argv.splice(i, 2)[1] : d; };
   const out = flag('out', path.join(require('os').tmpdir(), 'tmt-rehearsals'));
   const budget = Number(flag('budget', 8));
   const rounds = Number(flag('rounds', 8));
+  const gen = flag('generate', null);
+  if (gen) { for (const f of generate(Number(gen), out)) console.log(f); process.exit(0); }
   if (!argv.length) { process.stderr.write('usage: node tools/rehearse.js <scenario.json> [--out dir] [--budget usd] [--rounds n]\n'); process.exit(2); }
   for (const f of argv) {
     const r = rehearse(f, { out, budget, rounds });
@@ -170,4 +197,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { parseStream, latestRun, personaPrompt, grade, rehearse };
+module.exports = { parseStream, latestRun, personaPrompt, grade, rehearse, generate };
