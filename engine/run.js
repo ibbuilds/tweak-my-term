@@ -121,7 +121,9 @@ function stageFont(name) {
 function stageCheck(argv) {
   const st = requireOpen();
   if (!Array.isArray(argv) || !argv.length) throw new GateError('a check needs a command');
-  st.checks.push(argv);
+  // verify runs from wherever the agent is then; pin relative file arguments to where they are now.
+  st.checks.push(argv.map((a, n) => (n > 0 && !path.isAbsolute(a) && !a.startsWith('-') && !a.startsWith('~')
+    && /[\\/.]/.test(a) && fs.existsSync(a) ? path.resolve(a) : a)));
   invalidate(st);
   return save(st);
 }
