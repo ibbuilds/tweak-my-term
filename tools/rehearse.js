@@ -129,7 +129,11 @@ function rehearse(scenarioFile, { out, budget = 8, rounds = 8 } = {}) {
   const dir = path.resolve(out, sc.id);
   if (fs.existsSync(dir)) throw new Error(`${dir} exists; pick another --out`);
   copyDir(path.join(ROOT, 'rehearsals', 'homes', sc.home), path.join(dir, 'home'));
-  const env = { ...process.env, TMT_HOME: path.join(dir, 'home'), TMT_STATE: path.join(dir, 'state'), TMT_OS: sc.os };
+  // HOME too, so `~` in the agent's own shell commands lands in the fake home, never the real
+  // one; Claude Code keeps its own login through CLAUDE_CONFIG_DIR.
+  const realConfig = process.env.CLAUDE_CONFIG_DIR || path.join(require('os').homedir(), '.claude');
+  const env = { ...process.env, TMT_HOME: path.join(dir, 'home'), TMT_STATE: path.join(dir, 'state'), TMT_OS: sc.os,
+    HOME: path.join(dir, 'home'), CLAUDE_CONFIG_DIR: realConfig };
   const turns = [];
   const userMsgs = [];
   const log = [`# ${sc.id}\n`, `**User:** ${sc.request}\n`];
