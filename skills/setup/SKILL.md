@@ -107,7 +107,11 @@ Write `look.json` in the run folder following `${CLAUDE_PLUGIN_ROOT}/schemas/loo
 
 ## 6. Fit: which tools deliver each part on this OS
 
-Read [references/fit.md](references/fit.md). For each part of the look, find the tool
+Read [references/parts.md](references/parts.md) and [references/fit.md](references/fit.md).
+Assemble, don't invent: for each part (palette, font, background, prompt, terminal,
+layout, each themed tool) take the existing source in this order: what the user has, the
+chosen rice's dotfiles, the official port of a named scheme, the catalog recipe, and
+only then your own. Write the parts and their sources in `brief.md`. For each part, find the tool
 that does it on the user's OS: `tmt catalog cap <capability>` and `tmt catalog show <id>`.
 Prefer what is already installed. If something can't be done on their terminal (e.g. GIF
 background, shaders, blur), say so and give the closest alternative, or propose a

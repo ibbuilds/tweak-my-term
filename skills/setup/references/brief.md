@@ -45,6 +45,7 @@ Style (look and feel): ...   (palette, mood, type, art, prompt)
 Layout (arrangement): ...   (single window | panes: n, what runs where | tiling | dashboard | dropdown)
 Anchor: <user image | rice #n | generate: description | none yet>
 Examples taken: style from <links> | layout from <links>
+Parts: <part: source> per line (see parts.md)
 Must have: ...            (e.g. image background, two-line prompt, git status, icons)
 Must keep: ...            (aliases, keybindings, PSReadLine history, tools they use)
 Terminal(s): ...  Shell(s): ...  OS: ...

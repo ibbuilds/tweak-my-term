@@ -112,6 +112,8 @@ function grade(turns, run, userMsgs) {
       detect: used(/\btmt detect\b|cli\.js detect/), audit: used(/\btmt audit\b|cli\.js audit/),
       inspire: used(/\btmt inspire\b|cli\.js inspire/), inspireSave: used(/inspire[^\n]*--save/),
       scene: used(/art scene/), treat: used(/art treat/), palette: used(/art palette|art scheme/),
+      reusedSources: bash.filter((c) => /raw\.githubusercontent\.com|git clone|api\.github\.com/.test(c)).length
+        + turns.flatMap((t) => t.tools).filter((t) => t.name === 'WebFetch').length,
       previewPng: used(/art preview[^\n]*--png/), lookCheck: used(/look check/), plan: used(/\btmt plan\b|cli\.js plan/),
       readImages: turns.flatMap((t) => t.tools).filter((t) => t.name === 'Read' && /\.(png|jpe?g|webp|gif)$/i.test(String(t.input.file_path || ''))).length,
     },
