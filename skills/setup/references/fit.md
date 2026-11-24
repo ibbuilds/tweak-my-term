@@ -53,3 +53,12 @@ scanline shader. WezTerm could animate it; switching costs re-creating your WT p
 Research the official docs (current version), write the config, and validate it with the
 tool's own check command via `tmt stage check -- <cmd>`. Tell the user it's unverified.
 Check its license first: free tools only (see Decision order).
+
+## Leftovers from the previous look
+
+A merge keeps every key the new look doesn't set. Before planning, read the captured config
+for settings that would draw over or fight the new look: a pixel shader
+(`experimental.pixelShaderPath` in Windows Terminal, `custom-shader` in Ghostty), a
+background image or opacity on another level (profile vs defaults), an old color scheme on
+the profile that opens. Remove each in the same plan: in a `merge-json` fragment set the key
+to `null` and it is deleted. Then check `tmt shot` shows the new look, not the old one.
