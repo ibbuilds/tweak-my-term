@@ -331,12 +331,12 @@ test('plan reports which design steps the run folder shows', () => {
   freshHome();
   const st = run.newRun();
   run.stageFile('write', '~/x.txt', src('x', 'x'));
-  assert.deepStrictEqual(run.plan().steps, { brief: false, references: false, parts: false, look: false, preview: false });
+  assert.deepStrictEqual(run.plan().steps, { brief: false, asked: false, references: false, parts: false, look: false, preview: false });
   const dir = run.runDir(st.id);
   fs.writeFileSync(path.join(dir, 'brief.md'), '# Brief\nParts:\n- palette: Catppuccin port\n');
   fs.writeFileSync(path.join(dir, 'look.json'), '{}');
   fs.writeFileSync(path.join(dir, 'preview.png'), 'png');
-  assert.deepStrictEqual(run.plan().steps, { brief: true, references: false, parts: true, look: true, preview: true });
+  assert.deepStrictEqual(run.plan().steps, { brief: true, asked: false, references: false, parts: true, look: true, preview: true });
   // three curated references, each a link and what is taken from it
   fs.writeFileSync(path.join(dir, 'brief.md'), [
     '# Brief', 'References:',
@@ -437,8 +437,43 @@ test('plan lists, per detected shell and terminal, every element the look has no
     const kept = run.plan().undecided;
     assert.ok(kept.kitty.includes('tab-icon') && kept.kitty.includes('window-icon') && kept.bash.includes('prompt'), 'the look restyles icons and prompt; "keep" is not a choice for them');
     assert.ok(!kept.kitty.includes('keybindings') && !kept.bash.includes('aliases'), 'options may stay as they are');
-    for (const t of ['bash', 'kitty']) for (const e of all.restyle[t === 'bash' ? 'shell' : 'terminal']) every[`${t}.${e}`] = { choice: 'new', why: 'need' };
+    for (const t of ['bash', 'kitty']) for (const e of all.restyle[t === 'bash' ? 'shell' : 'terminal']) every[`${t}.${e}`] = { choice: `new ${e}`, why: `need behind ${t} ${e}` };
     fs.writeFileSync(path.join(dir, 'look.json'), JSON.stringify({ name: 'v', elements: every }));
     assert.deepStrictEqual(run.plan().undecided, {});
   } finally { if (prevOs === undefined) delete process.env.TMT_OS; else process.env.TMT_OS = prevOs; }
+});
+
+test('a restyled element left as it was, or a why pasted on many elements, is not decided', () => {
+  freshHome();
+  const prevOs = process.env.TMT_OS;
+  process.env.TMT_OS = 'linux';
+  try {
+    const st = run.newRun();
+    const dir = run.runDir(st.id);
+    fs.writeFileSync(path.join(dir, 'detect.json'), JSON.stringify({ tools: {}, terminals: { kitty: { installed: true } }, configs: [] }));
+    run.stageFile('write', '~/x.txt', src('x', 'x'));
+    const all = require('../../catalog/elements.json');
+    const every = {};
+    for (const e of Object.keys(all.terminal)) every[`kitty.${e}`] = { choice: `new ${e}`, why: `need behind ${e}` };
+    every['kitty.tab-icon'] = { choice: 'none: profile icons unchanged', why: 'calm tabs' };
+    every['kitty.window-icon'] = { choice: 'default app icon', why: 'no shortcut used' };
+    every['kitty.bell'] = { choice: 'none', why: 'quiet office' };
+    for (const e of ['font', 'cursor', 'padding', 'opacity']) every[`kitty.${e}`] = { choice: `new ${e}`, why: 'vaporwave look' };
+    fs.writeFileSync(path.join(dir, 'look.json'), JSON.stringify({ name: 'v', elements: every }));
+    const u = run.plan().undecided.kitty;
+    assert.ok(u.includes('tab-icon') && u.includes('window-icon'), 'unchanged or default is "keep" in other words: ' + u);
+    assert.ok(!u.includes('bell'), 'a real "none" with its own why is a decision');
+    assert.deepStrictEqual(u.filter((e) => ['font', 'cursor', 'padding', 'opacity'].includes(e)).sort(), ['cursor', 'font', 'opacity', 'padding'], 'one why pasted on 4+ elements names no need');
+  } finally { if (prevOs === undefined) delete process.env.TMT_OS; else process.env.TMT_OS = prevOs; }
+});
+
+test('plan reports whether the brief records the questions asked and the user answers', () => {
+  freshHome();
+  const st = run.newRun();
+  run.stageFile('write', '~/x.txt', src('x', 'x'));
+  const dir = run.runDir(st.id);
+  fs.writeFileSync(path.join(dir, 'brief.md'), ['# Brief', 'Asked:', '- Q: side panes? A: fetch and a clock', '- Q: icons? A: yes', 'Parts:', '- p', ''].join('\n'));
+  assert.strictEqual(run.plan().steps.asked, false, 'two answers are not an interview');
+  fs.writeFileSync(path.join(dir, 'brief.md'), ['# Brief', 'Asked:', '- Q: side panes? A: fetch and a clock', '- Q: icons? A: yes, per shell', '- Q: speed or looks? A: looks, under a second', 'Parts:', '- p', ''].join('\n'));
+  assert.strictEqual(run.plan().steps.asked, true);
 });

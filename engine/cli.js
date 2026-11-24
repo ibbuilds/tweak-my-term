@@ -79,7 +79,7 @@ function planText(p) {
   for (const f of p.fonts) lines.push(`  font      ${f.name}${f.present ? ' (already installed, skipped)' : ' (per-user Nerd Font)'}`);
   for (const c of p.checks) lines.push(`  check     ${c.join(' ')}`);
   if (p.steps) {
-    const names = { brief: 'brief.md', references: 'References in brief.md (3+ curated examples: link + take: what you use from it) and their screenshots in refs/ (3+, read by you)', parts: 'Parts in brief.md', look: 'look.json', preview: 'preview.png (read by you)' };
+    const names = { brief: 'brief.md', asked: 'Asked in brief.md (3+ "- Q: ... A: ..." lines: the user answers about layout, panes, icons, tools, speed)', references: 'References in brief.md (3+ curated examples: link + take: what you use from it) and their screenshots in refs/ (3+, read by you)', parts: 'Parts in brief.md', look: 'look.json', preview: 'preview.png (read by you)' };
     const missing = Object.keys(names).filter((k) => !p.steps[k]);
     lines.push('', `Design steps: ${Object.keys(names).map((k) => `${names[k]} ${p.steps[k] ? 'yes' : 'NO'}`).join(', ')}`);
     if (missing.length) lines.push(`Missing: ${missing.map((k) => names[k]).join(', ')}. Do those setup steps before asking for approval, or tell the user why they were skipped.`);

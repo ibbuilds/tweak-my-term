@@ -8,7 +8,7 @@ How to use it:
 1. Find the entries the request touches (several can mix: "cozy cyberpunk").
 2. Take the facts as defaults; the user's own words and image win over this page.
 3. Check the **Ask** line: if the request leaves that choice open and it changes the
-   result, it is one of your (at most 3) questions, as options with a recommended default.
+   result, it is one of your 3 questions, as options with a recommended default.
 4. Search inspiration with the **Search** words, plus `--layout` if the user asked for
    an arrangement.
 

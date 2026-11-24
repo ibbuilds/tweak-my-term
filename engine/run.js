@@ -227,7 +227,18 @@ function undecided(dir) {
   const all = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'catalog', 'elements.json'), 'utf8'));
   const el = look.elements || {};
   const restyle = all.restyle || {};
-  const ok = (v, cat, e) => (v === 'keep' && !(restyle[cat] || []).includes(e)) || (v && typeof v === 'object' && String(v.choice || '').trim() && String(v.why || '').trim());
+  const norm = (x) => String(x || '').trim().toLowerCase();
+  const whyCount = {};
+  for (const v of Object.values(el)) if (v && typeof v === 'object' && norm(v.why)) whyCount[norm(v.why)] = (whyCount[norm(v.why)] || 0) + 1;
+  // "unchanged", "default", "current" ... on an element the look restyles is "keep" in other words
+  const KEEPISH = /\b(keep|kept|unchanged|default|as[ -]is|current|existing|untouched|no change)\b/i;
+  const ok = (v, cat, e) => {
+    const must = (restyle[cat] || []).includes(e);
+    if (v === 'keep') return !must;
+    if (!v || typeof v !== 'object' || !norm(v.choice) || !norm(v.why)) return false;
+    if (must && KEEPISH.test(v.choice)) return false;
+    return whyCount[norm(v.why)] < 4; // one why pasted on many elements names no need
+  };
   const out = {};
   for (const t of mine) {
     const omit = new Set(t.elementsOmit || []);
@@ -262,11 +273,24 @@ function lookGaps(dir) {
   return WHOLE.filter((k) => look[k] === undefined || look[k] === null);
 }
 
+// The interview happened: an "Asked:" section in brief.md with 3+ "Q: ... A: ..." lines in the user's words.
+function asked(brief) {
+  const lines = brief.split(/\r?\n/);
+  const start = lines.findIndex((l) => /^\**Asked\**:/i.test(l));
+  if (start < 0) return false;
+  let n = 0;
+  for (const l of lines.slice(start + 1)) {
+    if (/^#|^\**[A-Z][A-Za-z ]*\**:/.test(l)) break;
+    if (/\bQ:\s*\S.*\bA:\s*\S/.test(l)) n++;
+  }
+  return n >= 3;
+}
+
 function designSteps(dir) {
   const has = (f) => fs.existsSync(path.join(dir, f));
   let brief = '';
   try { brief = fs.readFileSync(path.join(dir, 'brief.md'), 'utf8'); } catch { /* no brief */ }
-  return { brief: Boolean(brief), references: references(brief) && savedRefs(dir) >= 3, parts: /^\**Parts\**:/im.test(brief), look: has('look.json'), preview: has('preview.png') };
+  return { brief: Boolean(brief), asked: asked(brief), references: references(brief) && savedRefs(dir) >= 3, parts: /^\**Parts\**:/im.test(brief), look: has('look.json'), preview: has('preview.png') };
 }
 
 // Curated inspiration: a "References:" section in brief.md with 3+ links, each saying what it gives ("take: ...").

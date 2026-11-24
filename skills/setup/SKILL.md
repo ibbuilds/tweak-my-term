@@ -36,9 +36,12 @@ values (hexes, font, padding) and reuse them in look.json for whatever you keep.
 
 Read [references/brief.md](references/brief.md). Capture in the user's words: what they
 want it to look and feel like, which terminal and shells, what must keep working (aliases,
-keybindings, habits), speed budget, and whether installs are allowed. Ask at most 3 short
-questions, only for what changes the result, as options with your recommended default
-(see "How to ask" there). Mood words ("vaporwave", "cozy", "like paper") mean concrete
+keybindings, habits), speed budget, and whether installs are allowed. Always ask 3 short
+questions about what the request leaves open and that changes the result most (layout and
+side panes, what shows on a new tab, icons and tabs, tools, speed vs looks), as options with
+your recommended default (see "How to ask" there). Never fill a gap with "not requested":
+ask. Record them in `brief.md` as an `Asked:` section, one line each:
+`- Q: <question> A: <the user's answer>`; `tmt plan` blocks until there are 3. Mood words ("vaporwave", "cozy", "like paper") mean concrete
 palettes, art, fonts and layouts: read [references/moods.md](references/moods.md). If the
 user is vague or says "surprise me", go to Inspire.
 
@@ -178,7 +181,9 @@ look.json `elements["<tool>.<element>"] = { "choice": ..., "why": <the user need
 scheme, font, cursor, background, frame, tab row and style, tab and window icons, unfocused,
 pane dividers, startup layout, prompt, title, banner, responsiveness): the user's old icons
 or banner clash with a new look. Draw icons with `tmt art icon` (one motif per shell profile,
-an `.ico` for the app shortcut). The why ties each choice to the brief: ask the user when a need is unknown instead
+an `.ico` for the app shortcut). "unchanged", "default" or "current" on these is "keep" and
+does not count. Each why names this element's own need (an Asked answer, a ref, a habit);
+one why pasted on 4+ elements does not count. The why ties each choice to the brief: ask the user when a need is unknown instead
 of guessing. Also decide `prompt`, `onStart`, `tools`, `layout` and `window` ("none" is a
 decision). Prompts keep the user's other hooks (append to `PROMPT_COMMAND`, don't replace
 it) and read git state without a subprocess per prompt on Windows. `tmt plan` lists what is
