@@ -80,6 +80,24 @@ function newRun({ force = false, note = '' } = {}) {
 }
 
 // ---------- stage ----------
+// A string value mangled on its way through a shell: "\n" or "\b" from an unescaped Windows
+// path, or a template placeholder that was never filled in.
+function brokenString(v, at = '') {
+  if (typeof v === 'string') {
+    if (/[\u0000-\u001f]/.test(v)) return { at, value: v, why: 'a control character (an unescaped backslash?)' };
+    const m = /\$\{[^}]*\}/.exec(v);
+    if (m) return { at, value: v, why: `an unexpanded ${m[0]}` };
+    return null;
+  }
+  if (v && typeof v === 'object') {
+    for (const [k, x] of Object.entries(v)) {
+      const r = brokenString(x, at ? (Array.isArray(v) ? `${at}[${k}]` : `${at}.${k}`) : k);
+      if (r) return r;
+    }
+  }
+  return null;
+}
+
 function stageFile(kind, target, source, { os: osName } = {}) {
   const st = requireOpen();
   if (!KINDS.includes(kind)) throw new GateError(`unknown kind "${kind}" (use ${KINDS.join(', ')})`);
@@ -88,7 +106,10 @@ function stageFile(kind, target, source, { os: osName } = {}) {
   const buf = fs.readFileSync(source);
   if (kind === 'block') blocks.markerFor(abs);
   if (kind === 'merge-json') {
-    try { jsonc.parse(buf.toString('utf8')); } catch (e) { throw new GateError(`${source} is not valid JSON(C): ${e.message}`); }
+    let frag;
+    try { frag = jsonc.parse(buf.toString('utf8')); } catch (e) { throw new GateError(`${source} is not valid JSON(C): ${e.message}`); }
+    const bad = brokenString(frag);
+    if (bad) throw new GateError(`${source}: ${bad.at} = ${JSON.stringify(bad.value)} has ${bad.why}; write the fragment with JSON.stringify (paths need \\ in JSON) instead of a shell heredoc`);
   }
   const dir = path.join(runDir(st.id), 'staged');
   fs.mkdirSync(dir, { recursive: true });

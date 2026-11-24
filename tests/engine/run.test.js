@@ -525,3 +525,13 @@ test('plan flags tools the user accepted in Asked that no install provides', () 
     assert.deepStrictEqual(run.plan().toolsMissing, []);
   } finally { if (prevOs === undefined) delete process.env.TMT_OS; else process.env.TMT_OS = prevOs; }
 });
+
+test('merge-json refuses values broken by shell quoting: control characters or an unexpanded ${...}', () => {
+  freshHome();
+  run.newRun();
+  const bad = String.raw`{"profiles": {"defaults": {"backgroundImage": "%USERPROFILE%.config\neon\bg.png"}}}`;
+  assert.throws(() => run.stageFile('merge-json', '{wt-settings}', src('a.json', bad)), /profiles\.defaults\.backgroundImage.*control character/);
+  const tpl = '{"profiles": {"list": [{"guid": "{1}", "icon": "C:/icons/${n}.png"}]}}';
+  assert.throws(() => run.stageFile('merge-json', '{wt-settings}', src('b.json', tpl)), /icon.*\$\{n\}/);
+  run.stageFile('merge-json', '{wt-settings}', src('c.json', JSON.stringify({ profiles: { defaults: { backgroundImage: ['%USERPROFILE%', '.config', 'neon', 'bg.png'].join(String.fromCharCode(92)) } } })));
+});
