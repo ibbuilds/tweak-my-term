@@ -13,6 +13,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { spawnSync } = require('child_process');
 
 const ROOT = path.join(__dirname, '..');
@@ -81,9 +82,26 @@ function claude(args, { env, cwd, timeout = 1800000 } = {}) {
   return r;
 }
 
+// The machine is simulated (TMT_HOME, TMT_OS). Real users run on their own machine, where the
+// host is the truth; here the agent must not probe or read the host.
+const REHEARSAL = "This session runs on a simulated machine: $TMT_HOME is the user's home and $TMT_OS their OS. Treat `tmt detect` and `tmt capture` as the truth about the machine, don't probe the host OS, and don't read or write files outside $TMT_HOME, the run folder and the plugin folder. Everything else works as on the user's real machine.";
+
+/** Tool inputs that name the real home, outside the temp folder and ~/.claude (a leak). */
+function realHomeRefs(turns, home = os.homedir(), ok = [os.tmpdir(), path.join(home, '.claude')]) {
+  // One spelling for every path: forward slashes, lower case, /c/ (Git Bash) as c:/.
+  const one = (s) => s.replace(/\\+/g, '/').toLowerCase().replace(/(^|[\s"'=:(])\/([a-z])\//g, '$1$2:/');
+  const h = one(home);
+  const oks = ok.map(one);
+  return turns.flatMap((t) => t.tools).filter((t) => {
+    const parts = one(JSON.stringify(t.input)).split(h);
+    return parts.slice(1).some((rest) => !oks.some((o) => (h + rest).startsWith(o)));
+  }).length;
+}
+
 function agentTurn(text, { cwd, env, resume, budget }) {
   const args = ['-p', text, '--plugin-dir', ROOT, '--setting-sources', 'project,local',
-    '--allowedTools', 'Bash', 'Read', 'Glob', 'Grep', 'Skill', 'Write', 'Edit', 'WebFetch', 'Agent', 'Task',
+    '--allowedTools', 'Bash', 'Read', 'Glob', 'Grep', 'Skill', 'Write', 'Edit', 'WebFetch', 'WebSearch', 'Agent', 'Task',
+    '--append-system-prompt', REHEARSAL,
     '--disallowedTools', 'PowerShell', '--permission-mode', 'acceptEdits', '--max-turns', '150',
     '--max-budget-usd', String(budget), '--output-format', 'stream-json', '--verbose'];
   if (resume) args.push('--resume', resume);
@@ -113,13 +131,14 @@ function grade(turns, run, userMsgs) {
       detect: used(/\btmt detect\b|cli\.js detect/), audit: used(/\btmt audit\b|cli\.js audit/),
       inspire: used(/\btmt inspire\b|cli\.js inspire/), inspireSave: used(/inspire[^\n]*--save/),
       scene: used(/art scene/), treat: used(/art treat/), palette: used(/art palette|art scheme/),
-      reusedSources: bash.filter((c) => /raw\.githubusercontent\.com|git clone|api\.github\.com/.test(c)).length
+      reusedSources: bash.filter((c) => /raw\.githubusercontent\.com|git clone|api\.github\.com|\bparts (port|rice)\b/.test(c)).length
         + turns.flatMap((t) => t.tools).filter((t) => t.name === 'WebFetch').length,
       previewPng: used(/art preview[^\n]*--png/), lookCheck: used(/look check/), plan: used(/\btmt plan\b|cli\.js plan/),
       readImages: turns.flatMap((t) => t.tools).filter((t) => t.name === 'Read' && /\.(png|jpe?g|webp|gif)$/i.test(String(t.input.file_path || ''))).length,
     },
     look: look && { name: look.name, background: look.background || null, font: look.font, arrangement: look.layout ? look.layout.arrangement : null },
     staged: st ? { files: st.files.map((f) => `${f.kind} ${f.target}`), installs: st.installs.map((i) => `${i.manager} ${i.id}`), fonts: st.fonts } : null,
+    realHomeRefs: realHomeRefs(turns),
     toolErrors: turns.flatMap((t) => t.errors).slice(0, 20),
   };
 }
@@ -201,4 +220,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { parseStream, latestRun, personaPrompt, grade, rehearse, generate };
+module.exports = { parseStream, latestRun, personaPrompt, grade, realHomeRefs, rehearse, generate };
