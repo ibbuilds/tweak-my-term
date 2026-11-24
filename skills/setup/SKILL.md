@@ -160,7 +160,12 @@ shell and terminal in `detect.json`:
 - an existing setup (a custom prompt, a banner): override it from a block at the end of the
   rc file and quiet its banner (an env var in the terminal profile), so `tmt restore` brings
   it back unchanged.
-`tmt plan` lists what is "Not restyled"; fix that before asking for approval.
+- the window: a Windows Terminal `theme` (tab row, frame) as well as the scheme, and any
+  start layout the user asked for (side panes with a fetch, a clock).
+In look.json decide `prompt`, `onStart`, `tools`, `layout` and `window` ("none" is a
+decision). Prompts keep the user's other hooks (append to `PROMPT_COMMAND`, don't replace
+it) and read git state without a subprocess per prompt on Windows. `tmt plan` lists what is
+"Not restyled" and what the look "leaves undecided"; fix both before asking for approval.
 
 Targets use `~` and tokens (`{wt-settings}`, `{ps-profile}`, `{xdg-config}` ...). Keep
 the user's existing settings: use `block` and `merge-json` over `write` for files the user

@@ -198,7 +198,7 @@ function plan({ os: osName } = {}) {
   st.approved = null;
   fs.writeFileSync(path.join(dir, 'plan.diff'), files.map((f) => `=== ${f.change.toUpperCase()} ${f.display} (${f.kind})\n${f.diff}`).join('\n'));
   save(st);
-  return { id: st.id, hash, files, installs, fonts: fontsNeeded, checks: st.checks, steps: designSteps(dir), uncovered: notCovered };
+  return { id: st.id, hash, files, installs, fonts: fontsNeeded, checks: st.checks, steps: designSteps(dir), uncovered: notCovered, lookGaps: lookGaps(dir) };
 }
 
 /**
@@ -224,6 +224,15 @@ function uncovered(dir, files, osName) {
 }
 
 /** Which setup-skill design steps left their file in the run folder (skipped steps show). */
+// The parts of a whole terminal a look must decide (an explicit "none" counts as decided).
+const WHOLE = ['prompt', 'onStart', 'tools', 'layout', 'window'];
+/** Whole-terminal parts look.json leaves undecided, or null without a look.json. */
+function lookGaps(dir) {
+  let look;
+  try { look = JSON.parse(fs.readFileSync(path.join(dir, 'look.json'), 'utf8')); } catch { return null; }
+  return WHOLE.filter((k) => look[k] === undefined || look[k] === null);
+}
+
 function designSteps(dir) {
   const has = (f) => fs.existsSync(path.join(dir, f));
   let brief = '';

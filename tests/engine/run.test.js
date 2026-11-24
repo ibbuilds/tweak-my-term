@@ -384,3 +384,15 @@ test('in a simulated home, verify runs checks with HOME set to that home', () =>
   const v = run.verify();
   assert.ok(v.checks.some((c) => c.name.startsWith(process.execPath) && c.status === 0), JSON.stringify(v.checks) + h);
 });
+
+test('plan lists the whole-terminal parts the look leaves undecided', () => {
+  freshHome();
+  const st = run.newRun();
+  run.stageFile('write', '~/x.txt', src('x', 'x'));
+  assert.strictEqual(run.plan().lookGaps, null, 'no look.json yet');
+  const dir = run.runDir(st.id);
+  fs.writeFileSync(path.join(dir, 'look.json'), JSON.stringify({ name: 'v', prompt: { lines: 2 }, window: { padding: 8 } }));
+  assert.deepStrictEqual(run.plan().lookGaps, ['onStart', 'tools', 'layout']);
+  fs.writeFileSync(path.join(dir, 'look.json'), JSON.stringify({ name: 'v', prompt: {}, window: {}, onStart: { fetch: 'none' }, tools: [], layout: { multiplexer: 'none' } }));
+  assert.deepStrictEqual(run.plan().lookGaps, [], 'an explicit "none" is a decision');
+});
