@@ -778,8 +778,14 @@ function myTools() {
   try {
     const run = require('../engine/run');
     const d = JSON.parse(fs.readFileSync(path.join(run.runDir(run.current().id), 'detect.json'), 'utf8'));
-    return Object.entries(d.tools || {}).filter(([, v]) => v && v.installed).map(([k]) => k);
+    return toolsOf(d);
   } catch { return []; }
+}
+
+/** Installed tools and terminals, plus every tool with a config in the home (a simulated home has configs, not binaries). */
+function toolsOf(d) {
+  const on = (o) => Object.entries(o || {}).filter(([, v]) => v && v.installed).map(([k]) => k);
+  return [...new Set([...on(d.tools), ...on(d.terminals), ...(d.configs || []).flatMap((c) => c.tools || [c.tool])])];
 }
 
 /** For the top results with a repo, list its files per tool (via tmt parts rice), so reuse is one step. */
@@ -892,5 +898,5 @@ async function main(argv = []) {
 
 module.exports = {
   DATA_URL, ATTRIBUTION, TERMINALS, SHELLS, MOODS,
-  load, normalize, normalizeTools, withSeen, loadSeen, cropTerminals, formatResults, withParts, CONTENTS, rank, search, searchDetailed, facets, facetsOf, saveImage, saveAll, parseQuery, parseArgs, main,
+  load, normalize, normalizeTools, withSeen, loadSeen, cropTerminals, formatResults, withParts, toolsOf, CONTENTS, rank, search, searchDetailed, facets, facetsOf, saveImage, saveAll, parseQuery, parseArgs, main,
 };

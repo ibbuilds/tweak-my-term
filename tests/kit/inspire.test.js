@@ -465,3 +465,9 @@ test('withParts puts the user\'s own tools first and marks them', async () => {
   const text = I.formatResults({ results, notes: [] });
   assert.ok(text.includes('parts: alacritty (yours): .config/alacritty/alacritty.yml; i3: .config/i3/config; zsh: .zshrc'), text);
 });
+
+test('the user\'s tools are the installed ones plus any with a config in the home', () => {
+  const d = { tools: { btop: { installed: true }, zsh: { installed: false } }, terminals: { kitty: { installed: true }, foot: { installed: false } },
+    configs: [{ tool: 'ble.sh', tools: ['ble.sh', 'bash'] }, { tool: 'alacritty', tools: ['alacritty'] }] };
+  assert.deepStrictEqual(I.toolsOf(d).sort(), ['alacritty', 'bash', 'ble.sh', 'btop', 'kitty']);
+});
