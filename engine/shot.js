@@ -1,6 +1,6 @@
 'use strict';
 // Screenshot of the terminal, so the agent can compare the real result with the anchor
-// and the preview. Windows: the foreground window (or one whose title matches).
+// and the preview. Windows: the newest terminal window (or one whose title matches), never other apps.
 // macOS: screencapture. Linux: grim, gnome-screenshot, spectacle or ImageMagick import.
 
 const fs = require('fs');
@@ -14,29 +14,34 @@ Add-Type -AssemblyName System.Drawing
 Add-Type @"
 using System; using System.Runtime.InteropServices;
 public class TmtWin {
-  [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
   [DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
-  [DllImport("dwmapi.dll")] public static extern int DwmGetWindowAttribute(IntPtr h, int a, out RECT r, int s);
   [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr h, out RECT r);
+  [DllImport("user32.dll")] public static extern bool IsIconic(IntPtr h);
+  [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr h, int c);
+  [DllImport("user32.dll")] public static extern bool PrintWindow(IntPtr h, IntPtr dc, uint f);
   public struct RECT { public int L, T, R, B; }
 }
 "@
 [void][TmtWin]::SetProcessDPIAware()
-Start-Sleep -Milliseconds ${Math.round(delay * 1000)}
-$h = [TmtWin]::GetForegroundWindow()
+# Only terminal windows: never capture whatever other app is in front (it may be private).
+$terms = 'WindowsTerminal','alacritty','wezterm-gui','kitty','ghostty','Hyper','Tabby','rio','contour','OpenConsole'
 $title = ${JSON.stringify(title || '')}
-if ($title) {
-  $p = Get-Process | Where-Object { $_.MainWindowHandle -ne 0 -and $_.MainWindowTitle -like "*$title*" } | Select-Object -First 1
-  if (-not $p) { throw "no window title contains '$title'" }
-  $h = $p.MainWindowHandle
-}
+$wins = Get-Process -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -ne 0 -and $terms -contains $_.ProcessName }
+if ($title) { $wins = $wins | Where-Object { $_.MainWindowTitle -like "*$title*" } }
+$p = $wins | Sort-Object StartTime -Descending | Select-Object -First 1
+if (-not $p) { throw "no terminal window open$(if ($title) { " with '$title' in its title" }): open the terminal (e.g. wt) and run tmt shot again" }
+$h = $p.MainWindowHandle
+if ([TmtWin]::IsIconic($h)) { [void][TmtWin]::ShowWindow($h, 9) }
+Start-Sleep -Milliseconds ${Math.round(delay * 1000)}
 $r = New-Object TmtWin+RECT
-if ([TmtWin]::DwmGetWindowAttribute($h, 9, [ref]$r, 16) -ne 0) { [void][TmtWin]::GetWindowRect($h, [ref]$r) }
+[void][TmtWin]::GetWindowRect($h, [ref]$r)
 $w = $r.R - $r.L; $hh = $r.B - $r.T
 if ($w -le 0 -or $hh -le 0) { throw 'window has no size' }
 $bmp = New-Object System.Drawing.Bitmap $w, $hh
 $g = [System.Drawing.Graphics]::FromImage($bmp)
-$g.CopyFromScreen($r.L, $r.T, 0, 0, $bmp.Size)
+# PrintWindow renders the window itself (2 = full content, works for GPU-drawn terminals), even if covered.
+$dc = $g.GetHdc(); $ok = [TmtWin]::PrintWindow($h, $dc, 2); $g.ReleaseHdc($dc)
+if (-not $ok) { throw 'could not render the terminal window' }
 $bmp.Save(${JSON.stringify(out)}, [System.Drawing.Imaging.ImageFormat]::Png)
 "$w x $hh"
 `;
