@@ -1,4 +1,5 @@
 'use strict';
+const mkTmp = require('../_tmp');
 const test = require('node:test');
 const assert = require('node:assert');
 const fs = require('fs');
@@ -201,4 +202,43 @@ test('html: bad arrangements fail clearly', () => {
   bad({ split: 'row', sizes: [1], panes: [{ run: 'a' }, { run: 'b' }] }, /sizes must have one number per pane/);
   bad({ run: 'a', split: 'row', panes: [{ run: 'b' }, { run: 'c' }] }, /a pane is either a split or runs something/);
   bad({ split: 'diagonal', panes: [{ run: 'a' }, { run: 'b' }] }, /split must be row or column/);
+});
+
+// ---- --png: render the preview with a local Chromium-family browser ---------------------------
+// Agents without a browser tool still need to see the page they ask the user to approve.
+
+test('findBrowser: Windows Edge from Program Files when it exists', () => {
+  const edge = 'C:\\PF86\\Microsoft\\Edge\\Application\\msedge.exe';
+  const got = V.findBrowser({ os: 'windows', env: { 'ProgramFiles(x86)': 'C:\\PF86' }, exists: (p) => p === edge, which: () => null });
+  assert.strictEqual(got, edge);
+});
+
+test('findBrowser: Linux and macOS find a browser on PATH or in /Applications; null when none', () => {
+  assert.strictEqual(V.findBrowser({ os: 'linux', env: {}, exists: () => false, which: (c) => (c === 'chromium' ? '/usr/bin/chromium' : null) }), '/usr/bin/chromium');
+  const mac = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+  assert.strictEqual(V.findBrowser({ os: 'macos', env: {}, exists: (p) => p === mac, which: () => null }), mac);
+  assert.strictEqual(V.findBrowser({ os: 'linux', env: {}, exists: () => false, which: () => null }), null);
+});
+
+test('screenshot: runs the browser headless on the page and reports the PNG it wrote', () => {
+  const dir = mkTmp('tmt-shot-');
+  const html = path.join(dir, 'preview.html');
+  const out = path.join(dir, 'preview.png');
+  fs.writeFileSync(html, '<html></html>');
+  let call;
+  const exec = (cmd, args) => { call = { cmd, args }; fs.writeFileSync(out, 'png'); return { status: 0, stdout: '', stderr: '' }; };
+  const r = V.screenshot(html, out, { browser: '/bin/chromium', exec, width: 1200, height: 800 });
+  assert.strictEqual(r.ok, true);
+  assert.strictEqual(call.cmd, '/bin/chromium');
+  assert.ok(call.args.includes('--headless=new'));
+  assert.ok(call.args.includes(`--screenshot=${out}`));
+  assert.ok(call.args.includes('--window-size=1200,800'));
+  assert.ok(call.args.some((a) => a.startsWith('file:') && a.endsWith('preview.html')));
+});
+
+test('screenshot: reports failure when the browser writes nothing', () => {
+  const dir = mkTmp('tmt-shot-');
+  const r = V.screenshot(path.join(dir, 'p.html'), path.join(dir, 'p.png'), { browser: 'x', exec: () => ({ status: 1, stdout: '', stderr: 'boom' }) });
+  assert.strictEqual(r.ok, false);
+  assert.match(r.error, /boom|no image/);
 });

@@ -401,4 +401,45 @@ function swatch(palette) {
   return img;
 }
 
-module.exports = { html, swatch, fontStack };
+// ------------------------------------------------------------------ png
+// A local Chromium-family browser renders the page headless, so an agent without a browser
+// tool can still look at what it asks the user to approve.
+
+const BROWSERS = {
+  windows: (env) => {
+    const roots = [env['ProgramFiles(x86)'], env.ProgramFiles, env.LOCALAPPDATA].filter(Boolean);
+    const rel = [['Microsoft', 'Edge', 'Application', 'msedge.exe'], ['Google', 'Chrome', 'Application', 'chrome.exe'],
+      ['BraveSoftware', 'Brave-Browser', 'Application', 'brave.exe'], ['Chromium', 'Application', 'chrome.exe']];
+    return roots.flatMap((r) => rel.map((p) => require('path').win32.join(r, ...p)));
+  },
+  macos: () => ['Google Chrome', 'Microsoft Edge', 'Chromium', 'Brave Browser'].map((n) => `/Applications/${n}.app/Contents/MacOS/${n}`),
+  linux: () => [],
+};
+const ON_PATH = ['google-chrome', 'google-chrome-stable', 'chromium', 'chromium-browser', 'microsoft-edge', 'microsoft-edge-stable', 'brave-browser', 'msedge', 'chrome'];
+
+/** Path of a Chromium-family browser on this machine, or null. */
+function findBrowser({ os, env = process.env, exists = require('fs').existsSync, which = require('../engine/sys').which } = {}) {
+  const osName = os || require('../engine/paths').platform();
+  const file = (BROWSERS[osName] || BROWSERS.linux)(env).find((p) => exists(p));
+  if (file) return file;
+  for (const c of ON_PATH) { const w = which(c); if (w) return w; }
+  return null;
+}
+
+/** Render htmlFile to pngFile with a headless browser. Returns { ok, out } or { ok: false, error }. */
+function screenshot(htmlFile, pngFile, { browser = findBrowser(), exec = require('../engine/sys').exec, width = 1280, height = 1000 } = {}) {
+  const fs = require('fs');
+  const path = require('path');
+  if (!browser) return { ok: false, error: 'no Chrome, Edge, Chromium or Brave found; open the HTML file instead' };
+  const out = path.resolve(pngFile);
+  const profile = fs.mkdtempSync(path.join(require('os').tmpdir(), 'tmt-browser-'));
+  try { fs.rmSync(out, { force: true }); } catch { /* nothing to clear */ }
+  const url = require('url').pathToFileURL(path.resolve(htmlFile)).href;
+  const r = exec(browser, ['--headless=new', '--disable-gpu', '--hide-scrollbars', `--user-data-dir=${profile}`,
+    `--window-size=${width},${height}`, `--screenshot=${out}`, url], { timeout: 60000 });
+  try { fs.rmSync(profile, { recursive: true, force: true }); } catch { /* temp profile; the OS cleans it */ }
+  if (fs.existsSync(out)) return { ok: true, out };
+  return { ok: false, error: `the browser wrote no image (exit ${r.status}${r.stderr ? ': ' + r.stderr.trim().split(/\r?\n/).pop() : ''})` };
+}
+
+module.exports = { html, swatch, fontStack, findBrowser, screenshot };

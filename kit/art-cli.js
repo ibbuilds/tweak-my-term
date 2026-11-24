@@ -32,8 +32,8 @@ const HELP = `tmt art: build the visual anchor, the background and the palette
   tmt art ascii <image> [--cols 40] [--charset blocks|ascii|braille|halfblock] [--color none|ansi16|truecolor]
         [--palette look.json] [--out file]
       ASCII/ANSI art (fastfetch logo files, banners)
-  tmt art preview <look.json> [--out preview.html] [--swatch swatch.png]
-      mock terminal page with the real palette, font, background and prompt, for approval
+  tmt art preview <look.json> [--out preview.html] [--swatch swatch.png] [--png preview.png]
+      mock terminal page with the real palette, font, background and prompt, for approval; --png renders it with a local Chromium-family browser
 
 Paths inside look.json are relative to the look file. Add --json for machine-readable output.`;
 
@@ -44,7 +44,7 @@ const ALLOWED = {
   scheme: ['format', 'out'],
   contrast: ['image', 'opacity'],
   ascii: ['cols', 'charset', 'color', 'palette', 'out', 'invert'],
-  preview: ['out', 'swatch'],
+  preview: ['out', 'swatch', 'png'],
 };
 const BOOLEAN = new Set(['json', 'invert', 'help']);
 
@@ -316,7 +316,7 @@ function cmdAscii(pos, flags, json) {
 }
 
 function cmdPreview(pos, flags, json) {
-  need(pos, 1, 'tmt art preview <look.json> [--out preview.html] [--swatch swatch.png]');
+  need(pos, 1, 'tmt art preview <look.json> [--out preview.html] [--swatch swatch.png] [--png preview.png]');
   const { look, dir } = readLook(pos[0]);
   const file = lookBackground(look, dir);
   if (file && !fs.existsSync(file)) throw new Error(`background image not found: ${file} (paths in the look are relative to ${dir}). Create it first, or remove background.image from the look.`);
@@ -332,7 +332,14 @@ function cmdPreview(pos, flags, json) {
     fs.writeFileSync(sw, png.encode(img));
     data.swatch = path.resolve(sw);
   }
-  return emit(json, data, `Wrote ${out} (${data.bytes} bytes)${data.swatch ? `\nWrote ${flags.swatch}` : ''}\nOpen it in a browser and approve the look before anything is applied.`);
+  let shotNote = '';
+  if (flags.png !== undefined) {
+    const p = str(flags, 'png');
+    fs.mkdirSync(path.dirname(path.resolve(p)), { recursive: true });
+    const r = preview.screenshot(out, p);
+    if (r.ok) { data.png = r.out; shotNote = `\nWrote ${p} (the page as an image: look at it before showing the user)`; } else { data.pngError = r.error; shotNote = `\nNo image: ${r.error}`; }
+  }
+  return emit(json, data, `Wrote ${out} (${data.bytes} bytes)${data.swatch ? `\nWrote ${flags.swatch}` : ''}${shotNote}\nOpen it in a browser and approve the look before anything is applied.`);
 }
 
 const COMMANDS = { scene: cmdScene, treat: cmdTreat, palette: cmdPalette, scheme: cmdScheme, contrast: cmdContrast, ascii: cmdAscii, preview: cmdPreview };

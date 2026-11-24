@@ -111,9 +111,11 @@ current official docs, and mark the result "unverified" to the user.
 
 ## 7. Preview → user approves the look
 
-`tmt art preview look.json --out <run>/preview.html --swatch <run>/swatch.png`. Open or
-link it. Get a yes on the look (colors, font, background, prompt, arrangement) before rendering
-configs. Iterate here; it's cheap.
+`tmt art preview look.json --out <run>/preview.html --swatch <run>/swatch.png --png <run>/preview.png`.
+`--png` renders the page with a local Chrome/Edge/Chromium/Brave: read that image yourself
+and fix what looks wrong (contrast, clipped text, a pane that reads as empty) before the
+user sees it. Then open or link the HTML. Get a yes on the look (colors, font, background,
+prompt, arrangement) before rendering configs. Iterate here; it's cheap.
 
 ## 8. Render configs → staged files
 
