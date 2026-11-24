@@ -1,6 +1,6 @@
 'use strict';
 // Screenshot of the terminal, so the agent can compare the real result with the anchor
-// and the preview. Windows: the newest terminal window (or one whose title matches), never other apps.
+// and the preview. Windows: the top-most terminal window (or one whose title matches), never other apps.
 // macOS: screencapture. Linux: grim, gnome-screenshot, spectacle or ImageMagick import.
 
 const fs = require('fs');
@@ -20,17 +20,32 @@ public class TmtWin {
   [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr h, int c);
   [DllImport("user32.dll")] public static extern bool PrintWindow(IntPtr h, IntPtr dc, uint f);
   public struct RECT { public int L, T, R, B; }
+  delegate bool EnumProc(IntPtr h, IntPtr p);
+  [DllImport("user32.dll")] static extern bool EnumWindows(EnumProc f, IntPtr p);
+  [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr h);
+  [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr h, out uint pid);
+  [DllImport("user32.dll", CharSet = CharSet.Unicode)] static extern int GetWindowText(IntPtr h, System.Text.StringBuilder s, int n);
+  // EnumWindows walks top-level windows top-most first, so the first match is the front terminal window.
+  public static IntPtr Top(int[] pids, string title) {
+    IntPtr found = IntPtr.Zero;
+    EnumWindows(delegate (IntPtr h, IntPtr p) {
+      uint pid; GetWindowThreadProcessId(h, out pid);
+      if (!IsWindowVisible(h) || Array.IndexOf(pids, (int)pid) < 0) return true;
+      var s = new System.Text.StringBuilder(512); GetWindowText(h, s, 512);
+      if (s.Length == 0 || (title.Length > 0 && s.ToString().IndexOf(title, StringComparison.OrdinalIgnoreCase) < 0)) return true;
+      found = h; return false;
+    }, IntPtr.Zero);
+    return found;
+  }
 }
 "@
 [void][TmtWin]::SetProcessDPIAware()
 # Only terminal windows: never capture whatever other app is in front (it may be private).
 $terms = 'WindowsTerminal','alacritty','wezterm-gui','kitty','ghostty','Hyper','Tabby','rio','contour','OpenConsole'
 $title = ${JSON.stringify(title || '')}
-$wins = Get-Process -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -ne 0 -and $terms -contains $_.ProcessName }
-if ($title) { $wins = $wins | Where-Object { $_.MainWindowTitle -like "*$title*" } }
-$p = $wins | Sort-Object StartTime -Descending | Select-Object -First 1
-if (-not $p) { throw "no terminal window open$(if ($title) { " with '$title' in its title" }): open the terminal (e.g. wt) and run tmt shot again" }
-$h = $p.MainWindowHandle
+[int[]]$pids = @(Get-Process -ErrorAction SilentlyContinue | Where-Object { $terms -contains $_.ProcessName } | ForEach-Object { $_.Id })
+$h = [TmtWin]::Top($pids, $title)
+if ($h -eq [IntPtr]::Zero) { throw "no terminal window open$(if ($title) { " with '$title' in its title" }): open the terminal (e.g. wt) and run tmt shot again" }
 if ([TmtWin]::IsIconic($h)) { [void][TmtWin]::ShowWindow($h, 9) }
 Start-Sleep -Milliseconds ${Math.round(delay * 1000)}
 $r = New-Object TmtWin+RECT

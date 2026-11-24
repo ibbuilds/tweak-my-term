@@ -23,5 +23,6 @@ test('on Windows, shot targets terminal processes and renders that window, not t
     assert.match(script, /WindowsTerminal/);
     assert.match(script, /PrintWindow/);
     assert.match(script, /no terminal window/);
+    assert.match(script, /EnumWindows/); // one process can own several windows: take the top-most
   } finally { if (prev === undefined) delete process.env.TMT_OS; else process.env.TMT_OS = prev; }
 });
