@@ -535,3 +535,38 @@ test('merge-json refuses values broken by shell quoting: control characters or a
   assert.throws(() => run.stageFile('merge-json', '{wt-settings}', src('b.json', tpl)), /icon.*\$\{n\}/);
   run.stageFile('merge-json', '{wt-settings}', src('c.json', JSON.stringify({ profiles: { defaults: { backgroundImage: ['%USERPROFILE%', '.config', 'neon', 'bg.png'].join(String.fromCharCode(92)) } } })));
 });
+
+test('verify follows a startup pane\'s -p profile to that profile\'s commandline', () => {
+  freshHome();
+  run.newRun();
+  const s = {
+    startupActions: 'new-tab -p "Shell" ; split-pane -V -s 0.4 -p "Vis" ; split-pane -H --profile "{0000-n}"',
+    profiles: { list: [
+      { name: 'Shell' },
+      { name: 'Vis', commandline: 'not-a-real-tool-xyz.exe -p "%USERPROFILE%\cava.conf"' },
+      { guid: '{0000-n}', name: 'Node', commandline: '"node" -v' },
+    ] },
+  };
+  run.stageFile('write', '~/t/settings.json', src('settings.json', JSON.stringify(s)));
+  run.approve(run.plan().hash);
+  run.apply();
+  const v = run.verify();
+  const c = v.checks.find((x) => /startup panes/.test(x.name));
+  assert.strictEqual(c.status, 1, JSON.stringify(v.checks));
+  assert.match(c.output, /not-a-real-tool-xyz\.exe \(profile Vis\)/);
+  assert.doesNotMatch(c.output, /node/);
+});
+
+test('apply reports each install, its catalog tool, and whether that tool is now on PATH', () => {
+  freshHome();
+  const prevOs = process.env.TMT_OS;
+  process.env.TMT_OS = 'windows';
+  try {
+    run.newRun();
+    run.stageInstall('winget', 'karlstav.cava');
+    run.approve(run.plan().hash);
+    const r = run.apply({ allowInstalls: true, exec: () => ({ status: 0, stdout: '', stderr: '' }) });
+    assert.deepStrictEqual(r.installed.map(({ manager, id, tool }) => ({ manager, id, tool })), [{ manager: 'winget', id: 'karlstav.cava', tool: 'cava' }]);
+    assert.strictEqual(r.installed[0].onPath, Boolean(require('../../engine/sys').resolveCmd('cava')));
+  } finally { if (prevOs === undefined) delete process.env.TMT_OS; else process.env.TMT_OS = prevOs; }
+});

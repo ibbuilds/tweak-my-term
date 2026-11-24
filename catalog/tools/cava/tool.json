@@ -11,7 +11,7 @@
   "os": {
     "windows": {
       "supported": true,
-      "install": [{ "manager": "winget", "id": "karlstav.cava", "notes": "cava 1.0.0, MSI installer. Not in scoop." }],
+      "install": [{ "manager": "winget", "id": "karlstav.cava", "notes": "cava 1.0.0, MSI installer. Not in scoop. Seen on Windows 11 (2026-11): installs to %LOCALAPPDATA%/cava/cava.exe and does not add it to PATH; reference that full path in commandlines." }],
       "detect": ["cava", "-v"],
       "config": ["~/.config/cava/config"],
       "notes": "Per config.c: $XDG_CONFIG_HOME/cava/config if set, else %USERPROFILE%\\.config\\cava\\config; the default file is created on first launch. Audio: the README says it captures the default output device automatically, no input settings needed. How it renders in Windows Terminal was not seen."

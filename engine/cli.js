@@ -174,7 +174,7 @@ async function main() {
     case 'apply': {
       const allow = Boolean(flags['allow-installs']) || String(process.env.CLAUDE_PLUGIN_OPTION_ALLOW_INSTALLS).toLowerCase() === 'true';
       const r = run.apply({ allowInstalls: allow });
-      return out(r, json, (x) => `Applied run ${x.id}.\nWritten: ${x.written.join(', ') || 'nothing'}${x.fonts.length ? `\nFonts installed: ${x.fonts.join(', ')}` : ''}\nNext: tmt verify (open a new terminal tab/window to see the look)`);
+      return out(r, json, (x) => `Applied run ${x.id}.\nWritten: ${x.written.join(', ') || 'nothing'}${x.fonts.length ? `\nFonts installed: ${x.fonts.join(', ')}` : ''}${(x.installed || []).length ? `\nInstalled: ${x.installed.map((i) => `${i.manager} ${i.id}${i.tool ? ` (${i.tool})` : ''}`).join(', ')}` : ''}${(x.installed || []).filter((i) => i.onPath === false).map((i) => `\nWARNING: ${i.command} is installed but not on PATH here: new shells and startup panes will not find it. Find its folder, then reference the full path or add the folder to PATH in a new run.`).join('')}\nNext: tmt verify (open a new terminal tab/window to see the look)`);
     }
     case 'verify': {
       const r = run.verify();

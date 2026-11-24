@@ -433,6 +433,15 @@ function failInstall(st, i, r) {
   throw new GateError(st.error);
 }
 
+// The catalog tool an install provides, and whether its command now resolves: some installers
+// (cava's MSI on Windows) put the program in a folder that is not on PATH.
+function withTool(i, osName) {
+  const t = require('./catalog').tools().find((x) => ((x.os && x.os[osName] && x.os[osName].install) || []).some((y) => y.manager === i.manager && y.id === i.id));
+  const det = t && t.os[osName].detect;
+  const cmd = det && det[0];
+  return { manager: i.manager, id: i.id, tool: t ? t.id : null, command: cmd || null, onPath: cmd ? Boolean(sys.resolveCmd(cmd)) : null };
+}
+
 function apply({ allowInstalls = false, exec = sys.exec, fontInstaller = fonts.install } = {}) {
   const st = current();
   if (!st || st.status !== 'approved' || !st.plan || st.approved !== st.plan.hash) {
@@ -443,7 +452,7 @@ function apply({ allowInstalls = false, exec = sys.exec, fontInstaller = fonts.i
     const nowHash = fs.existsSync(f.abs) ? sha(fs.readFileSync(f.abs)) : null;
     if (nowHash !== f.beforeHash) throw new GateError(`${f.display} changed since the plan was made; run \`tmt plan\` again and get a new approval`);
   }
-  runInstalls(st, { allowInstalls, exec });
+  const installed = runInstalls(st, { allowInstalls, exec }).map((i) => withTool(i, st.os));
 
   const manifest = { files: [], fonts: [], dirs: [] };
   const bdir = path.join(dir, 'backup');
@@ -482,7 +491,7 @@ function apply({ allowInstalls = false, exec = sys.exec, fontInstaller = fonts.i
   st.status = 'applied';
   st.applied = { at: now() };
   save(st);
-  return { id: st.id, written: st.plan.files.filter((f) => f.change !== 'unchanged').map((f) => f.display), fonts: manifest.fonts.map((f) => f.name) };
+  return { id: st.id, written: st.plan.files.filter((f) => f.change !== 'unchanged').map((f) => f.display), fonts: manifest.fonts.map((f) => f.name), installed };
 }
 
 // ---------- verify ----------
@@ -512,17 +521,26 @@ const WT_VALUE_FLAGS = new Set(['-p', '--profile', '-d', '--startingDirectory', 
 function wtWords(cmd) {
   return (cmd.match(/"[^"]*"|\S+/g) || []).map((w) => w.replace(/^"|"$/g, ''));
 }
-function startupCommands(sa) {
+// The program each startup pane runs: its own command, or else the commandline of its -p profile
+// (by name or guid). Profiles without a commandline (dynamic ones like PowerShell) are skipped.
+function startupCommands(sa, profiles = []) {
   const out = [];
+  const expand = (x) => x.replace(/%([^%]+)%/g, (m, k) => process.env[k] || m);
   for (const part of sa.split(/(?<!\\);/)) {
     const w = wtWords(part.trim());
     if (!['new-tab', 'nt', 'split-pane', 'sp'].includes(w[0])) continue;
+    let cmd = null, profile = null;
     for (let i = 1; i < w.length; i++) {
+      if (w[i] === '-p' || w[i] === '--profile') { profile = w[++i]; continue; }
       if (WT_VALUE_FLAGS.has(w[i])) { i++; continue; }
       if (w[i].startsWith('-')) continue;
-      out.push(w[i]);
+      cmd = w[i];
       break;
     }
+    if (cmd) { out.push(cmd); continue; }
+    const key = String(profile || '').toLowerCase();
+    const p = profile && profiles.find((x) => x && (String(x.name || '').toLowerCase() === key || String(x.guid || '').toLowerCase() === key));
+    if (p && typeof p.commandline === 'string' && p.commandline.trim()) out.push({ cmd: expand(wtWords(p.commandline.trim())[0]), profile: p.name || p.guid });
   }
   return out;
 }
@@ -542,9 +560,13 @@ function verify({ exec = sys.exec } = {}) {
     }
   }
   for (const f of st.plan.files) {
-    let sa = null;
-    try { sa = /.jsonc?$/i.test(f.abs) ? jsonc.parse(fs.readFileSync(f.abs, 'utf8')).startupActions : null; } catch { /* the JSON check reports it */ }
-    if (typeof sa === 'string') checks.push({ name: `startup panes start installed programs: ${paths.pretty(f.abs)}`, internal: 'panes', commands: startupCommands(sa) });
+    let sa = null, profiles = [];
+    try {
+      const j = /.jsonc?$/i.test(f.abs) ? jsonc.parse(fs.readFileSync(f.abs, 'utf8')) : null;
+      sa = j && j.startupActions;
+      profiles = (j && j.profiles && Array.isArray(j.profiles.list) && j.profiles.list) || (j && Array.isArray(j.profiles) && j.profiles) || [];
+    } catch { /* the JSON check reports it */ }
+    if (typeof sa === 'string') checks.push({ name: `startup panes start installed programs: ${paths.pretty(f.abs)}`, internal: 'panes', commands: startupCommands(sa, profiles) });
   }
   for (const argv of st.checks) checks.push({ name: argv.join(' '), argv: argv.map(expandArg) });
   const results = checks.map((c) => {
@@ -552,7 +574,8 @@ function verify({ exec = sys.exec } = {}) {
       try { jsonc.parse(fs.readFileSync(c.file, 'utf8')); return { name: c.name, status: 0 }; } catch (e) { return { name: c.name, status: 1, output: e.message }; }
     }
     if (c.internal === 'panes') {
-      const missing = c.commands.filter((cmd) => !sys.resolveCmd(cmd) && !fs.existsSync(cmd));
+      const missing = c.commands.filter((x) => { const cmd = typeof x === 'string' ? x : x.cmd; return !sys.resolveCmd(cmd) && !fs.existsSync(cmd); })
+        .map((x) => (typeof x === 'string' ? x : `${x.cmd} (profile ${x.profile})`));
       return missing.length ? { name: c.name, status: 1, output: `not installed or not on PATH: ${missing.join(', ')}` } : { name: c.name, status: 0 };
     }
     if (!sys.resolveCmd(c.argv[0]) && !fs.existsSync(c.argv[0])) return { name: c.name, status: 0, skipped: `${c.argv[0]} not installed` };
