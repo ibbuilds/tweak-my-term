@@ -148,6 +148,20 @@ test('installs only run when allowed, through the given executor', () => {
   assert.match(calls[0], /^winget install --id junegunn\.fzf --exact/);
 });
 
+test('with a simulated home (TMT_HOME) the real package manager is never called', () => {
+  freshHome();
+  run.newRun();
+  run.stageInstall('winget', 'junegunn.fzf');
+  run.approve(run.plan().hash);
+  const sys = require('../../engine/sys');
+  const real = sys.exec;
+  const calls = [];
+  sys.exec = (cmd, args) => { calls.push(cmd); return { status: 0, stdout: '', stderr: '' }; };
+  try { run.apply({ allowInstalls: true }); } finally { sys.exec = real; }
+  assert.deepStrictEqual(calls.filter((c) => c === 'winget'), []);
+  assert.strictEqual(run.current().status, 'applied');
+});
+
 test('a failed install stops the apply before any file is written', () => {
   const h = freshHome();
   run.newRun();

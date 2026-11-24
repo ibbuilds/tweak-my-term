@@ -217,6 +217,8 @@ function runInstalls(st, { allowInstalls, exec }) {
   const manual = [];
   const done = [];
   for (const i of st.installs) {
+    // A simulated home (TMT_HOME: tests, agent rehearsals) must never install on the real machine.
+    if (paths.fake() && exec === sys.exec) { done.push({ ...i, simulated: true }); continue; }
     const [cmd, args] = installers.command(i.manager, i.id);
     if (installers.needsSudo(i.manager)) {
       if (exec('sudo', ['-n', 'true']).status !== 0) { manual.push(installers.display(i.manager, i.id)); continue; }
