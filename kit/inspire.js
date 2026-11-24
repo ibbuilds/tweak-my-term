@@ -729,7 +729,7 @@ async function saveAll(list, dir, opts = {}) {
 
 const USAGE = `Usage: tmt inspire <query...> [--os linux|macos|windows] [--terminal x] [--shell x] [--layout ${LAYOUT_NAMES.join('|')}] [--limit n] [--min-score n]
                    [--has clock,monitor,...] [--complexity 1-5|n+|n-m|high|low]
-                   [--sort relevance|new|random] [--seed n] [--json] [--refresh] [--facets] [--save <n|all> <dir> [--crop]]
+                   [--sort relevance|new|random] [--seed n] [--json] [--refresh] [--facets] [--save <n|all> <dir> [--crop]] [--no-parts]
 Results vary by design: no repeated colorscheme, window manager or author while other matches exist.
 --sort random --seed n draws a different set each time; --save all <dir> downloads every screenshot to review;
 --crop also cuts out each terminal window seen in it (rice-<id>-t1.png...). Words like complex, busy, dashboard,
@@ -739,7 +739,7 @@ Search r/unixporn rices by mood, colorscheme, tool or WM. Example: tmt inspire c
 function parseArgs(argv) {
   const a = { query: [], flags: {} };
   const valued = new Set(['os', 'terminal', 'shell', 'layout', 'limit', 'min-score', 'sort', 'seed', 'has', 'complexity']);
-  const bool = new Set(['json', 'refresh', 'facets', 'help', 'crop']);
+  const bool = new Set(['json', 'refresh', 'facets', 'help', 'crop', 'no-parts']);
   const list = argv.filter((x) => x !== undefined && x !== null).map(String);
   for (let i = 0; i < list.length; i++) {
     const x = list[i];
@@ -773,6 +773,30 @@ function intFlag(v, name) {
   return Number(v);
 }
 
+/** For the top results with a repo, list its files per tool (via tmt parts rice), so reuse is one step. */
+async function withParts(results, { top = 3, rice = (repo) => require('./parts').rice(repo, {}) } = {}) {
+  for (const x of results.filter((r) => r.repo).slice(0, top)) {
+    try {
+      const r = await rice(x.repo);
+      const tools = {};
+      let more = 0;
+      for (const [t, list] of Object.entries(r.tools || {})) { tools[t] = list.slice(0, 3); more += Math.max(0, list.length - 3); }
+      x.parts = { license: r.license || null, tools, more, wallpapers: (r.wallpapers || []).length };
+    } catch (e) { x.parts = { error: e.message }; }
+  }
+  return results;
+}
+
+function partsLine(x) {
+  const p = x.parts;
+  if (p.error) return [`   parts: n/a (${p.error})`];
+  const tools = Object.entries(p.tools);
+  if (!tools.length) return ['   parts: no config files for catalog tools in this repo'];
+  const list = tools.map(([t, l]) => `${t}: ${l.join(', ')}`).join('; ');
+  return [`   parts: ${list}${p.more ? ` (+${p.more} more)` : ''} | ${p.wallpapers} wallpaper(s) | ${p.license || 'no license: take values, not whole files'}`,
+    `   get: tmt parts rice ${x.repo} --get <path...>  (into the run folder; start from these files instead of writing configs from scratch)`];
+}
+
 function formatResults(r) {
   const lines = [];
   if (!r.results.length) lines.push('No matches.');
@@ -783,6 +807,7 @@ function formatResults(r) {
     lines.push(`   screenshot: ${x.image || 'n/a'}`);
     lines.push(`   reddit: ${x.url || 'n/a'}`);
     lines.push(`   repo: ${x.repo ? `${x.repo}  (its files per tool: tmt parts rice ${x.repo})` : 'n/a'}`);
+    if (x.parts) lines.push(...partsLine(x));
     lines.push(`   why: ${x.why}`);
     if (x.seen) {
       const t = x.seen.terminals;
@@ -819,6 +844,9 @@ async function main(argv = []) {
   if (minScore !== undefined && !Number.isFinite(minScore)) throw new Error('--min-score must be a number.');
   const r = await searchDetailed(query, { ...loadOpts, os: flags.os, terminal: flags.terminal, shell: flags.shell, layout: flags.layout, has: flags.has, complexity: flags.complexity, limit, minScore, sort: flags.sort, seed: flags.seed === undefined ? undefined : Number(flags.seed) });
 
+  // The top repos' files per tool (GitHub API, cached a day). Off for a local index (tests) or --no-parts.
+  if (!flags['no-parts'] && !process.env.TMT_RICES_FILE) await withParts(r.results);
+
   let saved = null;
   if (flags.save && flags.save.n === 'all') {
     saved = await saveAll(r.results, flags.save.dir);
@@ -852,5 +880,5 @@ async function main(argv = []) {
 
 module.exports = {
   DATA_URL, ATTRIBUTION, TERMINALS, SHELLS, MOODS,
-  load, normalize, normalizeTools, withSeen, loadSeen, cropTerminals, formatResults, CONTENTS, rank, search, searchDetailed, facets, facetsOf, saveImage, saveAll, parseQuery, parseArgs, main,
+  load, normalize, normalizeTools, withSeen, loadSeen, cropTerminals, formatResults, withParts, CONTENTS, rank, search, searchDetailed, facets, facetsOf, saveImage, saveAll, parseQuery, parseArgs, main,
 };

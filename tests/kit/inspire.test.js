@@ -437,3 +437,22 @@ test('a mood word that is also a theme package name does not match the tools lis
   const r = await I.searchDetailed('paper', { entries: [pkg, lit], diverse: false });
   assert.deepStrictEqual(r.results.map((x) => x.id), ['lit']);
 });
+
+test('withParts lists each top repo\'s files per tool, so the agent sees what it can reuse', async () => {
+  const seen = [];
+  const rice = async (repo) => {
+    seen.push(repo);
+    if (repo.endsWith('/gone')) throw new Error('Repo not found or private');
+    return { license: 'LICENSE', tools: { kitty: ['.config/kitty/kitty.conf', '.config/kitty/theme.conf', 'a', 'b'], tmux: ['.tmux.conf'] }, wallpapers: ['walls/1.png'] };
+  };
+  const results = [{ repo: 'https://github.com/a/dots' }, { repo: null }, { repo: 'https://github.com/b/gone' }, { repo: 'https://github.com/c/x' }];
+  await I.withParts(results, { top: 2, rice });
+  assert.deepStrictEqual(seen, ['https://github.com/a/dots', 'https://github.com/b/gone']);
+  assert.deepStrictEqual(results[0].parts, { license: 'LICENSE', tools: { kitty: ['.config/kitty/kitty.conf', '.config/kitty/theme.conf', 'a'], tmux: ['.tmux.conf'] }, more: 1, wallpapers: 1 });
+  assert.match(results[2].parts.error, /not found/);
+  assert.strictEqual(results[3].parts, undefined);
+  const text = I.formatResults({ results: results.map((x, i) => ({ title: `t${i}`, tools: [], why: 'w', os: 'linux', ...x })), notes: [] });
+  assert.ok(text.includes('parts: kitty: .config/kitty/kitty.conf, .config/kitty/theme.conf, a; tmux: .tmux.conf (+1 more) | 1 wallpaper(s) | LICENSE'), text);
+  assert.match(text, /get: tmt parts rice https:\/\/github\.com\/a\/dots --get <path\.\.\.>/);
+  assert.match(text, /parts: n\/a \(Repo not found/);
+});
