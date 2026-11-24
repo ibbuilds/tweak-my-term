@@ -108,10 +108,10 @@ Write `look.json` in the run folder following `${CLAUDE_PLUGIN_ROOT}/schemas/loo
 ## 6. Fit: which tools deliver each part on this OS
 
 Read [references/parts.md](references/parts.md) and [references/fit.md](references/fit.md).
-Assemble, don't invent: for each part (palette, font, background, prompt, terminal,
-layout, each themed tool) take the existing source in this order: what the user has, the
-chosen rice's dotfiles, the official port of a named scheme, the catalog recipe, and
-only then your own. Run these before writing any config yourself:
+For each part (palette, font, background, prompt, terminal, layout, each themed tool) use
+whatever gets a working result fastest: what the user has, a rice's files for the user's
+own tools, the official port of a named scheme, the catalog recipe, or your own file. The
+outcome counts, not the source. Shortcuts when they fit:
 - the chosen rice (inspiration pick with a repo): its `parts:` line in the `tmt inspire`
   output lists its files per tool (your installed tools marked "yours": --get those), wallpapers
   and license (`tmt parts rice <repo>` for the
