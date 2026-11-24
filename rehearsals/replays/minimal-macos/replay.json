@@ -1,0 +1,17 @@
+{
+  "os": "macos",
+  "home": "macos-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "~/.config/kitty/kitty.conf",
+      "file": "files/000-kitty.conf"
+    },
+    {
+      "kind": "block",
+      "target": "~/.zshrc",
+      "file": "files/001-zshblock.sh"
+    }
+  ],
+  "checks": []
+}

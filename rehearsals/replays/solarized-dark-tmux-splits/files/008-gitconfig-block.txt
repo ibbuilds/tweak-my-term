@@ -1,0 +1,2 @@
+[include]
+    path = ~/.config/solarized-dark-dev/delta-solarized.gitconfig

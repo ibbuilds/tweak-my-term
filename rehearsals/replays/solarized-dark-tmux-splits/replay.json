@@ -1,0 +1,52 @@
+{
+  "os": "macos",
+  "home": "macos-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "{mac-app-support}/iTerm2/DynamicProfiles/solarized-dark-dev.json",
+      "file": "files/000-iterm-profile.json"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/solarized-dark-dev/dev.sh",
+      "file": "files/001-dev.sh"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/solarized-dark-dev/env.zsh",
+      "file": "files/002-env.zsh"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/solarized-dark-dev/kitty-colors.conf",
+      "file": "files/003-kitty-colors.conf"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/solarized-dark-dev/delta-solarized.gitconfig",
+      "file": "files/004-delta-solarized.gitconfig"
+    },
+    {
+      "kind": "write",
+      "target": "~/.tmux.conf",
+      "file": "files/005-tmux.conf"
+    },
+    {
+      "kind": "block",
+      "target": "~/.zshrc",
+      "file": "files/006-zshrc-block.zsh"
+    },
+    {
+      "kind": "block",
+      "target": "~/.config/kitty/kitty.conf",
+      "file": "files/007-kitty-include.conf"
+    },
+    {
+      "kind": "block",
+      "target": "~/.gitconfig",
+      "file": "files/008-gitconfig-block.txt"
+    }
+  ],
+  "checks": []
+}

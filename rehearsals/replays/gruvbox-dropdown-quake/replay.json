@@ -1,0 +1,17 @@
+{
+  "os": "linux",
+  "home": "linux-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "~/.config/tmt/ddterm.dconf",
+      "file": "files/000-ddterm.dconf"
+    }
+  ],
+  "checks": [
+    [
+      "dconf",
+      "--version"
+    ]
+  ]
+}

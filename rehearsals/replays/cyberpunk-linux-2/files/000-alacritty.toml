@@ -1,0 +1,49 @@
+[font]
+size = 11
+
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+
+[window]
+opacity = 0.92
+padding = { x = 8, y = 6 }
+dynamic_padding = false
+decorations = "None"
+startup_mode = "Maximized"
+
+[cursor]
+style = { shape = "Block", blinking = "On" }
+
+[terminal.shell]
+program = "bash"
+args = ["-lc", "exec ~/.config/dash/dash.sh"]
+
+[colors.primary]
+background = "#0A0714"
+foreground = "#D5D2E8"
+
+[colors.cursor]
+cursor = "#FF2A9D"
+
+[colors.selection]
+background = "#3A1D5C"
+
+[colors.normal]
+black = "#1A1530"
+red = "#FF3860"
+green = "#39E58C"
+yellow = "#F9E04B"
+blue = "#5B8CFF"
+magenta = "#FF2A9D"
+cyan = "#00F0FF"
+white = "#B9B4D6"
+
+[colors.bright]
+black = "#6C6592"
+red = "#FF6B88"
+green = "#7CFFB8"
+yellow = "#FFF08A"
+blue = "#8FB0FF"
+magenta = "#FF7CC4"
+cyan = "#7DF8FF"
+white = "#F4F2FF"

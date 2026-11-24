@@ -1,0 +1,22 @@
+{
+  "os": "windows",
+  "home": "windows-basic",
+  "files": [
+    {
+      "kind": "merge-json",
+      "target": "{wt-settings}",
+      "file": "files/000-wt-merge.json"
+    },
+    {
+      "kind": "write",
+      "target": "{xdg-config}/lazygit/config.yml",
+      "file": "files/001-lazygit-config.yml"
+    },
+    {
+      "kind": "write",
+      "target": "~/scoop/apps/btop/current/themes/tokyo-night.theme",
+      "file": "files/002-tokyo-night.theme"
+    }
+  ],
+  "checks": []
+}

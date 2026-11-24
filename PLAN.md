@@ -418,6 +418,15 @@ No AI key needed. Check: green on both.
 
 Done = every M20 rehearsal passes the grade and M21 is green.
 
+**Status (2026-11-24).** M15 done (`tools/rehearse.js`, sealed HOME, real-home reads
+flagged in the grade). M16-M17 in the skill and lexicon. Wave 1 (8 rehearsals): 7 reached
+a plan; 0 reused an existing file, so M18 got `tmt parts port` (official ports for
+Catppuccin, Dracula, Rose Pine, Tokyo Night, Kanagawa; iTerm2-Color-Schemes for any other
+scheme) and `tmt parts rice` (a rice's dotfiles per tool, wallpapers, license). The GNOME
+drop-down request stalled on a catalog gap: ddterm and Guake added. M21: 9 replays
+(Linux, macOS, Windows) recorded from rehearsals; CI replays them with real validators.
+Wave 2 runs the weak cases again plus new requests.
+
 ## 6. Risks
 
 - **Plugin mechanics on Windows** (M0). Fallback: call `node` with the full path.

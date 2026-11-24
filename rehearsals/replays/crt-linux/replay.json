@@ -1,0 +1,17 @@
+{
+  "os": "linux",
+  "home": "linux-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "{xdg-config}/ghostty/config.ghostty",
+      "file": "files/000-config.ghostty"
+    },
+    {
+      "kind": "write",
+      "target": "{xdg-config}/ghostty/shaders/amber-crt.glsl",
+      "file": "files/001-amber-crt.glsl"
+    }
+  ],
+  "checks": []
+}

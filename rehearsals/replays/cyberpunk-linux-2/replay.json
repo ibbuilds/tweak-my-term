@@ -1,0 +1,33 @@
+{
+  "os": "linux",
+  "home": "linux-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "~/.config/alacritty/alacritty.toml",
+      "file": "files/000-alacritty.toml"
+    },
+    {
+      "kind": "write",
+      "target": "~/.tmux.conf",
+      "file": "files/001-tmux.conf"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/dash/dash.sh",
+      "file": "files/002-dash.sh"
+    },
+    {
+      "kind": "block",
+      "target": "~/.bashrc",
+      "file": "files/003-bashrc.block"
+    }
+  ],
+  "checks": [
+    [
+      "bash",
+      "-n",
+      "~/.config/dash/dash.sh"
+    ]
+  ]
+}

@@ -1,0 +1,2 @@
+# neon-grid prompt: same user@host:path structure, recolored (aliases untouched)
+PS1='\[\e[38;2;255;42;157m\]\u\[\e[38;2;108;101;146m\]@\[\e[38;2;0;240;255m\]\h\[\e[38;2;108;101;146m\]:\[\e[38;2;249;224;75m\]\w\[\e[38;2;255;42;157m\]\$\[\e[0m\] '

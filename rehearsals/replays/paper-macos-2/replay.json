@@ -1,0 +1,27 @@
+{
+  "os": "macos",
+  "home": "macos-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "~/.config/paper/paper.conf",
+      "file": "files/000-paper.conf"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/paper/prompt.zsh",
+      "file": "files/001-prompt.zsh"
+    },
+    {
+      "kind": "block",
+      "target": "~/.config/kitty/kitty.conf",
+      "file": "files/002-include.conf"
+    },
+    {
+      "kind": "block",
+      "target": "~/.zshrc",
+      "file": "files/003-zsh-block.sh"
+    }
+  ],
+  "checks": []
+}
