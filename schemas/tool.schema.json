@@ -25,6 +25,7 @@
         "linux": { "$ref": "#/$defs/osEntry" }
       }
     },
+    "elementsOmit": { "type": "array", "items": { "type": "string" }, "description": "Elements from catalog/elements.json this tool cannot change." },
     "capabilities": {
       "type": "object",
       "additionalProperties": {

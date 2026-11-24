@@ -396,3 +396,26 @@ test('plan lists the whole-terminal parts the look leaves undecided', () => {
   fs.writeFileSync(path.join(dir, 'look.json'), JSON.stringify({ name: 'v', prompt: {}, window: {}, onStart: { fetch: 'none' }, tools: [], layout: { multiplexer: 'none' } }));
   assert.deepStrictEqual(run.plan().lookGaps, [], 'an explicit "none" is a decision');
 });
+
+test('plan lists, per detected shell and terminal, every element the look has not decided', () => {
+  freshHome();
+  const prevOs = process.env.TMT_OS;
+  process.env.TMT_OS = 'linux';
+  try {
+    const st = run.newRun();
+    const dir = run.runDir(st.id);
+    fs.writeFileSync(path.join(dir, 'detect.json'), JSON.stringify({ tools: { bash: { installed: true } }, terminals: { kitty: { installed: true } }, configs: [] }));
+    run.stageFile('write', '~/x.txt', src('x', 'x'));
+    assert.strictEqual(run.plan().undecided, null, 'no look.json yet');
+    fs.writeFileSync(path.join(dir, 'look.json'), JSON.stringify({ name: 'v', elements: { 'bash.prompt': { choice: 'two-line pills', why: 'wants git info at a glance' }, 'kitty.tab-icon': { choice: 'none', why: 'single tab user' }, 'kitty.scrollbar': 'hidden' } }));
+    const u = run.plan().undecided;
+    assert.ok(u.bash.includes('banner') && !u.bash.includes('prompt'), JSON.stringify(u.bash));
+    assert.ok(u.kitty.includes('window-icon') && !u.kitty.includes('tab-icon'), JSON.stringify(u.kitty));
+    assert.ok(u.kitty.includes('scrollbar'), 'a choice without a why (other than "keep") is not decided');
+    const all = require('../../catalog/elements.json');
+    const every = {};
+    for (const t of ['bash', 'kitty']) for (const e of Object.keys(all[t === 'bash' ? 'shell' : 'terminal'])) every[`${t}.${e}`] = 'keep';
+    fs.writeFileSync(path.join(dir, 'look.json'), JSON.stringify({ name: 'v', elements: every }));
+    assert.deepStrictEqual(run.plan().undecided, {});
+  } finally { if (prevOs === undefined) delete process.env.TMT_OS; else process.env.TMT_OS = prevOs; }
+});

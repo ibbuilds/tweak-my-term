@@ -125,6 +125,7 @@ function grade(turns, run, userMsgs, scenarioDir) {
   return {
     status: st ? st.status : 'no run',
     notRestyled: st && st.plan ? st.plan.uncovered : null,
+    elementsUndecided: st && st.plan ? st.plan.undecided : null,
     lookUndecided: look ? ['prompt', 'onStart', 'tools', 'layout', 'window'].filter((k) => look[k] == null) : null,
     questionsAnswered: userMsgs.filter((m) => m !== STOP).length,
     cost: Number(turns.reduce((s, t) => s + t.cost, 0).toFixed(2)),

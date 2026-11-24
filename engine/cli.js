@@ -85,6 +85,10 @@ function planText(p) {
     if (missing.length) lines.push(`Missing: ${missing.map((k) => names[k]).join(', ')}. Do those setup steps before asking for approval, or tell the user why they were skipped.`);
   }
   if (p.lookGaps && p.lookGaps.length) lines.push(`Look leaves undecided: ${p.lookGaps.join(', ')} (prompt, start banner, tool colors, pane layout, window/tab theme). Decide each in look.json and stage it, or set it to none.`);
+  if (p.undecided && Object.keys(p.undecided).length) {
+    lines.push('Elements undecided (look.json elements["<tool>.<element>"] = { choice, why } or "keep"; see catalog/elements.json):');
+    for (const [t, list] of Object.entries(p.undecided)) lines.push(`  ${t}: ${list.join(', ')}`);
+  } else if (p.undecided) lines.push('Elements: every element of every detected shell and terminal is decided, each with the need it serves.');
   if (p.uncovered === null) lines.push('Coverage: unknown (no detect.json in the run): run `tmt detect` so the plan can check every shell and terminal is restyled.');
   else if (p.uncovered && p.uncovered.length) lines.push(`Not restyled: ${p.uncovered.join(', ')}. A look covers the whole terminal: stage their prompt, colors and banner too, or tell the user why they are left out.`);
   else if (p.uncovered) lines.push('Coverage: every detected shell and terminal is restyled.');

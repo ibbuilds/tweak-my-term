@@ -193,26 +193,54 @@ function plan({ os: osName } = {}) {
   const installs = st.installs.map((i) => ({ ...i, command: installers.display(i.manager, i.id), sudo: installers.needsSudo(i.manager) }));
   const hash = sha(JSON.stringify({ files: files.map((f) => [f.kind, f.abs, f.beforeHash, f.afterHash]), installs: st.installs, fonts: st.fonts, checks: st.checks }));
   const notCovered = uncovered(dir, files, osName || st.os);
-  st.plan = { hash, at: now(), files: files.map(({ diff: _d, ...rest }) => rest), installs, fonts: fontsNeeded, checks: st.checks, uncovered: notCovered };
+  st.plan = { hash, at: now(), files: files.map(({ diff: _d, ...rest }) => rest), installs, fonts: fontsNeeded, checks: st.checks, uncovered: notCovered, undecided: undecided(dir) };
   st.status = 'planned';
   st.approved = null;
   fs.writeFileSync(path.join(dir, 'plan.diff'), files.map((f) => `=== ${f.change.toUpperCase()} ${f.display} (${f.kind})\n${f.diff}`).join('\n'));
   save(st);
-  return { id: st.id, hash, files, installs, fonts: fontsNeeded, checks: st.checks, steps: designSteps(dir), uncovered: notCovered, lookGaps: lookGaps(dir) };
+  return { id: st.id, hash, files, installs, fonts: fontsNeeded, checks: st.checks, steps: designSteps(dir), uncovered: notCovered, lookGaps: lookGaps(dir), undecided: undecided(dir) };
 }
 
 /**
  * A look is the whole terminal: the user's shells and terminals (from the run's detect.json)
  * that no staged file touches. null when detect.json is missing, so coverage is unknown.
  */
-function uncovered(dir, files, osName) {
+function mineOf(dir) {
   let d;
   try { d = JSON.parse(fs.readFileSync(path.join(dir, 'detect.json'), 'utf8')); } catch { return null; }
   const kinds = new Set(['shell', 'terminal']);
-  const catalog = require('./catalog');
-  const ofKind = new Set(catalog.tools().filter((t) => kinds.has(t.category)).map((t) => t.id));
+  const byId = new Map(require('./catalog').tools().filter((t) => kinds.has(t.category)).map((t) => [t.id, t]));
   const on = (o) => Object.entries(o || {}).filter(([, v]) => v && v.installed).map(([k]) => k);
-  const mine = [...new Set([...on(d.tools), ...on(d.terminals), ...(d.configs || []).flatMap((c) => c.tools || [c.tool])])].filter((id) => ofKind.has(id));
+  return [...new Set([...on(d.tools), ...on(d.terminals), ...(d.configs || []).flatMap((c) => c.tools || [c.tool])])].filter((id) => byId.has(id)).map((id) => byId.get(id));
+}
+
+/**
+ * Per detected shell and terminal, the elements (catalog/elements.json) look.json has not decided.
+ * Decided = "keep", or { choice, why } with both filled: every choice traces back to a user need.
+ * null when detect.json or look.json is missing.
+ */
+function undecided(dir) {
+  const mine = mineOf(dir);
+  let look;
+  try { look = JSON.parse(fs.readFileSync(path.join(dir, 'look.json'), 'utf8')); } catch { return null; }
+  if (!mine) return null;
+  const all = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'catalog', 'elements.json'), 'utf8'));
+  const el = look.elements || {};
+  const ok = (v) => v === 'keep' || (v && typeof v === 'object' && String(v.choice || '').trim() && String(v.why || '').trim());
+  const out = {};
+  for (const t of mine) {
+    const omit = new Set(t.elementsOmit || []);
+    const left = Object.keys(all[t.category] || {}).filter((e) => !omit.has(e) && !ok(el[`${t.id}.${e}`]));
+    if (left.length) out[t.id] = left;
+  }
+  return out;
+}
+
+function uncovered(dir, files, osName) {
+  const tools = mineOf(dir);
+  if (!tools) return null;
+  const catalog = require('./catalog');
+  const mine = tools.map((t) => t.id);
   const norm = (p) => (process.platform === 'win32' ? path.resolve(p).toLowerCase() : path.resolve(p));
   const touched = files.map((f) => norm(f.abs));
   const known = catalog.configPaths(osName);

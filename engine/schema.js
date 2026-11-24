@@ -1,7 +1,7 @@
 'use strict';
 // Minimal JSON Schema validator: the subset our schemas use (type, enum, const, pattern,
 // required, properties, additionalProperties, items, minItems, maxItems, minimum, maximum,
-// $ref to #/$defs). No dependencies, so the engine runs anywhere Node runs.
+// oneOf, $ref to #/$defs). No dependencies, so the engine runs anywhere Node runs.
 
 const fs = require('fs');
 const path = require('path');
@@ -16,6 +16,10 @@ function validate(schema, value, root = schema, at = '$', errors = []) {
     const m = /^#\/\$defs\/(.+)$/.exec(schema.$ref);
     if (!m || !root.$defs || !root.$defs[m[1]]) { errors.push(`${at}: unknown $ref ${schema.$ref}`); return errors; }
     return validate(root.$defs[m[1]], value, root, at, errors);
+  }
+  if (schema.oneOf) {
+    const fits = schema.oneOf.filter((b) => !validate(b, value, root, at, []).length).length;
+    if (fits !== 1) errors.push(`${at}: must match exactly one of ${schema.oneOf.length} forms (matches ${fits})`);
   }
   const t = typeOf(value);
   if (schema.type) {

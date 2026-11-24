@@ -162,10 +162,14 @@ shell and terminal in `detect.json`:
   it back unchanged.
 - the window: a Windows Terminal `theme` (tab row, frame) as well as the scheme, and any
   start layout the user asked for (side panes with a fetch, a clock).
-In look.json decide `prompt`, `onStart`, `tools`, `layout` and `window` ("none" is a
+Decide every element in catalog/elements.json for each detected shell and terminal (tab and
+window icons, titles, scrollbar, selection, completion menu, pager, responsiveness ...) as
+look.json `elements["<tool>.<element>"] = { "choice": ..., "why": <the user need> }`, or
+"keep". The why ties each choice to the brief: ask the user when a need is unknown instead
+of guessing. Also decide `prompt`, `onStart`, `tools`, `layout` and `window` ("none" is a
 decision). Prompts keep the user's other hooks (append to `PROMPT_COMMAND`, don't replace
 it) and read git state without a subprocess per prompt on Windows. `tmt plan` lists what is
-"Not restyled" and what the look "leaves undecided"; fix both before asking for approval.
+"Not restyled", what the look "leaves undecided" and the "Elements undecided"; fix all before asking for approval.
 
 Targets use `~` and tokens (`{wt-settings}`, `{ps-profile}`, `{xdg-config}` ...). Keep
 the user's existing settings: use `block` and `merge-json` over `write` for files the user

@@ -26,3 +26,11 @@ test('look schema: a look that keeps the terminal default font needs no family',
   assert.deepStrictEqual(check('look', { ...base, font: { size: 11 } }), []);
   assert.deepStrictEqual(check('look', { ...base, font: {} }), ['$.font: missing required "size"']);
 });
+test('oneOf: a value must match exactly one branch', () => {
+  const { validate } = require('../../engine/schema');
+  const s = { oneOf: [{ const: 'keep' }, { type: 'object', required: ['choice', 'why'] }] };
+  assert.deepStrictEqual(validate(s, 'keep'), []);
+  assert.deepStrictEqual(validate(s, { choice: 'a', why: 'b' }), []);
+  assert.ok(validate(s, { choice: 'a' }).length, 'missing why fails');
+  assert.ok(validate(s, 'pink').length, 'a bare choice fails');
+});

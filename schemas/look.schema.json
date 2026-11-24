@@ -151,6 +151,16 @@
         "properties": { "keys": { "type": "string" }, "action": { "type": "string" }, "scope": { "type": "string" } }
       }
     },
+    "elements": {
+      "type": "object",
+      "description": "Every element of each shell and terminal (catalog/elements.json), keyed \"<tool>.<element>\": { choice, why } where why is the user need it serves, or \"keep\".",
+      "additionalProperties": {
+        "oneOf": [
+          { "const": "keep" },
+          { "type": "object", "additionalProperties": false, "required": ["choice", "why"], "properties": { "choice": { "type": "string" }, "why": { "type": "string" } } }
+        ]
+      }
+    },
     "budget": {
       "type": "object",
       "additionalProperties": false,
