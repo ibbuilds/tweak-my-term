@@ -1,0 +1,30 @@
+# paper-warm prompt: path, git, duration; accent glyph on line 2.
+"$schema" = 'https://starship.rs/config-schema.json'
+add_newline = true
+scan_timeout = 30
+command_timeout = 500
+format = "$directory$git_branch$git_status$cmd_duration$line_break$character"
+
+[directory]
+style = "bold #3A5F8A"
+truncation_length = 3
+truncation_symbol = "…/"
+format = "[$path]($style)[$read_only]($read_only_style) "
+
+[git_branch]
+symbol = " "
+style = "#7A4A7E"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "#8A6410"
+format = '([$all_status$ahead_behind]($style) )'
+
+[cmd_duration]
+min_time = 2000
+style = "#74685A"
+format = "[took $duration]($style)"
+
+[character]
+success_symbol = "[❯](bold #B5532E)"
+error_symbol = "[❯](bold #A8302B)"

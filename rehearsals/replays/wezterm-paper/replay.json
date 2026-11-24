@@ -1,0 +1,22 @@
+{
+  "os": "windows",
+  "home": "windows-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "~/.config/wezterm/wezterm.lua",
+      "file": "files/000-wezterm.lua"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/starship.toml",
+      "file": "files/001-starship.toml"
+    },
+    {
+      "kind": "block",
+      "target": "{ps-profile}",
+      "file": "files/002-profile.ps1"
+    }
+  ],
+  "checks": []
+}

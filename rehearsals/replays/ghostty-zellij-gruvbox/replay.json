@@ -1,0 +1,62 @@
+{
+  "os": "linux",
+  "home": "linux-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "{xdg-config}/ghostty/config.ghostty",
+      "file": "files/000-ghostty.conf"
+    },
+    {
+      "kind": "write",
+      "target": "{xdg-config}/zellij/config.kdl",
+      "file": "files/001-zellij-config.kdl"
+    },
+    {
+      "kind": "write",
+      "target": "{xdg-config}/zellij/layouts/gruvbox-cozy.kdl",
+      "file": "files/002-zellij-layout.kdl"
+    },
+    {
+      "kind": "write",
+      "target": "{xdg-config}/helix/config.toml",
+      "file": "files/003-helix-config.toml"
+    },
+    {
+      "kind": "write",
+      "target": "{xdg-config}/yazi/yazi.toml",
+      "file": "files/004-yazi.toml"
+    },
+    {
+      "kind": "write",
+      "target": "{xdg-config}/yazi/theme.toml",
+      "file": "files/005-yazi-theme.toml"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/starship.toml",
+      "file": "files/006-starship.toml"
+    },
+    {
+      "kind": "write",
+      "target": "{xdg-config}/fish/conf.d/gruvbox-cozy.fish",
+      "file": "files/007-fish-gruvbox.fish"
+    }
+  ],
+  "checks": [
+    [
+      "fish",
+      "--no-execute",
+      "~/.config/fish/conf.d/gruvbox-cozy.fish"
+    ],
+    [
+      "ghostty",
+      "+validate-config"
+    ],
+    [
+      "zellij",
+      "setup",
+      "--check"
+    ]
+  ]
+}

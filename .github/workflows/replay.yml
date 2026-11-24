@@ -1,0 +1,63 @@
+name: replay
+
+# Replays recorded plans (rehearsals/replays) with the real tools installed, so every
+# config is checked by the tool's own validator on a real macOS, Linux and Windows.
+# No AI and no secrets involved.
+
+on:
+  push:
+    branches: [main]
+    paths: ['rehearsals/**', 'engine/**', 'catalog/**', 'tools/replay.js', '.github/workflows/replay.yml']
+  pull_request:
+    paths: ['rehearsals/**', 'engine/**', 'catalog/**', 'tools/replay.js', '.github/workflows/replay.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  replay:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            tmt_os: linux
+          - os: macos-latest
+            tmt_os: macos
+          - os: windows-latest
+            tmt_os: windows
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Install tools (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fish tmux kitty alacritty
+          sudo snap install ghostty --classic
+          curl -fsSL https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz | sudo tar -xz -C /usr/local/bin zellij
+          curl -fsSL https://starship.rs/install.sh | sudo sh -s -- -y
+          echo "/snap/bin" >> "$GITHUB_PATH"
+
+      - name: Install tools (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install fish tmux zellij starship
+          brew install --cask ghostty kitty alacritty wezterm
+          echo "/Applications/Ghostty.app/Contents/MacOS" >> "$GITHUB_PATH"
+          echo "/Applications/kitty.app/Contents/MacOS" >> "$GITHUB_PATH"
+
+      - name: Tool versions
+        shell: bash
+        run: for t in fish tmux kitty alacritty ghostty zellij starship wezterm; do printf '%-10s ' $t; ($t --version 2>/dev/null || echo missing) | head -1; done
+
+      - name: Replay
+        shell: bash
+        env:
+          REPLAY_STRICT: '1'
+        run: node tools/replay.js run --os ${{ matrix.tmt_os }}
