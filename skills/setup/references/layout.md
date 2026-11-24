@@ -17,7 +17,12 @@ records them separately, inspiration is searched for each, and each is judged on
 | "dashboard", "monitor", "widgets", "HUD" | `dashboard` | many small panels: system monitor, music, clock, fetch |
 | "scrolling", "niri", "paper" | `scrolling` | a strip of windows that scrolls sideways |
 
-The kind is inferred from the window manager and tools, so confirm it on each screenshot.
+Screenshots that were looked at (`seen:` in the results) carry their real layout, how
+busy they are (complexity 1-5), what runs in each terminal and where each terminal sits;
+the rest are guessed from the window manager and tools, so confirm those on the picture.
+Narrow by what is on screen: `--complexity 4+` (or words: complex, busy, dashboard /
+minimal, clean), `--has monitor,clock,visualizer`. Add `--save all <dir> --crop` to get
+each terminal cut out of its desktop (`rice-<id>-t1.png`...) and judge those crops.
 For layout examples judge only the arrangement (pane count and proportions, gaps, what
 sits where, empty space); ignore their colors. For style examples, ignore arrangement.
 
@@ -44,7 +49,7 @@ Read `catalog/capabilities.json` for the user's terminal before choosing (`split
 | Layout | Inside the terminal (preferred: no new tools) | Needs more |
 |---|---|---|
 | panes | native splits + startup layout: Windows Terminal (Windows), WezTerm (all OSes), kitty (macOS/Linux); Ghostty and iTerm2 split but have no layout file | zellij layout file (all OSes) or tmux (macOS/Linux, WSL) when the terminal has no splits (Alacritty, foot) or the user wants sessions that survive closing |
-| dashboard | panes with one job each: monitor (btop), files (yazi), git (lazygit), fetch, clock | the same tools on every OS; widgets outside the terminal (eww, conky, Rainmeter, Übersicht) are desktop tools, out of scope unless asked |
+| dashboard | panes with one job each: monitor (btop), files (yazi), git (lazygit), fetch (fastfetch), clock, visualizer (cava), ambient art (pipes, matrix rain, bonsai) | see "Raising complexity" for the tool per OS; widgets outside the terminal (eww, conky, Rainmeter, Übersicht) are desktop tools, out of scope unless asked |
 | floating single window | window size in columns/rows, padding, hidden title bar/tabs, opacity (terminal recipes) | centering or a fixed position: an OS tool or WM rule |
 | dropdown (quake) | Windows Terminal, kitty, Ghostty, iTerm2 (partial); see the `quake` recipes | a hotkey launcher or WM scratchpad |
 | tiling / scrolling | approximate with splits inside one full-screen terminal | a tiling window manager (`catalog/window-managers/`): Windows GlazeWM, macOS AeroSpace or yabai, Linux Hyprland, sway, i3 or niri; KDE/GNOME have built-in or extension tiling (not cataloged) |
@@ -62,3 +67,35 @@ Rules:
 - Make it start that way: a startup layout or session file, not "split it by hand".
 - Apply design.md: 2-4 panes, one job each, one gap value, one bg across panes, focus
   shown by border or dimming (inactive-pane dimming: WezTerm, kitty, tmux).
+
+## Raising complexity ("more complex", "a fuller setup")
+
+Go one step up from what `audit.md` reports, never straight to a wall:
+single window → 2-3 panes with a job each → a dashboard (4-6 panes). Pick the step from
+inspiration at that complexity (`--complexity 3` or `4+`), and keep the user's working
+pane (their shell or editor) the biggest one with focus.
+
+Ingredients by OS (recipes under `catalog/tools/<id>/`, each with a "start in a pane" line
+and palette tokens):
+
+| Job | Windows | macOS / Linux |
+|---|---|---|
+| system monitor | btop (btop4win) | btop |
+| fetch | fastfetch | fastfetch |
+| clock | clock-tui (`tclock`, cargo) | tty-clock, clock-tui |
+| audio visualizer | cava | cava |
+| ambient art | pipes-rs, rusty-rain | pipes.sh, pipes-rs, cmatrix, cbonsai, rusty-rain |
+| files / git | yazi, lazygit | yazi, lazygit |
+
+Rules for a dashboard that looks designed, not busy:
+- Every pane has one job; at most 6. Ambient art (pipes, rain, bonsai) gets one small pane,
+  never the one the user types in.
+- One palette for every tool: theme each from look.json (`{palette.*}` tokens in the
+  recipes); a default-colored btop or rainbow cava breaks the picture.
+- Panes the user types in must not run tools that quit on any key (tty-clock without `-n`,
+  pipes.sh, cbonsai `-S`).
+- Cost: panes don't slow shell startup, but they use CPU. btop `update_ms` >= 2000, cava
+  `framerate` 30 or less; mention it to the user.
+- Build it with the terminal's startup layout (Windows Terminal `startupActions`, WezTerm
+  `gui-startup`, kitty session file) or a zellij layout, each pane started with its command.
+

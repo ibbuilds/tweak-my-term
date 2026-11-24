@@ -13,17 +13,19 @@ must-haves) and a folder for screenshots (inside the run folder).
 1. Search with the brief's words and what they imply. Style and layout are separate:
    style words (mood, scheme, terminal) as the query, layout as
    `--layout tiling|floating|panes|dashboard|scrolling`. 2-3 searches,
-   `tmt inspire <words> [--layout x] --os <os> --limit 12 --json`.
+   `tmt inspire <words> [--layout x] [--complexity n+] [--has x,y] --os <os> --limit 12 --json`.
    Add `--sort random --seed <n>` for a fresh draw, `--sort new` for current styles.
-2. Download the shortlist's screenshots: `--save all <folder>`. Open every image.
-   Screenshots usually show a whole desktop; find the terminal window(s) and judge only
-   them (and how they sit on screen if the brief is about the whole window). Drop shots
-   where the terminal is small, covered, or not the point.
+2. Download the shortlist's screenshots: `--save all <folder> --crop`. Results marked
+   `seen:` were already looked at: their terminals are cut out as `rice-<id>-t<n>.png`,
+   so open those crops (and the full shot only for how windows sit on the screen). For
+   results without `seen:`, open the full image, find the terminal window(s) and judge
+   only them. Drop shots where the terminal is small, covered, or not the point (`seen:`
+   says "no real terminal in the shot").
 3. For each keeper note: layout (single/splits/tabs/multiplexer, empty space),
    composition (image or art vs text area, padding, alignment), palette (bg tone, accent,
    how many colors carry weight), type (font feel, size, line height), prompt (lines,
-   segments), extras (fetch, TUI apps), and one honest line on why it works. Give the
-   terminal's pixel box in the screenshot (`X,Y,W,H`) so the caller can crop it.
+   segments), extras (fetch, TUI apps), and one honest line on why it works. For results
+   without crops, give the terminal's pixel box (`X,Y,W,H`) so the caller can crop it.
    Judge with `skills/setup/references/design.md` in the plugin root.
 4. For the best 4-6, open the dotfiles repo (raw files on GitHub: the terminal config, the
    prompt config, the colors). Confirm palette hexes, font and prompt tool. Read files;

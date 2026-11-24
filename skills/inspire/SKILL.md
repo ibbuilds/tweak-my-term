@@ -18,12 +18,15 @@ WM, tools) can't tell you that; the screenshots can. So you search, then you loo
    `--layout tiling|floating|panes|dashboard|scrolling` (inferred from WM and tools, so
    confirm it on the screenshot; see ../setup/references/layout.md). Run 2-3 searches;
    results are varied by design (no repeated scheme, WM or author).
-   `tmt inspire <words> --os <os> --limit 12 --json`. For a fresh draw instead of the most
+   `tmt inspire <words> --os <os> --limit 12 --json`. Words like complex, busy, dashboard,
+   minimal and clock, monitor, visualizer match what screenshots show; `--complexity 4+`
+   and `--has monitor,clock` filter by it. For a fresh draw instead of the most
    upvoted: `--sort random --seed <n>`; for current styles: `--sort new`.
    `tmt inspire --facets` shows which schemes and terminals exist.
-3. **Look at the screenshots.** `tmt inspire <same words> --limit 12 --save all <run>/inspire/`
-   downloads them (local reference only). Open each image and find the terminal
-   window(s). Most screenshots are whole desktops: bars, docks, wallpaper, browsers, music
+3. **Look at the screenshots.** `tmt inspire <same words> --limit 12 --save all <run>/inspire/ --crop`
+   downloads them (local reference only). Results marked `seen:` were looked at before:
+   their terminals are cut out (`rice-<id>-t1.png`...), so judge those crops. For the
+   others, open each image and find the terminal window(s). Most screenshots are whole desktops: bars, docks, wallpaper, browsers, music
    widgets. Judge only what lives inside the terminal window, plus how the window sits on
    the screen if the user wants that too. Judge layout examples on arrangement only and
    style examples on look only. Skip shots where the terminal is tiny, hidden, or not the
