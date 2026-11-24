@@ -392,17 +392,25 @@ function failingOver(img, pal, colors, { opacity, zone, light, maxSize }) {
   return [...worst.values()];
 }
 
-// Grows each cell's need into its neighbors, then interpolates smoothly between cell centers, so every pixel of a
-// failing cell gets at least that cell's veil and there are no hard edges.
+// Spreads each cell's need outward with a round, eased falloff over a few cells (so a shade reads as a soft glow,
+// never a box), then interpolates smoothly between cell centers. A failing cell keeps at least its own veil.
+const FEATHER = 2.5; // cells
 function scrimMask(need, width, height) {
   const grown = new Float32Array(need.length);
+  const reach = Math.ceil(FEATHER) + 1;
   for (let r = 0; r < GRID_ROWS; r++) {
     for (let c = 0; c < GRID_COLS; c++) {
       let m = 0;
-      for (let dr = -1; dr <= 1; dr++) {
-        for (let dc = -1; dc <= 1; dc++) {
+      for (let dr = -reach; dr <= reach; dr++) {
+        for (let dc = -reach; dc <= reach; dc++) {
           const rr = r + dr, cc = c + dc;
-          if (rr >= 0 && rr < GRID_ROWS && cc >= 0 && cc < GRID_COLS) m = Math.max(m, need[rr * GRID_COLS + cc]);
+          if (rr < 0 || rr >= GRID_ROWS || cc < 0 || cc >= GRID_COLS) continue;
+          // full veil on the cell and its 8 neighbors (every pixel of a failing cell is covered), then a round fade
+          const near = Math.abs(dr) <= 1 && Math.abs(dc) <= 1;
+          const t = near ? 0 : (Math.hypot(dr, dc) - 1) / FEATHER;
+          if (t >= 1) continue;
+          const fall = 1 - t * t * (3 - 2 * t); // smoothstep from 1 near the cell to 0 at the rim
+          m = Math.max(m, need[rr * GRID_COLS + cc] * fall);
         }
       }
       grown[r * GRID_COLS + c] = m;
@@ -420,7 +428,28 @@ function scrimMask(need, width, height) {
       mask[y * width + x] = top + (bot - top) * ty;
     }
   }
+  // Round off the square full-strength zone: three box passes (close to a Gaussian) whose total reach stays
+  // under one cell, so the failing cells, a cell inside that zone, keep their full veil.
+  const rx = Math.max(0, Math.floor(width / GRID_COLS / 3) - 1), ry = Math.max(0, Math.floor(height / GRID_ROWS / 3) - 1);
+  for (let pass = 0; pass < 3; pass++) blurMask(mask, width, height, rx, ry);
   return mask;
+}
+
+// In-place separable box blur of a float mask (edges clamp).
+function blurMask(m, w, h, rx, ry) {
+  const line = (get, set, n, r) => {
+    if (!r) return;
+    const src = new Float32Array(n);
+    for (let i = 0; i < n; i++) src[i] = get(i);
+    let sum = 0;
+    for (let i = -r; i <= r; i++) sum += src[clamp(i, 0, n - 1)];
+    for (let i = 0; i < n; i++) {
+      set(i, sum / (2 * r + 1));
+      sum += src[clamp(i + r + 1, 0, n - 1)] - src[clamp(i - r, 0, n - 1)];
+    }
+  };
+  for (let y = 0; y < h; y++) line((i) => m[y * w + i], (i, v) => { m[y * w + i] = v; }, w, rx);
+  for (let x = 0; x < w; x++) line((i) => m[i * w + x], (i, v) => { m[i * w + x] = v; }, h, ry);
 }
 
 function applyMask(img, mask, pal, light) {
@@ -539,5 +568,5 @@ function forText(img, palette, { opacity = 1, zone = 'terminal', strategy = 'aut
 
 module.exports = {
   apply, parseStep, forText, fit, crop, dim, blur, vignette, bloom, pixelate, quantize, scanlines, asciiGlyphs, tint,
-  normalizePalette, paletteHexes, FONT, textWeight,
+  normalizePalette, paletteHexes, FONT, textWeight, scrimMask,
 };

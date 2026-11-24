@@ -236,3 +236,14 @@ test('apply: a "scrim" step from forText reproduces the same pixels from the loo
   assert.ok(Buffer.from(again.data).equals(Buffer.from(r.image.data)));
   assert.deepStrictEqual(T.parseStep('scrim:0.8'), { op: 'scrim', opacity: 0.8 });
 });
+
+test('a local shade fades out round and wide, not as a hard-edged box', () => {
+  // one failing cell in the middle of the 16x10 grid; mask sampled at cell centers (1 px per cell)
+  const need = new Float32Array(16 * 10);
+  need[5 * 16 + 8] = 0.8;
+  const m = T.scrimMask(need, 16, 10);
+  const at = (c, r) => m[r * 16 + c];
+  assert.ok(at(8, 5) >= 0.8 - 1e-6, 'the failing cell keeps its full veil');
+  assert.ok(at(11, 5) > 0, 'the shade feathers out well beyond the next cell');
+  assert.ok(at(10, 7) < at(10, 5) - 0.05, 'diagonal falls off faster than straight: a round shade, not a square');
+});
