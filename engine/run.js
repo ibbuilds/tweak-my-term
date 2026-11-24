@@ -254,7 +254,7 @@ function apply({ allowInstalls = false, exec = sys.exec, fontInstaller = fonts.i
   }
   runInstalls(st, { allowInstalls, exec });
 
-  const manifest = { files: [], fonts: [] };
+  const manifest = { files: [], fonts: [], dirs: [] };
   const bdir = path.join(dir, 'backup');
   fs.mkdirSync(bdir, { recursive: true });
   st.plan.files.forEach((f, n) => {
@@ -271,6 +271,11 @@ function apply({ allowInstalls = false, exec = sys.exec, fontInstaller = fonts.i
     }
     for (const f of st.plan.files) {
       if (f.change === 'unchanged') continue;
+      // Remember the folders this write creates, so restore can take them away again.
+      for (let d = path.dirname(f.abs); !fs.existsSync(d); d = path.dirname(d)) {
+        if (!manifest.dirs.includes(d)) manifest.dirs.push(d);
+        if (path.dirname(d) === d) break;
+      }
       fs.mkdirSync(path.dirname(f.abs), { recursive: true });
       fs.writeFileSync(f.abs, fs.readFileSync(path.join(dir, f.proposed)));
     }
@@ -453,6 +458,10 @@ function restore(id, { exec = sys.exec } = {}) {
   });
   for (const e of [...manifest.files].reverse()) {
     if (e.existed) { fs.mkdirSync(path.dirname(e.target), { recursive: true }); fs.copyFileSync(path.join(dir, e.backup), e.target); } else fs.rmSync(e.target, { force: true });
+  }
+  // Folders apply created, deepest first; only empty ones (anything the user added since stays).
+  for (const d of [...(manifest.dirs || [])].sort((a, b) => b.length - a.length)) {
+    try { fs.rmdirSync(d); } catch { /* not empty or already gone: keep it */ }
   }
   for (const f of manifest.fonts || []) fonts.uninstall(f, { exec });
   st.status = 'restored';

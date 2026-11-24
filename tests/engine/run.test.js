@@ -96,6 +96,20 @@ test('apply writes files, then restore puts back every byte and removes created 
   assert.strictEqual(run.current().status, 'restored');
 });
 
+test('restore also removes the folders apply created, and keeps folders that were there', () => {
+  const h = freshHome();
+  fs.mkdirSync(path.join(h, '.config', 'mine'), { recursive: true });
+  run.newRun();
+  run.stageFile('write', '~/.config/look/art/bg.txt', src('a', 'a\n'));
+  run.stageFile('write', '~/.config/mine/x.conf', src('x', 'x\n'));
+  run.approve(run.plan().hash);
+  run.apply();
+  run.restore();
+  assert.strictEqual(fs.existsSync(path.join(h, '.config', 'look')), false, 'created folders are gone');
+  assert.strictEqual(fs.existsSync(path.join(h, '.config', 'mine')), true, 'existing folder kept');
+  assert.strictEqual(fs.existsSync(path.join(h, '.config')), true);
+});
+
 test('block staging keeps the rest of an rc file', () => {
   const h = freshHome();
   fs.writeFileSync(path.join(h, '.zshrc'), 'alias ll=ls\n');
