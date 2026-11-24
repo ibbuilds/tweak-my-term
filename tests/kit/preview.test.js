@@ -262,3 +262,16 @@ test('findBrowser: looks on the host OS, not the simulated TMT_OS', () => {
   else if (process.platform === 'darwin') assert.ok(seen.some((p) => p.startsWith('/Applications')), seen.join(' '));
   else assert.ok(!seen.some((p) => p.startsWith('/Applications')), seen.join(' '));
 });
+
+test('html: a clock pane draws big block digits, like a terminal clock', () => {
+  const page = V.html({ look: withLayout({ arrangement: { split: 'row', panes: [{ run: 'shell', focus: true }, { run: 'clock' }] } }) });
+  const body = /data-run="clock"><pre[^>]*>([\s\S]*?)<\/pre>/.exec(page)[1];
+  const rows = body.replace(/<[^>]+>/g, '').split('\n').filter((l) => /█/.test(l));
+  assert.strictEqual(rows.length, 5, 'five rows of digits');
+  assert.ok(rows.every((l) => l.length <= 24), 'fits a side pane');
+  assert.match(body, /class="a5"/, 'digits in the accent');
+});
+
+test('html: the pane layout has a real window shape, tall enough for a stacked side column', () => {
+  assert.match(V.html({ look: withLayout(THREE) }), /\.layout\{[^}]*aspect-ratio:16\/10/);
+});

@@ -162,6 +162,18 @@ function describeArrangement(node, depth = 0) {
   return `${node.split}${node.sizes ? ' ' + node.sizes.join('/') : ''}: ${node.panes.map((p) => describeArrangement(p, depth + 1)).join(depth ? ', ' : ' | ')}`;
 }
 
+
+// 3x5 block digits for a clock pane (what tclock, tty-clock or a clock script prints).
+const DIGITS = {
+  0: ['███', '█ █', '█ █', '█ █', '███'], 1: [' █ ', '██ ', ' █ ', ' █ ', '███'],
+  2: ['███', '  █', '███', '█  ', '███'], 3: ['███', '  █', '███', '  █', '███'],
+  4: ['█ █', '█ █', '███', '  █', '  █'], 5: ['███', '█  ', '███', '  █', '███'],
+  6: ['███', '█  ', '███', '█ █', '███'], 7: ['███', '  █', '  █', '  █', '  █'],
+  8: ['███', '█ █', '███', '█ █', '███'], 9: ['███', '█ █', '███', '  █', '███'],
+  ':': [' ', '█', ' ', '█', ' '],
+};
+const bigTime = (t) => [0, 1, 2, 3, 4].map((row) => [...t].map((ch) => DIGITS[ch][row]).join(' '));
+
 const SHELLS_RUN = /^(shell|sh|bash|zsh|fish|pwsh|powershell|nu|nushell|cmd|terminal)?$/i;
 function paneBody(run, prompt, sys = {}) {
   const r = String(run || '').toLowerCase();
@@ -200,6 +212,10 @@ function paneBody(run, prompt, sys = {}) {
     L.push('<span class="sel"><span class="a4 b">kit/</span>         </span>');
     L.push('package.json');
     L.push('<span class="a2 b">build.sh</span>');
+  } else if (/clock|tclock|tty-clock|time/.test(r)) {
+    L.push('');
+    for (const row of bigTime('21:47')) L.push(`<span class="a5">${row}</span>`);
+    L.push('', '<span class="a8">  tue 24 nov</span>');
   } else if (/fetch|neofetch|fastfetch/.test(r)) {
     for (const [k, v] of [['os', sys.os], ['shell', sys.shell], ['term', sys.term], ['font', sys.font]]) if (v) L.push(`<span class="a8">${k.padEnd(6)}</span><span class="a4">${esc(v)}</span>`);
   } else {
@@ -312,7 +328,7 @@ pre.term{position:relative;z-index:1;margin:0;padding:${pt}px ${pr_}px ${pb}px $
 ${ansiCss}.b{font-weight:bold}
 .sel{background:var(--sel);color:var(--fg)}
 .cur{${cursorCss};display:inline-block;width:.6em}
-.layout{position:relative;z-index:1;display:flex;min-height:300px;padding:${gap}px}
+.layout{position:relative;z-index:1;display:flex;min-height:300px;aspect-ratio:16/10;padding:${gap}px}
 .layout>.split,.cell{display:flex;flex:1 1 0;min-width:0;min-height:0}
 .split{display:flex;flex:1 1 0;min-width:0;min-height:0}.split.row{flex-direction:row}.split.column{flex-direction:column}
 .pane{flex:1 1 0;min-width:0;overflow:hidden;${screenBg};border:1px solid ${C.mix(pal.background, pal.foreground, 0.14)};border-radius:${gap ? 8 : 0}px}
