@@ -17,7 +17,7 @@
       "detect": ["defaults", "read", "/Applications/iTerm.app/Contents/Info", "CFBundleShortVersionString"],
       "config": ["{mac-app-support}/iTerm2/DynamicProfiles/", "~/Library/Preferences/com.googlecode.iterm2.plist"],
       "validate": ["plutil", "-lint", "{file}"],
-      "notes": "Agents should write a Dynamic Profile JSON file into DynamicProfiles/ (loaded live; no restart); do not edit the binary preferences plist while iTerm2 runs. A malformed file in that folder makes iTerm2 skip all Dynamic Profile changes, so lint first. `plutil -lint` accepting JSON input is assumed, not confirmed in the docs read; if it rejects the file use `python3 -m json.tool {file}`. Errors are logged in Console.app. Preference-level (non-profile) settings such as tab bar position are not Dynamic Profile keys."
+      "notes": "Agents should write a Dynamic Profile JSON file into DynamicProfiles/ (loaded live; no restart); do not edit the binary preferences plist while iTerm2 runs. A malformed file in that folder makes iTerm2 skip all Dynamic Profile changes, so lint first. `plutil -lint` rejects JSON Dynamic Profiles (Unexpected character {, seen in CI on macOS), so it only checks the .plist; `tmt verify` already parses every .json it writes. Errors are logged in Console.app. Preference-level (non-profile) settings such as tab bar position are not Dynamic Profile keys."
     }
   },
   "capabilities": {

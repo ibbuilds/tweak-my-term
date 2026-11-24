@@ -13,11 +13,5 @@
       "file": "files/001-crt-amber.glsl"
     }
   ],
-  "checks": [
-    [
-      "ghostty",
-      "+validate-config",
-      "--config-file={file}"
-    ]
-  ]
+  "checks": []
 }

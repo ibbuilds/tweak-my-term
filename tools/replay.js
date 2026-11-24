@@ -54,7 +54,7 @@ function record(runDir, name, home, opts = {}) {
   const homes = opts.homes || [path.join(runDir, '..', '..', '..', 'home'), os.homedir()];
   // Checks that name files outside the home (the run folder) can't be replayed elsewhere.
   const inRun = (a) => portableArg(a, [runDir]) !== a;
-  const checks = (st.checks || []).filter((c) => !c.some(inRun)).map((c) => c.map((a) => portableArg(a, homes)))
+  const checks = (st.checks || []).filter((c) => !c.some(inRun) && !c.some((a) => String(a).includes('{file}'))).map((c) => c.map((a) => portableArg(a, homes)))
     .filter((c) => !c.some((a) => /^([A-Za-z]:)?[\\/]/.test(String(a)) && !String(a).startsWith('~')));
   fs.writeFileSync(path.join(out, 'replay.json'), JSON.stringify({ os: st.os, home, files, checks }, null, 2) + '\n');
   return out;

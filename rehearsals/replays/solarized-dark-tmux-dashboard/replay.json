@@ -48,11 +48,5 @@
       "file": "files/008-gitconfig.block"
     }
   ],
-  "checks": [
-    [
-      "plutil",
-      "-lint",
-      "~/Library/Application Support/iTerm2/DynamicProfiles/tweak-my-term.json"
-    ]
-  ]
+  "checks": []
 }
