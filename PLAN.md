@@ -341,9 +341,14 @@ CI also runs the behavior evals: on Windows the eval runner refuses Bash-grantin
 (boxes spot-checked on crops; 42 have no real terminal and sink). M13: dogfood on a
 copied fake home ran capture → audit → stage → plan → approve → apply → verify →
 re-audit → restore, byte-identical; it found and fixed a gap (verify now fails when a
-startup pane runs a missing program). Two new evals written; not yet run (see M14).
-Next: annotate further down the list as needed (`tools/annotate.js prepare --top N`
-skips annotated ids), a preview-in-browser check in the dogfood, then M14.
+startup pane runs a missing program). Preview of a 3-pane look checked in headless
+Edge: panes, focus accent and palette render; no page console errors, no network
+requests. Two new evals written; not yet run (see M14). M14 prep: manual `evals`
+workflow (Linux, bubblewrap sandbox); history rewritten on a local branch without the
+author's dotfiles and derived art (same final tree, every historical blob passes the
+privacy rules); push waits for the author's go-ahead.
+Next: M14, then annotate further down the list as needed (`tools/annotate.js prepare
+--top N` skips annotated ids).
 
 ## 6. Risks
 

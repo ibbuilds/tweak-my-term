@@ -104,6 +104,10 @@ claude plugin validate .
 claude plugin eval . --tag trigger
 ```
 
+Cases that grant Bash need Claude Code's shell sandbox, so run them on macOS, Linux or
+WSL2, or with the manual `evals` workflow in GitHub Actions (needs an
+`ANTHROPIC_API_KEY` secret; every run is billed).
+
 See [`PLAN.md`](PLAN.md) for the design and [`AGENTS.md`](AGENTS.md) for conventions.
 
 ## License and data

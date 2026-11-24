@@ -1,0 +1,74 @@
+name: evals
+
+# Behavior evals (claude plugin eval). Manual only: every run is real model calls on
+# the repo's ANTHROPIC_API_KEY secret. Linux, because cases that grant Bash need
+# Claude Code's shell sandbox (bubblewrap), which native Windows does not have.
+on:
+  workflow_dispatch:
+    inputs:
+      case:
+        description: Case name glob (empty = all cases)
+        required: false
+        default: ""
+      runs:
+        description: Runs per case
+        required: false
+        default: "1"
+      max_cost_usd:
+        description: Hard cost ceiling in USD
+        required: false
+        default: "10"
+
+permissions:
+  contents: read
+
+jobs:
+  evals:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Shell sandbox dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bubblewrap socat
+          # Ubuntu 24.04 blocks unprivileged user namespaces; allow them for bwrap only.
+          sudo tee /etc/apparmor.d/bwrap > /dev/null <<'EOF'
+          abi <abi/4.0>,
+          include <tunables/global>
+
+          profile bwrap /usr/bin/bwrap flags=(unconfined) {
+            userns,
+            include if exists <local/bwrap>
+          }
+          EOF
+          sudo systemctl reload apparmor
+      - name: Install Claude Code
+        run: |
+          curl -fsSL https://claude.ai/install.sh | bash
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Run evals
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CASE: ${{ inputs.case }}
+          RUNS: ${{ inputs.runs }}
+          MAX_COST: ${{ inputs.max_cost_usd }}
+        run: |
+          claude --version
+          args=(. --trust-plugin --ablation none --allow-tools Bash --runs "$RUNS"
+                --model claude-sonnet-5-5 --judge-model claude-haiku-5-5
+                --no-publish --max-cost-usd "$MAX_COST" --json "$RUNNER_TEMP/evals.json")
+          if [ -n "$CASE" ]; then args+=(--case "$CASE"); fi
+          claude plugin eval "${args[@]}"
+      - name: Keep results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: |
+            ${{ runner.temp }}/evals.json
+            evals/results/
+          if-no-files-found: ignore
