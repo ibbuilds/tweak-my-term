@@ -41,7 +41,7 @@ Gate
 
 Design kit
   tmt art <command> ...                    palette, scheme, contrast, treat, scene, ascii, preview, swatch (tmt art help)
-  tmt inspire <query...> [--layout kind] [--limit N] [--sort relevance|new|random --seed n] [--save n|all dir]
+  tmt inspire <query...> [--layout kind] [--has clock,...] [--complexity 4+] [--limit N] [--save n|all dir [--crop]]
                                            search 4,000+ r/unixporn rices; varied results, screenshots to review
   tmt shot [--title text] [--delay s]      screenshot the terminal window into the run
   tmt catalog list | show <id> | cap <capability> | paths

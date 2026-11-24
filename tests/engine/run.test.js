@@ -158,6 +158,32 @@ test('verify fails on a broken JSON target and passes on a good one', () => {
   assert.strictEqual(run.current().status, 'failed');
 });
 
+test('verify fails when a Windows Terminal startup pane runs a command that is not installed', () => {
+  freshHome();
+  run.newRun();
+  const settings = (sa) => JSON.stringify({ startupActions: sa, profiles: { defaults: {} } });
+  run.stageFile('write', '~/t/settings.json', src('settings.json', settings('new-tab ; split-pane -V -s 0.35 --title "Mon" not-a-real-tool-xyz --flag ; move-focus left ; split-pane -H node -v')));
+  run.approve(run.plan().hash);
+  run.apply();
+  const v = run.verify();
+  assert.strictEqual(v.ok, false);
+  const c = v.checks.find((x) => /startup panes/.test(x.name));
+  assert.ok(c, v.checks.map((x) => x.name).join(' | '));
+  assert.match(c.output, /not-a-real-tool-xyz/);
+  assert.doesNotMatch(c.output, /\bnode\b/);
+});
+
+test('verify passes startup panes whose commands are installed', () => {
+  freshHome();
+  run.newRun();
+  run.stageFile('write', '~/t/settings.json', src('settings.json', JSON.stringify({ startupActions: 'new-tab -p "PowerShell" ; sp -V node -v ; focus-tab -t 0' })));
+  run.approve(run.plan().hash);
+  run.apply();
+  const v = run.verify();
+  assert.strictEqual(v.ok, true, JSON.stringify(v.checks));
+  assert.ok(v.checks.some((x) => /startup panes/.test(x.name)));
+});
+
 test('verify runs staged checks and reports their output', () => {
   freshHome();
   run.newRun();

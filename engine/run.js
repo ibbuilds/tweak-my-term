@@ -310,6 +310,27 @@ function expandArg(a) {
   return a;
 }
 
+// Commands that Windows Terminal startupActions run in a tab or pane: the first word after
+// new-tab/split-pane and their flags. A pane whose program is missing opens as an error.
+const WT_VALUE_FLAGS = new Set(['-p', '--profile', '-d', '--startingDirectory', '--title', '--tabColor', '--colorScheme', '-s', '--size']);
+function wtWords(cmd) {
+  return (cmd.match(/"[^"]*"|\S+/g) || []).map((w) => w.replace(/^"|"$/g, ''));
+}
+function startupCommands(sa) {
+  const out = [];
+  for (const part of sa.split(/(?<!\\);/)) {
+    const w = wtWords(part.trim());
+    if (!['new-tab', 'nt', 'split-pane', 'sp'].includes(w[0])) continue;
+    for (let i = 1; i < w.length; i++) {
+      if (WT_VALUE_FLAGS.has(w[i])) { i++; continue; }
+      if (w[i].startsWith('-')) continue;
+      out.push(w[i]);
+      break;
+    }
+  }
+  return out;
+}
+
 function verify({ exec = sys.exec } = {}) {
   const st = current();
   if (!st || !st.applied || st.status === 'restored') throw new GateError('nothing applied to verify: run `tmt apply` first');
@@ -318,10 +339,19 @@ function verify({ exec = sys.exec } = {}) {
     const c = autoCheck(f.abs);
     if (c) checks.push(c);
   }
+  for (const f of st.plan.files) {
+    let sa = null;
+    try { sa = /.jsonc?$/i.test(f.abs) ? jsonc.parse(fs.readFileSync(f.abs, 'utf8')).startupActions : null; } catch { /* the JSON check reports it */ }
+    if (typeof sa === 'string') checks.push({ name: `startup panes start installed programs: ${paths.pretty(f.abs)}`, internal: 'panes', commands: startupCommands(sa) });
+  }
   for (const argv of st.checks) checks.push({ name: argv.join(' '), argv: argv.map(expandArg) });
   const results = checks.map((c) => {
     if (c.internal === 'json') {
       try { jsonc.parse(fs.readFileSync(c.file, 'utf8')); return { name: c.name, status: 0 }; } catch (e) { return { name: c.name, status: 1, output: e.message }; }
+    }
+    if (c.internal === 'panes') {
+      const missing = c.commands.filter((cmd) => !sys.resolveCmd(cmd) && !fs.existsSync(cmd));
+      return missing.length ? { name: c.name, status: 1, output: `not installed or not on PATH: ${missing.join(', ')}` } : { name: c.name, status: 0 };
     }
     if (!sys.resolveCmd(c.argv[0]) && !fs.existsSync(c.argv[0])) return { name: c.name, status: 0, skipped: `${c.argv[0]} not installed` };
     const r = exec(c.argv[0], c.argv.slice(1), { timeout: 60000 });
