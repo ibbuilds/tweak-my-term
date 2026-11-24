@@ -242,3 +242,23 @@ test('screenshot: reports failure when the browser writes nothing', () => {
   assert.strictEqual(r.ok, false);
   assert.match(r.error, /boom|no image/);
 });
+
+test('findBrowser: Windows env names in any case (Git Bash passes PROGRAMFILES)', () => {
+  const { findBrowser } = require('../../kit/preview');
+  const want = 'C:\\PF\\Microsoft\\Edge\\Application\\msedge.exe';
+  const b = findBrowser({ os: 'windows', env: { PROGRAMFILES: 'C:\\PF' }, exists: (p) => p === want, which: () => null });
+  assert.strictEqual(b, want);
+});
+
+test('findBrowser: looks on the host OS, not the simulated TMT_OS', () => {
+  const { findBrowser } = require('../../kit/preview');
+  const prev = process.env.TMT_OS;
+  process.env.TMT_OS = process.platform === 'darwin' ? 'linux' : 'macos';
+  const seen = [];
+  try { findBrowser({ env: { ProgramFiles: 'C:\\PF' }, exists: (p) => { seen.push(p); return false; }, which: () => null }); } finally {
+    if (prev === undefined) delete process.env.TMT_OS; else process.env.TMT_OS = prev;
+  }
+  if (process.platform === 'win32') assert.ok(seen.some((p) => p.startsWith('C:\\PF')), seen.join(' '));
+  else if (process.platform === 'darwin') assert.ok(seen.some((p) => p.startsWith('/Applications')), seen.join(' '));
+  else assert.ok(!seen.some((p) => p.startsWith('/Applications')), seen.join(' '));
+});

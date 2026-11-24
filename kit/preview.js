@@ -407,7 +407,10 @@ function swatch(palette) {
 
 const BROWSERS = {
   windows: (env) => {
-    const roots = [env['ProgramFiles(x86)'], env.ProgramFiles, env.LOCALAPPDATA].filter(Boolean);
+    // Windows env names are case-insensitive, but a copied env object is not (Git Bash
+    // passes PROGRAMFILES), so look them up in any case.
+    const get = (k) => env[Object.keys(env).find((n) => n.toLowerCase() === k.toLowerCase())];
+    const roots = [get('ProgramFiles(x86)'), get('ProgramFiles'), get('LOCALAPPDATA')].filter(Boolean);
     const rel = [['Microsoft', 'Edge', 'Application', 'msedge.exe'], ['Google', 'Chrome', 'Application', 'chrome.exe'],
       ['BraveSoftware', 'Brave-Browser', 'Application', 'brave.exe'], ['Chromium', 'Application', 'chrome.exe']];
     return roots.flatMap((r) => rel.map((p) => require('path').win32.join(r, ...p)));
@@ -419,7 +422,8 @@ const ON_PATH = ['google-chrome', 'google-chrome-stable', 'chromium', 'chromium-
 
 /** Path of a Chromium-family browser on this machine, or null. */
 function findBrowser({ os, env = process.env, exists = require('fs').existsSync, which = require('../engine/sys').which } = {}) {
-  const osName = os || require('../engine/paths').platform();
+  // The browser runs on this machine, so the host OS decides, never the simulated TMT_OS.
+  const osName = os || { win32: 'windows', darwin: 'macos' }[process.platform] || 'linux';
   const file = (BROWSERS[osName] || BROWSERS.linux)(env).find((p) => exists(p));
   if (file) return file;
   for (const c of ON_PATH) { const w = which(c); if (w) return w; }
