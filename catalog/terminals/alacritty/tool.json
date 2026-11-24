@@ -16,8 +16,7 @@
       ],
       "detect": ["alacritty", "--version"],
       "config": ["{appdata}/alacritty/alacritty.toml"],
-      "validate": ["alacritty", "migrate", "--dry-run", "--config-file", "{file}"],
-      "notes": "Alacritty does not create the config file or folder. The validate command parses the TOML and prints the migrated config to stdout without writing; it checks syntax and renamed keys, and whether unknown keys fail is not confirmed (Alacritty also logs warnings for unused keys at startup). Default shell on Windows is powershell. Needs ConPTY (Windows 10 1809+) and OpenGL ES 2.0."
+      "notes": "Alacritty does not create the config file or folder. No config check command: `alacritty migrate --dry-run` exits with an error on any file already in TOML format, so it is not a validator. Config errors and unused keys show in the alacritty log at startup. Default shell on Windows is powershell. Needs ConPTY (Windows 10 1809+) and OpenGL ES 2.0."
     },
     "macos": {
       "supported": true,
@@ -26,7 +25,6 @@
       ],
       "detect": ["alacritty", "--version"],
       "config": ["{xdg-config}/alacritty/alacritty.toml", "~/.config/alacritty/alacritty.toml", "~/.alacritty.toml"],
-      "validate": ["alacritty", "migrate", "--dry-run", "--config-file", "{file}"],
       "notes": "Unix lookup order: $XDG_CONFIG_HOME/alacritty/alacritty.toml, $XDG_CONFIG_HOME/alacritty.toml, ~/.config/alacritty/alacritty.toml, ~/.alacritty.toml, /etc/alacritty/alacritty.toml. macOS has native tab actions (CreateNewTab, SelectNextTab) bindable in keyboard.bindings; there is no tab bar styling."
     },
     "linux": {
@@ -38,7 +36,6 @@
       ],
       "detect": ["alacritty", "--version"],
       "config": ["{xdg-config}/alacritty/alacritty.toml", "~/.config/alacritty/alacritty.toml", "~/.alacritty.toml"],
-      "validate": ["alacritty", "migrate", "--dry-run", "--config-file", "{file}"],
       "notes": "Blur works only on KDE Wayland. Needs a compositor for opacity on X11. Package availability per distribution release was not individually checked; INSTALL.md on GitHub lists the packagers."
     }
   },

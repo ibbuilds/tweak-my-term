@@ -317,12 +317,12 @@ test("verify runs the catalog tool's own validator on a config it knows", () => 
   process.env.TMT_OS = 'linux';
   try {
     run.newRun();
-    run.stageFile('write', '{xdg-config}/alacritty/alacritty.toml', src('a.toml', '[font]\nsize = 12\n'));
-    run.stageFile('write', '{xdg-config}/alacritty/notes.txt', src('n.txt', 'x'));
+    run.stageFile('write', '{xdg-config}/ghostty/config.ghostty', src('c.ghostty', 'font-size = 12\n'));
+    run.stageFile('write', '{xdg-config}/ghostty/notes.txt', src('n.txt', 'x'));
     run.approve(run.plan().hash);
     run.apply();
     const names = run.verify().checks.map((c) => c.name);
-    assert.ok(names.some((n) => /^alacritty migrate --dry-run --config-file .*alacritty\.toml$/.test(n)), names.join('\n'));
+    assert.ok(names.includes('ghostty +validate-config --config-file=~/.config/ghostty/config.ghostty'), names.join('\n'));
     assert.ok(!names.some((n) => /notes\.txt/.test(n)), names.join('\n'));
   } finally { if (prevOs === undefined) delete process.env.TMT_OS; else process.env.TMT_OS = prevOs; }
 });
