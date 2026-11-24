@@ -192,12 +192,13 @@ function plan({ os: osName } = {}) {
   const fontsNeeded = st.fonts.map((name) => ({ name, present: fonts.installed(name, st.os).length > 0 }));
   const installs = st.installs.map((i) => ({ ...i, command: installers.display(i.manager, i.id), sudo: installers.needsSudo(i.manager) }));
   const hash = sha(JSON.stringify({ files: files.map((f) => [f.kind, f.abs, f.beforeHash, f.afterHash]), installs: st.installs, fonts: st.fonts, checks: st.checks }));
-  st.plan = { hash, at: now(), files: files.map(({ diff: _d, ...rest }) => rest), installs, fonts: fontsNeeded, checks: st.checks };
+  const notCovered = uncovered(dir, files, osName || st.os);
+  st.plan = { hash, at: now(), files: files.map(({ diff: _d, ...rest }) => rest), installs, fonts: fontsNeeded, checks: st.checks, uncovered: notCovered };
   st.status = 'planned';
   st.approved = null;
   fs.writeFileSync(path.join(dir, 'plan.diff'), files.map((f) => `=== ${f.change.toUpperCase()} ${f.display} (${f.kind})\n${f.diff}`).join('\n'));
   save(st);
-  return { id: st.id, hash, files, installs, fonts: fontsNeeded, checks: st.checks, steps: designSteps(dir), uncovered: uncovered(dir, files, osName || st.os) };
+  return { id: st.id, hash, files, installs, fonts: fontsNeeded, checks: st.checks, steps: designSteps(dir), uncovered: notCovered };
 }
 
 /**

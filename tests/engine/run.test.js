@@ -354,6 +354,7 @@ test('plan lists the user\'s shells and terminals that the staged files leave un
     }));
     run.stageFile('block', '~/.bashrc', src('b', 'PS1=x'));
     assert.deepStrictEqual(run.plan().uncovered, ['zsh', 'kitty']);
+    assert.deepStrictEqual(run.load(st.id).plan.uncovered, ['zsh', 'kitty'], 'kept in the run state for graders');
     run.stageFile('write', '~/.zshrc', src('z', 'PROMPT=x'));
     run.stageFile('write', '~/.config/kitty/kitty.conf', src('k', 'font_size 12'));
     assert.deepStrictEqual(run.plan().uncovered, []);

@@ -124,6 +124,7 @@ function grade(turns, run, userMsgs, scenarioDir) {
   try { look = JSON.parse(fs.readFileSync(path.join(run.dir, 'look.json'), 'utf8')); } catch { /* none */ }
   return {
     status: st ? st.status : 'no run',
+    notRestyled: st && st.plan ? st.plan.uncovered : null,
     questionsAnswered: userMsgs.filter((m) => m !== STOP).length,
     cost: Number(turns.reduce((s, t) => s + t.cost, 0).toFixed(2)),
     agentTurns: turns.reduce((s, t) => s + t.turns, 0),
