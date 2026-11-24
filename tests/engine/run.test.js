@@ -119,7 +119,7 @@ test('a staged check that names a file by a relative path still finds it at veri
   process.chdir(dir);
   try { run.stageCheck([process.execPath, '-e', 'require("fs").accessSync(process.argv[1])', 'block.sh', 'not-a-file']); } finally { process.chdir(cwd); }
   const argv = run.current().checks[0];
-  assert.strictEqual(argv[3], path.join(dir, 'block.sh'));
+  assert.strictEqual(fs.realpathSync(argv[3]), fs.realpathSync(path.join(dir, 'block.sh')));
   assert.strictEqual(argv[4], 'not-a-file');
 });
 
