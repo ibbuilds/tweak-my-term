@@ -423,3 +423,17 @@ test('cli: --layout is a filter', () => {
   assert.strictEqual(j.filters.layout, 'panes');
   assert.deepStrictEqual(j.results.map((x) => x.id).sort(), ['fx0006', 'fx0010', 'fx0011']);
 });
+
+test('mood words from the lexicon (skills/setup/references/moods.md) expand to searchable words', () => {
+  for (const [mood, word] of [['vaporwave', 'synthwave'], ['lofi', 'cozy'], ['paper', 'light'], ['kawaii', 'pastel'], ['noir', 'monochrome'], ['y2k', 'aqua'], ['solarpunk', 'green'], ['dracula', 'dark'], ['brutalist', 'monochrome']]) {
+    assert.ok((I.MOODS[mood] || []).includes(word), `${mood} -> ${word}`);
+  }
+});
+
+test('a mood word that is also a theme package name does not match the tools list', async () => {
+  const base = { ...byId.fx0001, seen: null, colorscheme: null };
+  const pkg = { ...base, id: 'pkg', title: 'my desktop', tools: ['paper', 'kitty'], score: 5000 };
+  const lit = { ...base, id: 'lit', title: 'a bright day', tools: ['kitty'], score: 100, seen: { mood: ['bright'], layout: 'single', complexity: 2, terminals: [] } };
+  const r = await I.searchDetailed('paper', { entries: [pkg, lit], diverse: false });
+  assert.deepStrictEqual(r.results.map((x) => x.id), ['lit']);
+});

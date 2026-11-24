@@ -276,6 +276,29 @@ const MOODS = {
   bright: ['light', 'white', 'latte'],
   colorful: ['rainbow', 'vibrant', 'neon', 'dracula', 'pywal'],
   muted: ['soft', 'nord', 'kanagawa', 'rosepine'],
+  // the rest of the mood lexicon (skills/setup/references/moods.md)
+  vaporwave: ['synthwave', 'retrowave', 'outrun', 'pastel', 'pink', 'neon', 'aesthetic'],
+  aesthetic: ['vaporwave', 'pastel', 'synthwave'],
+  outrun: ['synthwave', 'retrowave', 'neon', 'vaporwave'],
+  retrowave: ['synthwave', 'outrun', 'vaporwave', 'neon'],
+  lofi: ['cozy', 'chill', 'music', 'anime', 'warm', 'rain'],
+  chill: ['lofi', 'cozy', 'calm'],
+  calm: ['minimal', 'soft', 'muted', 'nord'],
+  paper: ['light', 'bright', 'latte', 'solarized', 'cream', 'white'],
+  writer: ['paper', 'light', 'minimal'],
+  kawaii: ['pastel', 'cute', 'pink', 'anime', 'catppuccin'],
+  anime: ['cute', 'pastel', 'kawaii', 'lofi'],
+  noir: ['monochrome', 'black', 'dark', 'minimal'],
+  gothic: ['dracula', 'dark', 'black', 'monochrome'],
+  dracula: ['dark', 'purple', 'gothic'],
+  monochrome: ['black', 'white', 'minimal', 'gray'],
+  brutalist: ['monochrome', 'minimal', 'black', 'white'],
+  y2k: ['aqua', 'glass', 'chrome', 'blue', 'bright'],
+  glass: ['blur', 'transparent', 'aqua'],
+  solarpunk: ['green', 'nature', 'everforest', 'bright', 'gold'],
+  ice: ['nord', 'blue', 'iceberg', 'cold'],
+  sunset: ['synthwave', 'orange', 'pink', 'warm'],
+  space: ['stars', 'galaxy', 'dark', 'purple'],
 };
 
 const THEMES = new Set(['tokyonight', 'rosepine', 'onedark', 'onelight', 'gruvbox', 'catppuccin', 'solarized', 'everforest', 'kanagawa', 'oxocarbon', 'palenight']);
@@ -355,6 +378,8 @@ function scoreEntry(e, terms) {
   for (const q of terms) {
     const key = OS_WORDS[q.key] ? OS_WORDS[q.key] : q.key;
     const d = best(f, key);
+    // A mood word in the tools list is a theme package (Paper icons, Nordic GTK), not the mood.
+    if (q.expansions.length && d.field === 'tools') { d.w = 0; d.field = null; }
     // What the screenshot shows beats tags: complexity words and content words.
     if (q.complexity || q.content) {
       let w = 0;
