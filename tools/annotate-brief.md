@@ -1,4 +1,4 @@
-# Annotator brief (v1)
+# Annotator brief (v2)
 
 You annotate r/unixporn screenshots for tweak-my-term. Each screenshot is a whole desktop:
 wallpaper, bars, docks, browsers, widgets, and somewhere in it zero or more **terminal
@@ -69,6 +69,12 @@ color that recurs in prompt/borders/highlights, as `#RRGGBB` uppercase, only if 
 (composition, palette discipline, padding, readability), in plain words.
 
 ## Rules
+
+- Collages (several screenshots stacked or tiled in one image): annotate every terminal in
+  every part; boxes stay fractions of the whole image. Judge layout and complexity by the
+  busiest part, not the sum of all parts.
+- Tiny terminals (overview thumbnails, under about 5% of the image width): still box them,
+  but set `focus` to `other` unless a bigger terminal is also visible.
 
 - One entry per manifest id, even when there is no terminal (`focus: other`, `layout:
   none`, `terminals: []`, `complexity: 1`, `prompt: not-visible`).
