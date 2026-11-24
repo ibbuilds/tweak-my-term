@@ -193,12 +193,43 @@ function plan({ os: osName } = {}) {
   const installs = st.installs.map((i) => ({ ...i, command: installers.display(i.manager, i.id), sudo: installers.needsSudo(i.manager) }));
   const hash = sha(JSON.stringify({ files: files.map((f) => [f.kind, f.abs, f.beforeHash, f.afterHash]), installs: st.installs, fonts: st.fonts, checks: st.checks }));
   const notCovered = uncovered(dir, files, osName || st.os);
-  st.plan = { hash, at: now(), files: files.map(({ diff: _d, ...rest }) => rest), installs, fonts: fontsNeeded, checks: st.checks, uncovered: notCovered, undecided: undecided(dir) };
+  st.plan = { hash, at: now(), files: files.map(({ diff: _d, ...rest }) => rest), installs, fonts: fontsNeeded, checks: st.checks, uncovered: notCovered, undecided: undecided(dir), layoutSame: layoutSame(dir), toolsMissing: toolsMissing(dir, st), steps: designSteps(dir) };
   st.status = 'planned';
   st.approved = null;
   fs.writeFileSync(path.join(dir, 'plan.diff'), files.map((f) => `=== ${f.change.toUpperCase()} ${f.display} (${f.kind})\n${f.diff}`).join('\n'));
   save(st);
-  return { id: st.id, hash, files, installs, fonts: fontsNeeded, checks: st.checks, steps: designSteps(dir), uncovered: notCovered, lookGaps: lookGaps(dir), undecided: undecided(dir) };
+  return { id: st.id, hash, files, installs, fonts: fontsNeeded, checks: st.checks, steps: designSteps(dir), uncovered: notCovered, lookGaps: lookGaps(dir), undecided: undecided(dir), layoutSame: layoutSame(dir), toolsMissing: toolsMissing(dir, st) };
+}
+
+const readJson = (dir, name) => { try { return JSON.parse(fs.readFileSync(path.join(dir, name), 'utf8')); } catch { return null; } };
+const leaves = (p) => (!p ? 1 : Array.isArray(p.panes) ? p.panes.reduce((n, c) => n + leaves(c), 0) : 1);
+
+/**
+ * The look keeps the layout the user has now: no more panes than today, no multiplexer, no
+ * drop-down window. null without current.json (tmt capture) or look.json.
+ */
+function layoutSame(dir) {
+  const cur = readJson(dir, 'current.json'), look = readJson(dir, 'look.json');
+  if (!cur || !look) return null;
+  const now = Math.max(1, ...Object.values(cur.terminals || {}).map((t) => (t && t.layout && t.layout.panes) || 1));
+  const l = look.layout || {};
+  if ((l.multiplexer && !['none', 'native'].includes(l.multiplexer)) || l.quake) return false;
+  return leaves(l.arrangement) <= now;
+}
+
+/** Catalog tools look.json uses that detect.json shows missing and no staged install provides. */
+function toolsMissing(dir, st) {
+  const look = readJson(dir, 'look.json'), d = readJson(dir, 'detect.json');
+  if (!look || !d) return null;
+  const catalog = require('./catalog');
+  return (look.tools || []).filter((id) => {
+    const t = catalog.get(id);
+    if (!t) return false;
+    const seen = (d.tools && d.tools[id]) || (d.terminals && d.terminals[id]);
+    if (seen && seen.installed) return false;
+    const list = (t.os && t.os[st.os] && t.os[st.os].install) || [];
+    return !st.installs.some((i) => list.some((x) => x.manager === i.manager && x.id === i.id));
+  });
 }
 
 /**

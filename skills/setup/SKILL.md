@@ -133,7 +133,14 @@ outcome counts, not the source. Shortcuts when they fit:
   (terminal, prompt, multiplexer, btop, editor...). Any of 1,000+ schemes works ("Gruvbox Dark Hard").
 Write the parts and their sources in `brief.md`. For each part, find the tool
 that does it on the user's OS: `tmt catalog cap <capability>` and `tmt catalog show <id>`.
-Prefer what is already installed. If something can't be done on their terminal (e.g. GIF
+Pick the best free tool for each part, installed or not: the references' tools (a prompt
+engine such as oh-my-posh or starship, fastfetch, btop, eza, bat, fzf, zoxide, delta, lazygit,
+a multiplexer, a Nerd Font) are how a look gets built, not extras. Ask once which to install
+(one Asked line, the full list as the recommended default) and stage every one the user
+accepts (`tmt stage install auto <id>`, `tmt stage font`); `tmt plan` lists "Tools not
+installed" for any tool in look.json without one. A request for a new or different terminal
+also gets a new layout: `tmt plan` flags "Layout same as now" (same pane count, no
+multiplexer, no drop-down). If something can't be done on their terminal (e.g. GIF
 background, shaders, blur), say so and give the closest alternative, or propose a
 terminal that can (and what switching costs). Tools missing from the catalog: research the
 current official docs, and mark the result "unverified" to the user.
@@ -230,7 +237,8 @@ times before/after, and anything that couldn't be done with the closest alternat
 
 - The user approves the look (preview) and the plan (diff) before anything is written.
 - One run = one coherent change. Never write outside a run.
-- Don't install what wasn't asked for. Prefer per-user installs.
+- Install only what the user accepted (in Asked and in the plan); do propose every tool the
+  look needs. Prefer per-user installs.
 - Generated or user-owned images only. Third-party screenshots are linked; download one
   only as the user's anchor, kept local.
 - Never print secrets from existing configs (tokens in rc files, env exports).

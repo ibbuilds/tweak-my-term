@@ -477,3 +477,34 @@ test('plan reports whether the brief records the questions asked and the user an
   fs.writeFileSync(path.join(dir, 'brief.md'), ['# Brief', 'Asked:', '- Q: side panes? A: fetch and a clock', '- Q: icons? A: yes, per shell', '- Q: speed or looks? A: looks, under a second', 'Parts:', '- p', ''].join('\n'));
   assert.strictEqual(run.plan().steps.asked, true);
 });
+
+test('plan flags a layout no different from the one the user has now', () => {
+  freshHome();
+  const st = run.newRun();
+  run.stageFile('write', '~/x.txt', src('x', 'x'));
+  const dir = run.runDir(st.id);
+  assert.strictEqual(run.plan().layoutSame, null, 'no current.json: unknown');
+  fs.writeFileSync(path.join(dir, 'current.json'), JSON.stringify({ terminals: { 'windows-terminal': { layout: { panes: 2 } } } }));
+  fs.writeFileSync(path.join(dir, 'look.json'), JSON.stringify({ name: 'v', layout: { arrangement: { split: 'row', sizes: [60, 40], panes: [{ run: 'shell' }, { run: 'fastfetch' }] } } }));
+  assert.strictEqual(run.plan().layoutSame, true, 'two panes before, two panes now');
+  fs.writeFileSync(path.join(dir, 'look.json'), JSON.stringify({ name: 'v', layout: { arrangement: { split: 'row', sizes: [60, 40], panes: [{ run: 'shell' }, { split: 'column', sizes: [50, 50], panes: [{ run: 'fastfetch' }, { run: 'btop' }] }] } } }));
+  assert.strictEqual(run.plan().layoutSame, false, 'a third pane with its own job');
+  fs.writeFileSync(path.join(dir, 'look.json'), JSON.stringify({ name: 'v', layout: { multiplexer: 'zellij' } }));
+  assert.strictEqual(run.plan().layoutSame, false, 'a multiplexer is a new layout');
+});
+
+test('plan flags tools the look uses that are neither installed nor staged to install', () => {
+  freshHome();
+  const prevOs = process.env.TMT_OS;
+  process.env.TMT_OS = 'linux';
+  try {
+    const st = run.newRun();
+    const dir = run.runDir(st.id);
+    fs.writeFileSync(path.join(dir, 'detect.json'), JSON.stringify({ tools: { bash: { installed: true }, starship: { installed: true }, fastfetch: { installed: false } }, terminals: {}, configs: [] }));
+    fs.writeFileSync(path.join(dir, 'look.json'), JSON.stringify({ name: 'v', tools: ['starship', 'fastfetch', 'not-a-catalog-tool'] }));
+    run.stageFile('write', '~/x.txt', src('x', 'x'));
+    assert.deepStrictEqual(run.plan().toolsMissing, ['fastfetch']);
+    run.stageInstall('apt', 'fastfetch');
+    assert.deepStrictEqual(run.plan().toolsMissing, []);
+  } finally { if (prevOs === undefined) delete process.env.TMT_OS; else process.env.TMT_OS = prevOs; }
+});

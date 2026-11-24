@@ -89,6 +89,8 @@ function planText(p) {
     lines.push('Elements undecided (look.json elements["<tool>.<element>"] = { choice, why }, or "keep" where not in restyle; see catalog/elements.json):');
     for (const [t, list] of Object.entries(p.undecided)) lines.push(`  ${t}: ${list.join(', ')}`);
   } else if (p.undecided) lines.push('Elements: every element of every detected shell and terminal is decided, each with the need it serves.');
+  if (p.layoutSame) lines.push('Layout same as now: no more panes than today, no multiplexer, no drop-down. A new terminal gets a new layout from the references (panes with a job each, a dashboard, tabs, a multiplexer) unless the user asked to keep theirs; record that answer in Asked.');
+  if (p.toolsMissing && p.toolsMissing.length) lines.push(`Tools not installed: ${p.toolsMissing.join(', ')}. The look uses them: \`tmt stage install auto <id>\` for each (the user approves installs with the plan), or drop them from look.json.`);
   if (p.uncovered === null) lines.push('Coverage: unknown (no detect.json in the run): run `tmt detect` so the plan can check every shell and terminal is restyled.');
   else if (p.uncovered && p.uncovered.length) lines.push(`Not restyled: ${p.uncovered.join(', ')}. A look covers the whole terminal: stage their prompt, colors and banner too, or tell the user why they are left out.`);
   else if (p.uncovered) lines.push('Coverage: every detected shell and terminal is restyled.');
