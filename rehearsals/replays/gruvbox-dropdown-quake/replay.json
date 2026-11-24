@@ -11,7 +11,9 @@
   "checks": [
     [
       "dconf",
-      "--version"
+      "compile",
+      "/dev/null",
+      "~/.config/tmt"
     ]
   ]
 }

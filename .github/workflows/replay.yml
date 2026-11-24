@@ -60,7 +60,9 @@ jobs:
           Invoke-RestMethod get.scoop.sh -OutFile install-scoop.ps1
           .\install-scoop.ps1 -RunAsAdmin
           $shims = Join-Path $env:USERPROFILE 'scoop\shims'
-          & (Join-Path $shims 'scoop.cmd') install btop lazygit
+          $scoop = Join-Path $shims 'scoop.cmd'
+          & $scoop bucket add extras
+          & $scoop install btop lazygit
           $shims | Out-File -Append -Encoding utf8 $env:GITHUB_PATH
 
       - name: Tool versions
