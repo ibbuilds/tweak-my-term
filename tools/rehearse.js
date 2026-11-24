@@ -116,7 +116,7 @@ function userTurn(persona, history, agentMsg, { cwd }) {
 }
 
 /** Facts for grading, from the tool calls and the run folder. */
-function grade(turns, run, userMsgs) {
+function grade(turns, run, userMsgs, scenarioDir) {
   const bash = turns.flatMap((t) => t.tools).filter((t) => t.name === 'Bash').map((t) => String(t.input.command || ''));
   const used = (re) => bash.some((c) => re.test(c));
   const st = run && run.state;
@@ -138,7 +138,7 @@ function grade(turns, run, userMsgs) {
     },
     look: look && { name: look.name, background: look.background || null, font: look.font, arrangement: look.layout ? look.layout.arrangement : null },
     staged: st ? { files: st.files.map((f) => `${f.kind} ${f.target}`), installs: st.installs.map((i) => `${i.manager} ${i.id}`), fonts: st.fonts } : null,
-    realHomeRefs: realHomeRefs(turns),
+    realHomeRefs: realHomeRefs(turns, os.homedir(), [os.tmpdir(), path.join(os.homedir(), ".claude"), scenarioDir].filter(Boolean)),
     toolErrors: turns.flatMap((t) => t.errors).slice(0, 20),
   };
 }
@@ -175,7 +175,7 @@ function rehearse(scenarioFile, { out, budget = 8, rounds = 8 } = {}) {
     if (reply === STOP || reply.startsWith(STOP)) break;
     msg = reply;
   }
-  const g = grade(turns, latestRun(env.TMT_STATE), userMsgs);
+  const g = grade(turns, latestRun(env.TMT_STATE), userMsgs, dir);
   fs.writeFileSync(path.join(dir, 'transcript.md'), log.join('\n'));
   fs.writeFileSync(path.join(dir, 'grade.json'), JSON.stringify(g, null, 2) + '\n');
   return { dir, grade: g };
