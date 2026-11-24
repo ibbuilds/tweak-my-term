@@ -48,7 +48,7 @@ jobs:
       - name: Install tools (macOS)
         if: runner.os == 'macOS'
         run: |
-          brew install fish tmux zellij starship
+          brew install fish tmux zellij starship git-delta
           brew install --cask ghostty kitty wezterm
           echo "/Applications/Ghostty.app/Contents/MacOS" >> "$GITHUB_PATH"
           echo "/Applications/kitty.app/Contents/MacOS" >> "$GITHUB_PATH"
