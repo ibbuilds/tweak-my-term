@@ -196,7 +196,15 @@ function plan({ os: osName } = {}) {
   st.approved = null;
   fs.writeFileSync(path.join(dir, 'plan.diff'), files.map((f) => `=== ${f.change.toUpperCase()} ${f.display} (${f.kind})\n${f.diff}`).join('\n'));
   save(st);
-  return { id: st.id, hash, files, installs, fonts: fontsNeeded, checks: st.checks };
+  return { id: st.id, hash, files, installs, fonts: fontsNeeded, checks: st.checks, steps: designSteps(dir) };
+}
+
+/** Which setup-skill design steps left their file in the run folder (skipped steps show). */
+function designSteps(dir) {
+  const has = (f) => fs.existsSync(path.join(dir, f));
+  let brief = '';
+  try { brief = fs.readFileSync(path.join(dir, 'brief.md'), 'utf8'); } catch { /* no brief */ }
+  return { brief: Boolean(brief), parts: /^\**Parts\**:/im.test(brief), look: has('look.json'), preview: has('preview.png') };
 }
 
 function approve(hash) {

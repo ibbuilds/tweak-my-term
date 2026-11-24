@@ -326,3 +326,15 @@ test("verify runs the catalog tool's own validator on a config it knows", () => 
     assert.ok(!names.some((n) => /notes\.txt/.test(n)), names.join('\n'));
   } finally { if (prevOs === undefined) delete process.env.TMT_OS; else process.env.TMT_OS = prevOs; }
 });
+
+test('plan reports which design steps the run folder shows', () => {
+  freshHome();
+  const st = run.newRun();
+  run.stageFile('write', '~/x.txt', src('x', 'x'));
+  assert.deepStrictEqual(run.plan().steps, { brief: false, parts: false, look: false, preview: false });
+  const dir = run.runDir(st.id);
+  fs.writeFileSync(path.join(dir, 'brief.md'), '# Brief\nParts:\n- palette: Catppuccin port\n');
+  fs.writeFileSync(path.join(dir, 'look.json'), '{}');
+  fs.writeFileSync(path.join(dir, 'preview.png'), 'png');
+  assert.deepStrictEqual(run.plan().steps, { brief: true, parts: true, look: true, preview: true });
+});
