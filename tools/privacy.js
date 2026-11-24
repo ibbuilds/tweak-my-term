@@ -35,6 +35,8 @@ for (const f of files(process.argv.includes('--all'))) {
       for (const m of line.matchAll(r.re)) {
         if (!r.any && PLACEHOLDER.test(m[1])) continue;
         if (r.name === 'email' && /@[\d.]+$|@\w+\.(js|ts|md|json|lua|toml)$/i.test(m[0])) continue;
+        // GNOME Shell extension UUIDs look like emails (name@author.github.com).
+        if (r.name === 'email' && /@[\w-]+\.github\.(com|io)(\.shell-extension\.zip)?$/i.test(m[0]) && /extension|gnome|uuid/i.test(line)) continue;
         hits.push(`${f}:${i + 1}: ${r.name}: ${m[0]}`);
       }
     }
