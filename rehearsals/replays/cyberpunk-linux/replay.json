@@ -1,0 +1,37 @@
+{
+  "os": "linux",
+  "home": "linux-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "~/.config/alacritty/alacritty.toml",
+      "file": "files/000-alacritty.toml"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/neon-district/alacritty-theme.toml",
+      "file": "files/001-alacritty-theme.toml"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/neon-district/tmux.conf",
+      "file": "files/002-tmux.conf"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/neon-district/dashboard.sh",
+      "file": "files/003-dashboard.sh"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/cava/config",
+      "file": "files/004-cava.conf"
+    },
+    {
+      "kind": "block",
+      "target": "~/.bashrc",
+      "file": "files/005-bashrc.block"
+    }
+  ],
+  "checks": []
+}

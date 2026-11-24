@@ -1,0 +1,9 @@
+# rainy-2049 HUD prompt: two lines, path + git branch + exit status. No external tools.
+__hud_prompt() {
+  local ec=$? c_cy='\[\e[38;2;46;230;214m\]' c_mg='\[\e[38;2;255;61;154m\]' c_am='\[\e[38;2;255;179;71m\]' c_dim='\[\e[38;2;90;112;128m\]' c_rs='\[\e[0m\]'
+  local br; br=$(git branch --show-current 2>/dev/null)
+  local git=''; [ -n "$br" ] && git=" ${c_dim}on ${c_mg}${br}${c_rs}"
+  local arrow="${c_cy}"; [ $ec -ne 0 ] && arrow="${c_am}[${ec}] ${c_mg}"
+  PS1="${c_dim}╭─ ${c_cy}\w${c_rs}${git}\n${c_dim}╰─${arrow}❯${c_rs} "
+}
+PROMPT_COMMAND=__hud_prompt

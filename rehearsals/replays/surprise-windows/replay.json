@@ -1,0 +1,37 @@
+{
+  "os": "windows",
+  "home": "windows-image",
+  "files": [
+    {
+      "kind": "write",
+      "target": "~/.config/neon-void/art/bg-v1.png",
+      "file": "files/000-bg.png"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/neon-void/prompt.bash",
+      "file": "files/001-prompt.bash"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/neon-void/prompt.ps1",
+      "file": "files/002-prompt.ps1"
+    },
+    {
+      "kind": "block",
+      "target": "~/.bashrc",
+      "file": "files/003-bashrc.block"
+    },
+    {
+      "kind": "block",
+      "target": "{ps-profile}",
+      "file": "files/004-ps.block"
+    },
+    {
+      "kind": "merge-json",
+      "target": "~/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json",
+      "file": "files/005-wt.json"
+    }
+  ],
+  "checks": []
+}

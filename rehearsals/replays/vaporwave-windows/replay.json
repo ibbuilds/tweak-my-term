@@ -1,0 +1,42 @@
+{
+  "os": "windows",
+  "home": "windows-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "~/.config/vaporwave-night/prompt.sh",
+      "file": "files/000-prompt.sh"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/vaporwave-night/fetch.sh",
+      "file": "files/001-fetch.sh"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/vaporwave-night/clock.sh",
+      "file": "files/002-clock.sh"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/vaporwave-night/fastfetch.jsonc",
+      "file": "files/003-fastfetch.jsonc"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/vaporwave-night/art/bg.png",
+      "file": "files/004-bg.png"
+    },
+    {
+      "kind": "block",
+      "target": "~/.bashrc",
+      "file": "files/005-bashrc-block.sh"
+    },
+    {
+      "kind": "merge-json",
+      "target": "{wt-settings}",
+      "file": "files/006-wt.json"
+    }
+  ],
+  "checks": []
+}

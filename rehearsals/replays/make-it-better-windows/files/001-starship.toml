@@ -1,0 +1,40 @@
+# Catppuccin Mocha, two-line prompt
+add_newline = true
+palette = "mocha"
+format = """
+$directory$git_branch$git_status$fill$cmd_duration
+$character"""
+
+[fill]
+symbol = " "
+
+[directory]
+style = "bold blue"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[git_branch]
+symbol = " "
+style = "mauve"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "peach"
+format = "([$all_status$ahead_behind]($style) )"
+
+[cmd_duration]
+min_time = 2000
+style = "overlay1"
+format = "[$duration]($style)"
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+
+[palettes.mocha]
+blue = "#89b4fa"
+mauve = "#cba6f7"
+peach = "#fab387"
+green = "#a6e3a1"
+red = "#f38ba8"
+overlay1 = "#7f849c"

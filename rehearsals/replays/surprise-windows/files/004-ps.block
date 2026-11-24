@@ -1,0 +1,2 @@
+$nv = Join-Path $HOME '.config\neon-void\prompt.ps1'
+if (Test-Path $nv) { . $nv }

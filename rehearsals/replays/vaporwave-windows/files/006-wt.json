@@ -1,0 +1,32 @@
+{
+  "startupActions": "new-tab ; split-pane -V -s 0.35 -p \"VW Fetch\" ; split-pane -H -s 0.38 -p \"VW Clock\" ; move-focus left",
+  "launchMode": "default",
+  "initialCols": 160,
+  "initialRows": 42,
+  "centerOnLaunch": true,
+  "experimental.useBackgroundImageForWindow": true,
+  "profiles": {
+    "defaults": {
+      "colorScheme": "vaporwave-night",
+      "font": { "face": "CaskaydiaCove Nerd Font Mono", "size": 12 },
+      "padding": "16, 12, 16, 12",
+      "cursorShape": "bar",
+      "backgroundImage": "%USERPROFILE%\\.config\\vaporwave-night\\art\\bg.png",
+      "backgroundImageStretchMode": "uniformToFill",
+      "backgroundImageAlignment": "center",
+      "backgroundImageOpacity": 0.9,
+      "intenseTextStyle": "bright"
+    },
+    "list": [
+      { "guid": "{7a1f0e21-5b0c-4c1e-9a53-5d3e8c0a0001}", "name": "VW Fetch", "hidden": true,
+        "commandline": "%PROGRAMFILES%\\Git\\bin\\bash.exe --login -c \"~/.config/vaporwave-night/fetch.sh\"", "startingDirectory": "%USERPROFILE%" },
+      { "guid": "{7a1f0e21-5b0c-4c1e-9a53-5d3e8c0a0002}", "name": "VW Clock", "hidden": true,
+        "commandline": "%PROGRAMFILES%\\Git\\bin\\bash.exe --login -c \"~/.config/vaporwave-night/clock.sh\"", "startingDirectory": "%USERPROFILE%" }
+    ]
+  },
+  "schemes": [
+    { "name": "vaporwave-night", "background": "#171229", "foreground": "#EDDEF5", "cursorColor": "#FF71CE", "selectionBackground": "#592F59",
+      "black": "#3B3750", "red": "#EB8372", "green": "#7EB57F", "yellow": "#D59819", "blue": "#7BA7E0", "purple": "#EA6FD6", "cyan": "#4EB7BC", "white": "#D9CBE1",
+      "brightBlack": "#686578", "brightRed": "#FFAB9D", "brightGreen": "#9BD69C", "brightYellow": "#F9B73C", "brightBlue": "#9CC7FF", "brightPurple": "#FF9DED", "brightCyan": "#6BD8DE", "brightWhite": "#F9F2FD" }
+  ]
+}

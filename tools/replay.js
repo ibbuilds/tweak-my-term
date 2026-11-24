@@ -38,18 +38,23 @@ function portableArg(a, homes) {
   return a;
 }
 
-function record(runDir, name, home) {
+function record(runDir, name, home, opts = {}) {
   const st = JSON.parse(fs.readFileSync(path.join(runDir, 'state.json'), 'utf8'));
   const out = path.join(DIR, name);
   fs.mkdirSync(path.join(out, 'files'), { recursive: true });
   const files = st.files.map((f, n) => {
     const file = `files/${String(n).padStart(3, '0')}-${path.basename(f.source).replace(/^\d{3}-/, '')}`;
-    fs.copyFileSync(path.join(runDir, f.source), path.join(out, file));
+    const from = path.join(runDir, f.source);
+    // Replays check configs, not pixels: big images become a small valid PNG of the same name.
+    if (/\.(png|jpe?g|webp|gif)$/i.test(from) && fs.statSync(from).size > 64 * 1024) {
+      fs.writeFileSync(path.join(out, file), require('../kit/png').encode({ width: 16, height: 10, data: Buffer.alloc(16 * 10 * 4, 0x80) }));
+    } else fs.copyFileSync(from, path.join(out, file));
     return { kind: f.kind, target: f.target, file };
   });
-  const homes = [path.join(runDir, '..', '..', '..', 'home'), os.homedir()];
+  const homes = opts.homes || [path.join(runDir, '..', '..', '..', 'home'), os.homedir()];
   // Checks that name files outside the home (the run folder) can't be replayed elsewhere.
-  const checks = (st.checks || []).map((c) => c.map((a) => portableArg(a, homes)))
+  const inRun = (a) => portableArg(a, [runDir]) !== a;
+  const checks = (st.checks || []).filter((c) => !c.some(inRun)).map((c) => c.map((a) => portableArg(a, homes)))
     .filter((c) => !c.some((a) => /^([A-Za-z]:)?[\\/]/.test(String(a)) && !String(a).startsWith('~')));
   fs.writeFileSync(path.join(out, 'replay.json'), JSON.stringify({ os: st.os, home, files, checks }, null, 2) + '\n');
   return out;

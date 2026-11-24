@@ -1,0 +1,27 @@
+{
+  "schemes": [
+    {
+      "name": "neon-void",
+      "background": "#0B0714", "foreground": "#EDE3FF", "cursorColor": "#FF2BD6", "selectionBackground": "#4A1E5E",
+      "black": "#3A2D58", "red": "#FF5C7A", "green": "#8CE04A", "yellow": "#F2D500",
+      "blue": "#6C8CFF", "purple": "#E85CE0", "cyan": "#22D6E6", "white": "#D9CBE1",
+      "brightBlack": "#7A6F94", "brightRed": "#FF8FA3", "brightGreen": "#B6FF6B", "brightYellow": "#FFE94D",
+      "brightBlue": "#9DB2FF", "brightPurple": "#FF8CF0", "brightCyan": "#6BF2FF", "brightWhite": "#FBF6FF"
+    }
+  ],
+  "profiles": {
+    "defaults": {
+      "colorScheme": "neon-void",
+      "font": { "face": "JetBrainsMono NF, Cascadia Mono", "size": 12, "weight": "normal", "cellHeight": "1.25", "features": { "calt": 1, "liga": 1 } },
+      "padding": "8",
+      "cursorShape": "filledBox",
+      "unfocusedAppearance": { "cursorShape": "emptyBox" },
+      "backgroundImage": "%USERPROFILE%\\.config\\neon-void\\art\\bg-v1.png",
+      "backgroundImageAlignment": "bottom",
+      "backgroundImageOpacity": 0.35,
+      "backgroundImageStretchMode": "uniformToFill",
+      "adjustIndistinguishableColors": "indexed",
+      "scrollbarState": "hidden"
+    }
+  }
+}

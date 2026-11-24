@@ -1,0 +1,27 @@
+{
+  "os": "linux",
+  "home": "linux-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "~/.config/kitty/theme.conf",
+      "file": "files/000-theme.conf"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/kitty/kitty.conf",
+      "file": "files/001-kitty.conf"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/kitty/bg.png",
+      "file": "files/002-bg.png"
+    },
+    {
+      "kind": "block",
+      "target": "~/.bashrc",
+      "file": "files/003-bashrc.block"
+    }
+  ],
+  "checks": []
+}

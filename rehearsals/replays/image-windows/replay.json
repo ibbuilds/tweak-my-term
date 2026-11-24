@@ -1,0 +1,17 @@
+{
+  "os": "windows",
+  "home": "windows-image",
+  "files": [
+    {
+      "kind": "merge-json",
+      "target": "{wt-settings}",
+      "file": "files/000-wt.json"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/moonlit-mountains/art/bg.png",
+      "file": "files/001-bg.png"
+    }
+  ],
+  "checks": []
+}

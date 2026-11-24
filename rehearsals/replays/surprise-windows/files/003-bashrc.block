@@ -1,0 +1,1 @@
+[ -f ~/.config/neon-void/prompt.bash ] && . ~/.config/neon-void/prompt.bash

@@ -1,0 +1,27 @@
+{
+  "os": "windows",
+  "home": "windows-basic",
+  "files": [
+    {
+      "kind": "merge-json",
+      "target": "{wt-settings}",
+      "file": "files/000-wt.json"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/starship.toml",
+      "file": "files/001-starship.toml"
+    },
+    {
+      "kind": "block",
+      "target": "{ps-profile}",
+      "file": "files/002-ps-block.ps1"
+    },
+    {
+      "kind": "block",
+      "target": "~/.bashrc",
+      "file": "files/003-bash-block.sh"
+    }
+  ],
+  "checks": []
+}

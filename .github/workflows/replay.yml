@@ -1,5 +1,6 @@
 name: replay
 
+# alacritty: the Homebrew cask is disabled (fails Gatekeeper since 2026-09); macOS replays skip it.
 # Replays recorded plans (rehearsals/replays) with the real tools installed, so every
 # config is checked by the tool's own validator on a real macOS, Linux and Windows.
 # No AI and no secrets involved.
@@ -48,7 +49,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install fish tmux zellij starship
-          brew install --cask ghostty kitty alacritty wezterm
+          brew install --cask ghostty kitty wezterm
           echo "/Applications/Ghostty.app/Contents/MacOS" >> "$GITHUB_PATH"
           echo "/Applications/kitty.app/Contents/MacOS" >> "$GITHUB_PATH"
 

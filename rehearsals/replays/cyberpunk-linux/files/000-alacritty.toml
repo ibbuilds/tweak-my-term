@@ -1,0 +1,21 @@
+[general]
+import = ["~/.config/neon-district/alacritty-theme.toml"]
+
+[font]
+size = 11
+
+[font.normal]
+family = "JetBrainsMono NFM"
+
+[window]
+opacity = 0.94
+decorations = "None"
+padding = { x = 12, y = 12 }
+
+[cursor.style]
+shape = "Block"
+blinking = "Off"
+
+[terminal.shell]
+program = "bash"
+args = ["-l", "-c", "~/.config/neon-district/dashboard.sh"]

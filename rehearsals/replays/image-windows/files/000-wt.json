@@ -1,0 +1,21 @@
+{
+  "profiles": { "defaults": {
+    "colorScheme": "moonlit-mountains",
+    "font": { "face": "Cascadia Mono", "size": 12, "weight": "normal" },
+    "lineHeight": 1.2,
+    "cursorShape": "bar",
+    "padding": "8",
+    "backgroundImage": "%USERPROFILE%\\.config\\moonlit-mountains\\art\\bg.png",
+    "backgroundImageAlignment": "bottom",
+    "backgroundImageOpacity": 0.35,
+    "backgroundImageStretchMode": "uniformToFill"
+  } },
+  "schemes": [ {
+    "name": "moonlit-mountains",
+    "background": "#12161E", "foreground": "#DCE5F3", "cursorColor": "#6888B6", "selectionBackground": "#2B374A",
+    "black": "#363B45", "red": "#C89792", "green": "#8EAF8E", "yellow": "#B3A379",
+    "blue": "#91A6C4", "purple": "#BB97B7", "cyan": "#77B0B3", "white": "#C9D2DF",
+    "brightBlack": "#626872", "brightRed": "#EAB5B0", "brightGreen": "#ABCFAB", "brightYellow": "#D4C396",
+    "brightBlue": "#AFC6E7", "brightPurple": "#DCB6D8", "brightCyan": "#93D1D4", "brightWhite": "#F1F5FC"
+  } ]
+}
