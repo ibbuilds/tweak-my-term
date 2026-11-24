@@ -1,0 +1,47 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "tty-clock",
+  "name": "tty-clock",
+  "category": "tool",
+  "summary": "ncurses digital clock for a terminal pane (seconds, date, centered, blinking colon). Color is one of the 8 ANSI colors, so it follows the terminal palette. No Windows build: use clock-tui there.",
+  "homepage": "https://github.com/xorg62/tty-clock",
+  "docs": "https://github.com/xorg62/tty-clock#readme",
+  "license": "BSD-3-Clause",
+  "configFormat": "none (command-line flags only)",
+  "os": {
+    "windows": {
+      "supported": false,
+      "notes": "ncurses program with no Windows build or package (not in winget or scoop). Use clock-tui (tclock) on Windows."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "tty-clock" }],
+      "detect": ["tty-clock", "-v"],
+      "config": []
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "tty-clock" },
+        { "manager": "aur", "id": "tty-clock", "notes": "Arch: AUR only (no official pacman package)." },
+        { "manager": "source", "id": "xorg62/tty-clock", "notes": "Fedora: no dnf package found on Repology; build with make (needs ncurses-devel, gcc, make)." }
+      ],
+      "detect": ["tty-clock", "-v"],
+      "config": []
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "theme": { "support": "yes", "recipe": "recipes/theme.md", "notes": "-C 0-7 picks an ANSI color; the hex comes from the terminal palette." },
+    "config": { "support": "yes", "recipe": "recipes/config.md", "notes": "Flags only: seconds, date, box, centering, blink, refresh." }
+  },
+  "verified": { "date": "2026-11-23", "version": "2.3", "how": "docs" },
+  "sources": [
+    "https://github.com/xorg62/tty-clock",
+    "https://raw.githubusercontent.com/xorg62/tty-clock/master/README",
+    "https://formulae.brew.sh/formula/tty-clock",
+    "https://packages.debian.org/trixie/tty-clock",
+    "https://aur.archlinux.org/packages/tty-clock",
+    "https://repology.org/project/tty-clock/versions"
+  ]
+}

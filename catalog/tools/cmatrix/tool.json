@@ -1,0 +1,47 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "cmatrix",
+  "name": "cmatrix",
+  "category": "tool",
+  "summary": "Classic Matrix digital-rain screensaver (ncurses). Color is one of 8 named ANSI colors, so it follows the terminal palette. No Windows package: use rusty-rain there.",
+  "homepage": "https://github.com/abishekvashok/cmatrix",
+  "docs": "https://github.com/abishekvashok/cmatrix#usage",
+  "license": "GPL-3.0-or-later",
+  "configFormat": "none (command-line flags only)",
+  "os": {
+    "windows": {
+      "supported": false,
+      "notes": "The README only describes building with mingw-w64-ncurses (PDCurses has no color or bold) and there is no winget or scoop package. Use rusty-rain on Windows."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "cmatrix", "notes": "2.0." }],
+      "detect": ["cmatrix", "-V"],
+      "config": []
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "cmatrix" },
+        { "manager": "dnf", "id": "cmatrix" },
+        { "manager": "pacman", "id": "cmatrix" }
+      ],
+      "detect": ["cmatrix", "-V"],
+      "config": []
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "theme": { "support": "yes", "recipe": "recipes/theme.md", "notes": "-C green|red|blue|white|yellow|cyan|magenta|black; -r rainbow." },
+    "config": { "support": "yes", "recipe": "recipes/config.md", "notes": "Flags only: speed (-u), bold, asynchronous scroll, message, screensaver mode." }
+  },
+  "verified": { "date": "2026-11-23", "version": "2.0", "how": "docs" },
+  "sources": [
+    "https://github.com/abishekvashok/cmatrix#readme",
+    "https://raw.githubusercontent.com/abishekvashok/cmatrix/master/cmatrix.1",
+    "https://formulae.brew.sh/formula/cmatrix",
+    "https://packages.debian.org/trixie/cmatrix",
+    "https://archlinux.org/packages/extra/x86_64/cmatrix/",
+    "https://repology.org/project/cmatrix/versions"
+  ]
+}

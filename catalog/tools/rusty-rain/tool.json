@@ -1,0 +1,48 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "rusty-rain",
+  "name": "rusty-rain",
+  "category": "tool",
+  "summary": "Cross-platform cmatrix-style digital rain in Rust (the Windows choice). Hex colors for the rain, head and shade gradient; character groups, direction and speed flags.",
+  "homepage": "https://github.com/cowboy8625/rusty-rain",
+  "docs": "https://github.com/cowboy8625/rusty-rain#customization",
+  "license": "Apache-2.0",
+  "configFormat": "TOML (speed and custom character groups only; overrides CLI flags)",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [{ "manager": "winget", "id": "cowboy8625.rusty-rain", "notes": "0.5.0, portable exe (x86_64-pc-windows-gnu build). Not in scoop." }],
+      "detect": ["rusty-rain", "--version"],
+      "config": ["{appdata}/rusty-rain/config.toml"],
+      "notes": "Confirm `rusty-rain --version` resolves after install (portable package alias not checked). The config file is optional and, per the README, overrides CLI options: do not create it for a pane."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "cargo", "id": "rusty-rain", "notes": "No Homebrew formula found. crates.io has 0.5.1. Toolchain: `brew install rustup`." }],
+      "detect": ["rusty-rain", "--version"],
+      "config": ["~/.config/rusty-rain/config.toml"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "cargo", "id": "rusty-rain", "notes": "crates.io 0.5.1." },
+        { "manager": "aur", "id": "rusty-rain", "notes": "Arch: AUR (0.5.1). No apt or dnf package found on Repology." }
+      ],
+      "detect": ["rusty-rain", "--version"],
+      "config": ["{xdg-config}/rusty-rain/config.toml", "~/.config/rusty-rain/config.toml"]
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "theme": { "support": "yes", "recipe": "recipes/theme.md", "notes": "-C rain, -H head, -G shade gradient, -B background; #RRGGBB or r,g,b." },
+    "config": { "support": "yes", "recipe": "recipes/config.md", "notes": "Character group, direction, speed, shade; flags in the pane command." }
+  },
+  "verified": { "date": "2026-11-23", "version": "0.5.1", "how": "docs" },
+  "sources": [
+    "https://github.com/cowboy8625/rusty-rain#readme",
+    "https://raw.githubusercontent.com/cowboy8625/rusty-rain/master/src/cli.rs",
+    "winget show cowboy8625.rusty-rain (Windows 11 machine)",
+    "https://crates.io/crates/rusty-rain",
+    "https://aur.archlinux.org/packages/rusty-rain"
+  ]
+}

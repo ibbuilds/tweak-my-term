@@ -1,0 +1,52 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "pipes-rs",
+  "name": "pipes-rs",
+  "category": "tool",
+  "summary": "Rust rewrite of pipes.sh, cross-platform (the Windows choice). ANSI mode uses the terminal palette; optional TOML config for pipe kinds, count and speed.",
+  "homepage": "https://github.com/lhvy/pipes-rs",
+  "docs": "https://github.com/lhvy/pipes-rs#configuration",
+  "license": "BlueOak-1.0.0",
+  "configFormat": "TOML (~/.config/pipes-rs/config.toml, optional)",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [
+        { "manager": "winget", "id": "lhvy.pipes-rs", "notes": "Portable zip, 1.6.4." },
+        { "manager": "scoop", "id": "pipes-rs", "notes": "extras bucket: run `scoop bucket add extras` first. The scoop manifest lists Apache-2.0; the upstream LICENSE.md is Blue Oak 1.0.0." }
+      ],
+      "detect": ["pipes-rs", "--version"],
+      "config": ["~/.config/pipes-rs/config.toml"],
+      "notes": "The README gives ~/.config/pipes-rs/config.toml for every OS; whether Windows reads %USERPROFILE%\\.config or %APPDATA% was not checked. On Windows pass flags in the pane command instead of relying on the file."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "lhvy/tap/pipes-rs", "notes": "Third-party tap maintained by the author, not homebrew-core." }],
+      "detect": ["pipes-rs", "--version"],
+      "config": ["~/.config/pipes-rs/config.toml"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "cargo", "id": "--git https://github.com/lhvy/pipes-rs", "notes": "README method: `cargo install --git https://github.com/lhvy/pipes-rs`. The crates.io name pipes-rs is a different, old crate (0.1.1): do not `cargo install pipes-rs`." },
+        { "manager": "aur", "id": "pipes-rs", "notes": "Arch: AUR (pipes-rs or pipes-rs-bin). No apt or dnf package found on Repology." }
+      ],
+      "detect": ["pipes-rs", "--version"],
+      "config": ["{xdg-config}/pipes-rs/config.toml", "~/.config/pipes-rs/config.toml"]
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "theme": { "support": "yes", "recipe": "recipes/theme.md", "notes": "-c ansi follows the terminal palette; rgb mode uses built-in hue palettes, not the look palette." },
+    "config": { "support": "yes", "recipe": "recipes/config.md", "notes": "Pipe kinds, count, delay, turn chance; flags or config.toml." }
+  },
+  "verified": { "date": "2026-11-23", "version": "1.6.4", "how": "docs" },
+  "sources": [
+    "https://github.com/lhvy/pipes-rs#installation",
+    "https://github.com/lhvy/pipes-rs#configuration",
+    "https://github.com/lhvy/pipes-rs/blob/main/LICENSE.md",
+    "winget show lhvy.pipes-rs (Windows 11 machine)",
+    "scoop search pipes-rs (extras bucket)",
+    "https://repology.org/project/pipes-rs/versions"
+  ]
+}

@@ -402,6 +402,64 @@
         "how": "docs"
       }
     },
+    "cava": {
+      "name": "cava",
+      "category": "tool",
+      "path": "catalog/tools/cava",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "1.0.0",
+        "how": "docs"
+      }
+    },
+    "cbonsai": {
+      "name": "cbonsai",
+      "category": "tool",
+      "path": "catalog/tools/cbonsai",
+      "os": [
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "1.4.2",
+        "how": "docs"
+      }
+    },
+    "clock-tui": {
+      "name": "clock-tui (tclock)",
+      "category": "tool",
+      "path": "catalog/tools/clock-tui",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "0.6.1",
+        "how": "docs"
+      }
+    },
+    "cmatrix": {
+      "name": "cmatrix",
+      "category": "tool",
+      "path": "catalog/tools/cmatrix",
+      "os": [
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "2.0",
+        "how": "docs"
+      }
+    },
     "delta": {
       "name": "delta",
       "category": "tool",
@@ -477,6 +535,35 @@
         "how": "machine"
       }
     },
+    "pipes-rs": {
+      "name": "pipes-rs",
+      "category": "tool",
+      "path": "catalog/tools/pipes-rs",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "1.6.4",
+        "how": "docs"
+      }
+    },
+    "pipes-sh": {
+      "name": "pipes.sh",
+      "category": "tool",
+      "path": "catalog/tools/pipes-sh",
+      "os": [
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "1.3.0",
+        "how": "docs"
+      }
+    },
     "ripgrep": {
       "name": "ripgrep",
       "category": "tool",
@@ -490,6 +577,35 @@
         "date": "2026-11-23",
         "version": "15.2.0",
         "how": "machine"
+      }
+    },
+    "rusty-rain": {
+      "name": "rusty-rain",
+      "category": "tool",
+      "path": "catalog/tools/rusty-rain",
+      "os": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "0.5.1",
+        "how": "docs"
+      }
+    },
+    "tty-clock": {
+      "name": "tty-clock",
+      "category": "tool",
+      "path": "catalog/tools/tty-clock",
+      "os": [
+        "macos",
+        "linux"
+      ],
+      "verified": {
+        "date": "2026-11-23",
+        "version": "2.3",
+        "how": "docs"
       }
     },
     "yazi": {
@@ -723,6 +839,40 @@
         ],
         "recipe": "catalog/tools/btop/recipes/install-init.md"
       },
+      "cava": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/cava/recipes/install-init.md"
+      },
+      "cbonsai": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/cbonsai/recipes/install-init.md"
+      },
+      "clock-tui": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/clock-tui/recipes/install-init.md"
+      },
+      "cmatrix": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/cmatrix/recipes/install-init.md"
+      },
       "delta": {
         "support": "yes",
         "os": [
@@ -768,6 +918,23 @@
         ],
         "recipe": "catalog/tools/lazygit/recipes/install-init.md"
       },
+      "pipes-rs": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/pipes-rs/recipes/install-init.md"
+      },
+      "pipes-sh": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/pipes-sh/recipes/install-init.md"
+      },
       "ripgrep": {
         "support": "yes",
         "os": [
@@ -776,6 +943,23 @@
           "linux"
         ],
         "recipe": "catalog/tools/ripgrep/recipes/install-init.md"
+      },
+      "rusty-rain": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/rusty-rain/recipes/install-init.md"
+      },
+      "tty-clock": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/tty-clock/recipes/install-init.md"
       },
       "yazi": {
         "support": "yes",
@@ -899,6 +1083,44 @@
         ],
         "recipe": "catalog/tools/btop/recipes/theme.md"
       },
+      "cava": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/cava/recipes/theme.md",
+        "notes": "[color] gradient_color_1..8 (hex) bottom to top, horizontal_gradient_color_1..8, foreground/background."
+      },
+      "cbonsai": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/cbonsai/recipes/theme.md",
+        "notes": "-k dark-leaves,dark-wood,light-leaves,light-wood as color indices 0-255."
+      },
+      "clock-tui": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/clock-tui/recipes/theme.md",
+        "notes": "-c '#RRGGBB' or a named color; also default.color in config.toml."
+      },
+      "cmatrix": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/cmatrix/recipes/theme.md",
+        "notes": "-C green|red|blue|white|yellow|cyan|magenta|black; -r rainbow."
+      },
       "delta": {
         "support": "yes",
         "os": [
@@ -948,6 +1170,25 @@
         ],
         "recipe": "catalog/tools/lazygit/recipes/theme.md"
       },
+      "pipes-rs": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/pipes-rs/recipes/theme.md",
+        "notes": "-c ansi follows the terminal palette; rgb mode uses built-in hue palettes, not the look palette."
+      },
+      "pipes-sh": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/pipes-sh/recipes/theme.md",
+        "notes": "-c INDEX per pipe color (repeatable); the hex comes from the terminal palette."
+      },
       "ripgrep": {
         "support": "yes",
         "os": [
@@ -957,6 +1198,25 @@
         ],
         "recipe": "catalog/tools/ripgrep/recipes/theme.md",
         "notes": "--colors path/line/column/match/highlight with fg, bg, style; 24-bit via r,g,b."
+      },
+      "rusty-rain": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/rusty-rain/recipes/theme.md",
+        "notes": "-C rain, -H head, -G shade gradient, -B background; #RRGGBB or r,g,b."
+      },
+      "tty-clock": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/tty-clock/recipes/theme.md",
+        "notes": "-C 0-7 picks an ANSI color; the hex comes from the terminal palette."
       },
       "yazi": {
         "support": "yes",
@@ -4019,6 +4279,44 @@
         ],
         "recipe": "catalog/tools/btop/recipes/config.md"
       },
+      "cava": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/cava/recipes/config.md",
+        "notes": "Bars, widths, framerate, orientation, smoothing, input method; -p for a per-pane config file."
+      },
+      "cbonsai": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/cbonsai/recipes/config.md",
+        "notes": "Flags only: live/infinite/screensaver, growth speed, life, branching, geometry, leaves."
+      },
+      "clock-tui": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/clock-tui/recipes/config.md",
+        "notes": "Size, seconds, date, timezone, mode (clock, timer, stopwatch, countdown)."
+      },
+      "cmatrix": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/cmatrix/recipes/config.md",
+        "notes": "Flags only: speed (-u), bold, asynchronous scroll, message, screensaver mode."
+      },
       "delta": {
         "support": "yes",
         "os": [
@@ -4064,6 +4362,25 @@
         ],
         "recipe": "catalog/tools/lazygit/recipes/config.md"
       },
+      "pipes-rs": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/pipes-rs/recipes/config.md",
+        "notes": "Pipe kinds, count, delay, turn chance; flags or config.toml."
+      },
+      "pipes-sh": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/pipes-sh/recipes/config.md",
+        "notes": "Flags only: pipe count, type, framerate, straightness, reset."
+      },
       "ripgrep": {
         "support": "yes",
         "os": [
@@ -4072,6 +4389,25 @@
           "linux"
         ],
         "recipe": "catalog/tools/ripgrep/recipes/config.md"
+      },
+      "rusty-rain": {
+        "support": "yes",
+        "os": [
+          "windows",
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/rusty-rain/recipes/config.md",
+        "notes": "Character group, direction, speed, shade; flags in the pane command."
+      },
+      "tty-clock": {
+        "support": "yes",
+        "os": [
+          "macos",
+          "linux"
+        ],
+        "recipe": "catalog/tools/tty-clock/recipes/config.md",
+        "notes": "Flags only: seconds, date, box, centering, blink, refresh."
       },
       "yazi": {
         "support": "yes",

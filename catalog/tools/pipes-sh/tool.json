@@ -1,0 +1,47 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "pipes-sh",
+  "name": "pipes.sh",
+  "category": "tool",
+  "summary": "Animated pipes screensaver as a single bash script. Pipe colors are ANSI color indices, so they follow the terminal palette. Windows: use pipes-rs.",
+  "homepage": "https://github.com/pipeseroni/pipes.sh",
+  "docs": "https://github.com/pipeseroni/pipes.sh#readme",
+  "license": "MIT",
+  "configFormat": "none (command-line flags only)",
+  "os": {
+    "windows": {
+      "supported": false,
+      "notes": "Bash script that needs a POSIX bash, tput and a terminfo database; no winget or scoop package. Not seen working under Git Bash, so use pipes-rs on Windows."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "brew", "id": "pipes-sh" }],
+      "detect": ["pipes.sh", "-v"],
+      "config": []
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "apt", "id": "pipes.sh" },
+        { "manager": "aur", "id": "pipes.sh", "notes": "Arch: AUR only." },
+        { "manager": "source", "id": "pipeseroni/pipes.sh", "notes": "Fedora: no dnf package found on Repology. The script is one file: download pipes.sh, chmod +x, put it on PATH." }
+      ],
+      "detect": ["pipes.sh", "-v"],
+      "config": []
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "theme": { "support": "yes", "recipe": "recipes/theme.md", "notes": "-c INDEX per pipe color (repeatable); the hex comes from the terminal palette." },
+    "config": { "support": "yes", "recipe": "recipes/config.md", "notes": "Flags only: pipe count, type, framerate, straightness, reset." }
+  },
+  "verified": { "date": "2026-11-23", "version": "1.3.0", "how": "docs" },
+  "sources": [
+    "https://github.com/pipeseroni/pipes.sh",
+    "https://raw.githubusercontent.com/pipeseroni/pipes.sh/master/pipes.sh",
+    "https://formulae.brew.sh/formula/pipes-sh",
+    "https://packages.debian.org/trixie/pipes.sh",
+    "https://aur.archlinux.org/packages/pipes.sh",
+    "https://repology.org/project/pipes.sh/versions"
+  ]
+}

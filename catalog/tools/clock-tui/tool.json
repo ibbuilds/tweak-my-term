@@ -1,0 +1,49 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "clock-tui",
+  "name": "clock-tui (tclock)",
+  "category": "tool",
+  "summary": "Rust terminal clock, timer, stopwatch and countdown. Big-digit clock with hex colors and a size multiplier; the one clock that runs on Windows, macOS and Linux. Binary is `tclock`.",
+  "homepage": "https://github.com/race604/clock-tui",
+  "docs": "https://github.com/race604/clock-tui#usage",
+  "license": "MIT",
+  "configFormat": "TOML (~/.config/tclock/config.toml, optional)",
+  "os": {
+    "windows": {
+      "supported": true,
+      "install": [{ "manager": "cargo", "id": "clock-tui", "notes": "Needs a Rust toolchain: `winget install Rustlang.Rustup`. Not in winget or scoop; the repo documents cargo only. Built on crossterm and ratatui, so it should run in Windows Terminal, but no Windows run was seen." }],
+      "detect": ["tclock", "--version"],
+      "config": ["~/.config/tclock/config.toml"],
+      "notes": "The config path is built from the home folder (%USERPROFILE%\\.config\\tclock\\config.toml), per src/config.rs."
+    },
+    "macos": {
+      "supported": true,
+      "install": [{ "manager": "cargo", "id": "clock-tui", "notes": "No Homebrew formula found. `brew install rustup` then `rustup default stable` gives the toolchain." }],
+      "detect": ["tclock", "--version"],
+      "config": ["~/.config/tclock/config.toml"]
+    },
+    "linux": {
+      "supported": true,
+      "install": [
+        { "manager": "cargo", "id": "clock-tui" },
+        { "manager": "aur", "id": "clock-tui", "notes": "Arch: AUR only. No apt or dnf package found on Repology." }
+      ],
+      "detect": ["tclock", "--version"],
+      "config": ["~/.config/tclock/config.toml"]
+    }
+  },
+  "capabilities": {
+    "install-init": { "support": "yes", "recipe": "recipes/install-init.md" },
+    "theme": { "support": "yes", "recipe": "recipes/theme.md", "notes": "-c '#RRGGBB' or a named color; also default.color in config.toml." },
+    "config": { "support": "yes", "recipe": "recipes/config.md", "notes": "Size, seconds, date, timezone, mode (clock, timer, stopwatch, countdown)." }
+  },
+  "verified": { "date": "2026-11-23", "version": "0.6.1", "how": "docs" },
+  "sources": [
+    "https://github.com/race604/clock-tui#usage",
+    "https://raw.githubusercontent.com/race604/clock-tui/master/clock-tui/Cargo.toml",
+    "https://raw.githubusercontent.com/race604/clock-tui/master/clock-tui/src/app.rs",
+    "https://raw.githubusercontent.com/race604/clock-tui/master/clock-tui/src/config.rs",
+    "https://crates.io/crates/clock-tui",
+    "https://aur.archlinux.org/packages/clock-tui"
+  ]
+}
