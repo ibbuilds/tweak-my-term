@@ -84,7 +84,7 @@ function claude(args, { env, cwd, timeout = 1800000 } = {}) {
 
 // The machine is simulated (TMT_HOME, TMT_OS). Real users run on their own machine, where the
 // host is the truth; here the agent must not probe or read the host.
-const REHEARSAL = "This session runs on a simulated machine: $TMT_HOME is the user's home and $TMT_OS their OS. Treat `tmt detect` and `tmt capture` as the truth about the machine, don't probe the host OS, and don't read or write files outside $TMT_HOME, the run folder and the plugin folder. Everything else works as on the user's real machine.";
+const REHEARSAL = "This session runs on a simulated machine: $TMT_HOME is the user's home and $TMT_OS their OS; a path the user gives as ~/... is under $TMT_HOME. Treat `tmt detect` and `tmt capture` as the truth about the machine, don't probe the host OS, and don't read or write files outside $TMT_HOME, the run folder and the plugin folder. Everything else works as on the user's real machine.";
 
 /** Tool inputs that name the real home, outside the temp folder and ~/.claude (a leak). */
 function realHomeRefs(turns, home = os.homedir(), ok = [os.tmpdir(), path.join(home, '.claude')]) {
