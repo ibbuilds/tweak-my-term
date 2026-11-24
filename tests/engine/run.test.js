@@ -508,3 +508,20 @@ test('plan flags tools the look uses that are neither installed nor staged to in
     assert.deepStrictEqual(run.plan().toolsMissing, []);
   } finally { if (prevOs === undefined) delete process.env.TMT_OS; else process.env.TMT_OS = prevOs; }
 });
+
+test('plan flags tools the user accepted in Asked that no install provides', () => {
+  freshHome();
+  const prevOs = process.env.TMT_OS;
+  process.env.TMT_OS = 'linux';
+  try {
+    const st = run.newRun();
+    const dir = run.runDir(st.id);
+    fs.writeFileSync(path.join(dir, 'detect.json'), JSON.stringify({ tools: { starship: { installed: true } }, terminals: {}, configs: [] }));
+    fs.writeFileSync(path.join(dir, 'look.json'), JSON.stringify({ name: 'v', tools: ['starship'] }));
+    fs.writeFileSync(path.join(dir, 'brief.md'), ['# Brief', 'Asked:', '- Q: Layout? A: dashboard', '- Q: Tools to install? A: all (starship, fastfetch, frobnicator)', '- Q: Speed? A: looks', ''].join('\n'));
+    run.stageFile('write', '~/x.txt', src('x', 'x'));
+    assert.deepStrictEqual(run.plan().toolsMissing, ['fastfetch'], 'accepted, installable, not staged');
+    run.stageInstall('apt', 'fastfetch');
+    assert.deepStrictEqual(run.plan().toolsMissing, []);
+  } finally { if (prevOs === undefined) delete process.env.TMT_OS; else process.env.TMT_OS = prevOs; }
+});

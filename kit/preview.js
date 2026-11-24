@@ -212,9 +212,16 @@ function paneBody(run, prompt, sys = {}) {
     L.push('<span class="sel"><span class="a4 b">kit/</span>         </span>');
     L.push('package.json');
     L.push('<span class="a2 b">build.sh</span>');
+  } else if (/cava|visuali[sz]er|audio|spectrum/.test(r)) {
+    const H = [3, 5, 6, 4, 6, 5, 3, 2, 4, 6, 5, 3, 2, 3, 5, 4, 2, 1, 3, 4];
+    const rows = [];
+    for (let y = 6; y >= 1; y--) {
+      const cls = y >= 5 ? 'a5' : y >= 3 ? 'a4' : 'a6'; // top to bottom: magenta, blue, cyan
+      rows.push(`<span class="${cls}">${H.map((h) => (h >= y ? '█' : ' ')).join('')}</span>`);
+    }
+    L.push(`<span class="big">${rows.join('\n')}</span>`);
   } else if (/clock|tclock|tty-clock|time/.test(r)) {
-    L.push('');
-    for (const row of bigTime('21:47')) L.push(`<span class="a5">${row}</span>`);
+    L.push(`<span class="big">${bigTime('21:47').map((row) => `<span class="a5">${row}</span>`).join('\n')}</span>`);
     L.push('', '<span class="a8">  tue 24 nov</span>');
   } else if (/fetch|neofetch|fastfetch/.test(r)) {
     for (const [k, v] of [['os', sys.os], ['shell', sys.shell], ['term', sys.term], ['font', sys.font]]) if (v) L.push(`<span class="a8">${k.padEnd(6)}</span><span class="a4">${esc(v)}</span>`);
@@ -334,6 +341,7 @@ ${ansiCss}.b{font-weight:bold}
 .pane{flex:1 1 0;min-width:0;overflow:hidden;${screenBg};border:1px solid ${C.mix(pal.background, pal.foreground, 0.14)};border-radius:${gap ? 8 : 0}px}
 .pane.focus{border-color:var(--accent)}
 .pane:not(.focus) pre{opacity:.72}
+.big{display:block;line-height:1}
 pre.pt{overflow:hidden;white-space:pre-wrap;overflow-wrap:anywhere;font-size:clamp(10px,2.4vw,${fontPx}px)}
 .pl{display:inline-block;background:var(--sb);color:var(--st);padding:0 .9em 0 .6em;clip-path:polygon(0 0,calc(100% - .5em) 0,100% 50%,calc(100% - .5em) 100%,0 100%)}
 .pl.n{padding-left:1.1em;margin-left:-.45em;clip-path:polygon(0 0,calc(100% - .5em) 0,100% 50%,calc(100% - .5em) 100%,0 100%,.5em 50%)}

@@ -217,17 +217,40 @@ function layoutSame(dir) {
   return leaves(l.arrangement) <= now;
 }
 
-/** Catalog tools look.json uses that detect.json shows missing and no staged install provides. */
+// Answers in brief.md's Asked section (where the user accepted tools to install).
+function askedAnswers(dir) {
+  let brief = '';
+  try { brief = fs.readFileSync(path.join(dir, 'brief.md'), 'utf8'); } catch { return ''; }
+  const lines = brief.split(/\r?\n/);
+  const start = lines.findIndex((l) => /^\**Asked\**:/i.test(l));
+  if (start < 0) return '';
+  const out = [];
+  for (const l of lines.slice(start + 1)) {
+    if (/^#|^\**[A-Z][A-Za-z ]*\**:/.test(l)) break;
+    const m = /\bA:\s*(.*)$/.exec(l);
+    if (m) out.push(m[1]);
+  }
+  return out.join('\n').toLowerCase();
+}
+
+/**
+ * Catalog tools that detect.json shows missing and no staged install provides: those look.json
+ * uses, and those the user accepted in Asked that have an install on this OS.
+ */
 function toolsMissing(dir, st) {
   const look = readJson(dir, 'look.json'), d = readJson(dir, 'detect.json');
   if (!look || !d) return null;
   const catalog = require('./catalog');
-  return (look.tools || []).filter((id) => {
+  const installsOf = (t) => (t.os && t.os[st.os] && t.os[st.os].install) || [];
+  const answers = askedAnswers(dir);
+  const says = (id) => new RegExp('(^|[^\\w-])' + id.replace(/[.*+?^$(){}|[\]\\]/g, '\\$&') + '($|[^\\w-])').test(answers);
+  const named = answers ? catalog.tools().filter((t) => installsOf(t).length && says(t.id)).map((t) => t.id) : [];
+  return [...new Set([...(look.tools || []), ...named])].filter((id) => {
     const t = catalog.get(id);
     if (!t) return false;
     const seen = (d.tools && d.tools[id]) || (d.terminals && d.terminals[id]);
     if (seen && seen.installed) return false;
-    const list = (t.os && t.os[st.os] && t.os[st.os].install) || [];
+    const list = installsOf(t);
     return !st.installs.some((i) => list.some((x) => x.manager === i.manager && x.id === i.id));
   });
 }

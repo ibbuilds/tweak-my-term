@@ -275,3 +275,17 @@ test('html: a clock pane draws big block digits, like a terminal clock', () => {
 test('html: the pane layout has a real window shape, tall enough for a stacked side column', () => {
   assert.match(V.html({ look: withLayout(THREE) }), /\.layout\{[^}]*aspect-ratio:16\/10/);
 });
+
+test('html: block art (clock digits, visualizer bars) sits in a tight line box so rows do not overlap', () => {
+  const page = V.html({ look: withLayout({ arrangement: { split: 'row', panes: [{ run: 'shell', focus: true }, { run: 'clock' }] } }) });
+  assert.match(page, /data-run="clock"><pre[^>]*>[\s\S]*?<span class="big">/);
+  assert.match(page, /\.big\{[^}]*display:block[^}]*line-height:1[;}]/);
+});
+
+test('html: an audio visualizer pane (cava) draws bars in more than one palette color', () => {
+  const page = V.html({ look: withLayout({ arrangement: { split: 'row', panes: [{ run: 'shell', focus: true }, { run: 'cava' }] } }) });
+  const body = /data-run="cava"><pre[^>]*>([\s\S]*?)<\/pre>/.exec(page)[1];
+  const rows = body.replace(/<[^>]+>/g, '').split('\n').filter((l) => /[█▄]/.test(l));
+  assert.ok(rows.length >= 4, `bars stand ${rows.length} rows tall`);
+  assert.ok(new Set(body.match(/class="a\d"/g)).size >= 2, 'a gradient, not one color');
+});
