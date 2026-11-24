@@ -57,9 +57,9 @@
     "font": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["family", "size"],
+      "required": ["size"],
       "properties": {
-        "family": { "type": "string" },
+        "family": { "type": "string", "description": "Omit to keep the terminal default font" },
         "fallback": { "type": "array", "items": { "type": "string" } },
         "size": { "type": "number", "minimum": 6, "maximum": 40 },
         "weight": { "type": "string" },

@@ -19,3 +19,10 @@ test('look schema: a nested pane arrangement and gap validate; unknown keys do n
   const bad = { ...base, layout: { arrangement: { split: 'row', panes: [{ run: 'a', colour: 'x' }, { run: 'b' }] } } };
   assert.deepStrictEqual(check('look', bad), ['$.layout.arrangement.panes[0]: unknown key "colour"']);
 });
+
+test('look schema: a look that keeps the terminal default font needs no family', () => {
+  const { check } = require('../../engine/schema');
+  const base = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'kit', 'fixtures', 'look.json'), 'utf8'));
+  assert.deepStrictEqual(check('look', { ...base, font: { size: 11 } }), []);
+  assert.deepStrictEqual(check('look', { ...base, font: {} }), ['$.font: missing required "size"']);
+});
