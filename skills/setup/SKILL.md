@@ -113,7 +113,8 @@ layout, each themed tool) take the existing source in this order: what the user 
 chosen rice's dotfiles, the official port of a named scheme, the catalog recipe, and
 only then your own. Run these before writing any config yourself:
 - the chosen rice (inspiration pick with a repo): its `parts:` line in the `tmt inspire`
-  output lists its files per tool, wallpapers and license (`tmt parts rice <repo>` for the
+  output lists its files per tool (your installed tools marked "yours": --get those), wallpapers
+  and license (`tmt parts rice <repo>` for the
   full list); `tmt parts rice <repo> --get <path...>` saves them into the run
   folder. Adapt them (paths, fonts, OS); without a license take values, not whole files.
 - a named scheme: `tmt parts port <scheme> <app> [--flavor f] --get` for every app in the look

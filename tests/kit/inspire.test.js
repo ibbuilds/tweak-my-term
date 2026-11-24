@@ -456,3 +456,12 @@ test('withParts lists each top repo\'s files per tool, so the agent sees what it
   assert.match(text, /get: tmt parts rice https:\/\/github\.com\/a\/dots --get <path\.\.\.>/);
   assert.match(text, /parts: n\/a \(Repo not found/);
 });
+
+test('withParts puts the user\'s own tools first and marks them', async () => {
+  const rice = async () => ({ license: null, tools: { i3: ['.config/i3/config'], zsh: ['.zshrc'], alacritty: ['.config/alacritty/alacritty.yml'] }, wallpapers: [] });
+  const results = [{ repo: 'https://github.com/a/dots', title: 't', tools: [], why: 'w', os: 'linux' }];
+  await I.withParts(results, { rice, mine: ['alacritty', 'bash'] });
+  assert.deepStrictEqual(results[0].parts.mine, ['alacritty']);
+  const text = I.formatResults({ results, notes: [] });
+  assert.ok(text.includes('parts: alacritty (yours): .config/alacritty/alacritty.yml; i3: .config/i3/config; zsh: .zshrc'), text);
+});

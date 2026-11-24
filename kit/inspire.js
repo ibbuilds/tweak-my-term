@@ -773,15 +773,27 @@ function intFlag(v, name) {
   return Number(v);
 }
 
+/** Tools detected as installed in the open run (detect.json), so a rice's matching files stand out. */
+function myTools() {
+  try {
+    const run = require('../engine/run');
+    const d = JSON.parse(fs.readFileSync(path.join(run.runDir(run.current().id), 'detect.json'), 'utf8'));
+    return Object.entries(d.tools || {}).filter(([, v]) => v && v.installed).map(([k]) => k);
+  } catch { return []; }
+}
+
 /** For the top results with a repo, list its files per tool (via tmt parts rice), so reuse is one step. */
-async function withParts(results, { top = 3, rice = (repo) => require('./parts').rice(repo, {}) } = {}) {
+async function withParts(results, { top = 3, mine = [], rice = (repo) => require('./parts').rice(repo, {}) } = {}) {
   for (const x of results.filter((r) => r.repo).slice(0, top)) {
     try {
       const r = await rice(x.repo);
       const tools = {};
       let more = 0;
-      for (const [t, list] of Object.entries(r.tools || {})) { tools[t] = list.slice(0, 3); more += Math.max(0, list.length - 3); }
+      // The user's own tools first: those files are the ones worth taking.
+      const entries = Object.entries(r.tools || {}).sort(([a], [b]) => Number(mine.includes(b)) - Number(mine.includes(a)));
+      for (const [t, list] of entries) { tools[t] = list.slice(0, 3); more += Math.max(0, list.length - 3); }
       x.parts = { license: r.license || null, tools, more, wallpapers: (r.wallpapers || []).length };
+      if (mine.length) x.parts.mine = Object.keys(tools).filter((t) => mine.includes(t));
     } catch (e) { x.parts = { error: e.message }; }
   }
   return results;
@@ -792,7 +804,7 @@ function partsLine(x) {
   if (p.error) return [`   parts: n/a (${p.error})`];
   const tools = Object.entries(p.tools);
   if (!tools.length) return ['   parts: no config files for catalog tools in this repo'];
-  const list = tools.map(([t, l]) => `${t}: ${l.join(', ')}`).join('; ');
+  const list = tools.map(([t, l]) => `${t}${(p.mine || []).includes(t) ? ' (yours)' : ''}: ${l.join(', ')}`).join('; ');
   return [`   parts: ${list}${p.more ? ` (+${p.more} more)` : ''} | ${p.wallpapers} wallpaper(s) | ${p.license || 'no license: take values, not whole files'}`,
     `   get: tmt parts rice ${x.repo} --get <path...>  (into the run folder; start from these files instead of writing configs from scratch)`];
 }
@@ -845,7 +857,7 @@ async function main(argv = []) {
   const r = await searchDetailed(query, { ...loadOpts, os: flags.os, terminal: flags.terminal, shell: flags.shell, layout: flags.layout, has: flags.has, complexity: flags.complexity, limit, minScore, sort: flags.sort, seed: flags.seed === undefined ? undefined : Number(flags.seed) });
 
   // The top repos' files per tool (GitHub API, cached a day). Off for a local index (tests) or --no-parts.
-  if (!flags['no-parts'] && !process.env.TMT_RICES_FILE) await withParts(r.results);
+  if (!flags['no-parts'] && !process.env.TMT_RICES_FILE) await withParts(r.results, { mine: myTools() });
 
   let saved = null;
   if (flags.save && flags.save.n === 'all') {
