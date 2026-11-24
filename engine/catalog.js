@@ -62,9 +62,31 @@ function userConfigs(osName = paths.platform()) {
   return [...byPath.values()];
 }
 
+/**
+ * The catalog's own check for a config file: the tool whose config path is this file, or a
+ * file of the same type in that config folder. argv with {file} filled in, or null.
+ */
+function validatorFor(abs, osName = paths.platform()) {
+  const norm = (p) => (process.platform === 'win32' ? p.toLowerCase() : p).replace(/\\/g, '/');
+  const a = norm(abs);
+  for (const t of tools()) {
+    const o = t.os && t.os[osName];
+    if (!o || !o.validate || !o.config) continue;
+    for (const c of o.config) {
+      if (/[\\/]$/.test(c)) continue;
+      let p;
+      try { p = norm(paths.expand(c, { os: osName })); } catch { continue; }
+      const ext = path.extname(p);
+      const same = a === p || (ext && path.posix.dirname(a) === path.posix.dirname(p) && path.extname(a) === ext);
+      if (same) return { tool: t.id, argv: o.validate.map((x) => x.split('{file}').join(abs.replace(/\\/g, '/'))) };
+    }
+  }
+  return null;
+}
+
 function capabilities() {
   const f = path.join(ROOT, 'capabilities.json');
   return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null;
 }
 
-module.exports = { tools, get, configPaths, userConfigs, isPrivate, capabilities, ROOT };
+module.exports = { tools, get, configPaths, userConfigs, isPrivate, validatorFor, capabilities, ROOT };

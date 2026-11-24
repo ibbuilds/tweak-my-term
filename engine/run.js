@@ -347,6 +347,12 @@ function verify({ exec = sys.exec } = {}) {
   for (const f of st.plan.files) {
     const c = autoCheck(f.abs);
     if (c) checks.push(c);
+    // The tool's own validator from the catalog, so a check never depends on the agent.
+    const v = require('./catalog').validatorFor(f.abs, st.os || paths.platform());
+    const same = (argv) => argv && argv.join(' ') === v.argv.join(' ');
+    if (v && !st.checks.some(same) && !checks.some((x) => same(x.argv))) {
+      checks.push({ name: v.argv.join(' ').split(f.abs.replace(/\\/g, '/')).join(paths.pretty(f.abs)), argv: v.argv });
+    }
   }
   for (const f of st.plan.files) {
     let sa = null;
