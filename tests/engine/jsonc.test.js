@@ -57,3 +57,9 @@ test('indentOf reads the indent a file already uses', () => {
   assert.strictEqual(jsonc.indentOf('{\n    "a": {\n        "b": 1\n    }\n}'), '    ');
   assert.strictEqual(jsonc.indentOf('{"a":1}'), '    ');
 });
+
+test('merge deletes a key the fragment sets to null (JSON Merge Patch), so a new look can drop an old shader', () => {
+  const base = { profiles: { defaults: { 'experimental.pixelShaderPath': 'old.hlsl', font: { size: 11 } } } };
+  const out = merge(base, { profiles: { defaults: { 'experimental.pixelShaderPath': null, font: { size: 12 }, gone: null } } });
+  assert.deepStrictEqual(out, { profiles: { defaults: { font: { size: 12 } } } });
+});

@@ -53,7 +53,7 @@ const unique = (list, k) => {
   return new Set(vals).size === vals.length;
 };
 
-/** Deep merge: fragment wins; object lists are matched by a unique guid/name/id/keys; other lists are replaced. */
+/** Deep merge: fragment wins, a null value removes the key; object lists are matched by a unique guid/name/id/keys; other lists are replaced. */
 function merge(base, frag) {
   if (Array.isArray(frag)) {
     const keys = Array.isArray(base) ? KEYS.filter((k) => unique(frag, k) && unique(base, k)) : [];
@@ -70,7 +70,10 @@ function merge(base, frag) {
   }
   if (isObj(frag)) {
     const out = isObj(base) ? structuredClone(base) : {};
-    for (const [k, v] of Object.entries(frag)) out[k] = k in out ? merge(out[k], v) : structuredClone(v);
+    for (const [k, v] of Object.entries(frag)) {
+      if (v === null) delete out[k]; // JSON Merge Patch: null removes the key (e.g. an old look's shader)
+      else out[k] = k in out ? merge(out[k], v) : structuredClone(v);
+    }
     return out;
   }
   return frag;
