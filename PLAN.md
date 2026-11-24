@@ -350,6 +350,69 @@ sandbox) added; it needs an `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` sec
 Next: run the evals and fix what they find; annotate further down the list as needed
 (`tools/annotate.js prepare --top N` skips annotated ids).
 
+## 5c. Roadmap to "any terminal from words" (2026-11-23)
+
+Goal: a user tells their agent "make me a vaporwave, aesthetically pleasing terminal" (or
+any mood, image, rice or layout) and gets the whole terminal: anchor art, background,
+palette, font, prompt, layout, themed tools and features, built for their OS and
+terminal. When the request leaves something open that changes the result, the agent asks
+(through the user's agent, with options), then builds. Proven by graded rehearsals, not
+by "the configs parse".
+
+What already works (rounds r1/r2, 9 agent runs): request → plan with correct configs for
+Windows Terminal, WezTerm, kitty, alacritty, Ghostty, tmux, zellij, fish, starship, btop,
+cava, yazi, helix; apply/verify/restore. What is unproven: the conversation (every run was
+pre-approved), a full mood build (art + background + palette + layout + tools at once),
+how the real result looks, and real macOS/Linux.
+
+**M15 Rehearsal harness with a stand-in user.** `tools/rehearse.js` (dev only, needs the
+`claude` CLI): runs the plugin agent headless on a fake home (TMT_HOME/TMT_STATE/TMT_OS,
+no user settings, edits auto-accepted in the scenario folder). Each time the agent stops
+with a question, a stand-in user (a persona with hidden preferences, cheap model) answers
+in character; the agent resumes (`--resume <session>`). Ends at the plan, or turn/cost
+cap. Writes a transcript and a grade sheet. Check: one scenario runs to a plan through at
+least one question.
+
+**M16 Understanding the words.** A mood lexicon
+(`skills/setup/references/moods.md`): for each common aesthetic (vaporwave, synthwave,
+cyberpunk, cozy, paper, minimal, CRT, hacker, nord/ice, forest, pastel/kawaii, lofi,
+brutalist, Y2K, solarpunk, noir...) the visual facts: palette families, background
+subjects, type (serif/pixel/mono), effects (glow, scanlines, grain), prompt shape,
+layout tendencies, inspire search words, and what to ask when it is ambiguous. `tmt
+inspire` mood map grows the same words. Check: `tmt inspire <mood>` returns on-mood rices
+for each lexicon entry (spot-checked).
+
+**M17 Asking well.** The brief stage lists the decisions that change the result (light or
+dark, image or plain, layout, terminal, installs) and asks only the open ones, at most 3,
+as choices with a recommended default (AskUserQuestion when the host has it), and shows
+3-6 differing inspiration picks for vague moods. Check: rehearsals of vague requests ask
+1-3 relevant questions; precise ones ask none.
+
+**M18 Art that matches the mood.** The anchor for a mood with no user image is generated
+(`tmt art scene`) or painted by the agent against the raster API. Add what moods need:
+presets for the lexicon's common subjects (vaporwave sun + grid + palms, lofi room,
+paper texture, forest, CRT glow...) and primitives (perspective grid, banded sun, glow,
+silhouettes, grain). Check: each preset renders in tests; a vision grade of each against
+its mood word.
+
+**M19 Look at the real result.** Apply a rehearsal plan to this machine's real Windows
+Terminal (backed up; restore afterwards), `tmt shot`, compare to anchor and preview, fix
+the gap, restore byte-identical. Check: screenshot graded; restore verified.
+
+**M20 Mood matrix until it's good.** Six different requests (vaporwave, cozy paper light,
+cyberpunk dashboard, minimal floating, amber CRT, user image restyle) across the three
+OSes, through M15 with stand-in users. Grade each: questions asked (relevant, ≤3),
+options shown, anchor on-mood, palette contrast, preview checked, layout as asked,
+themed tools, plan applies and verifies, restore clean. Fix the repo (skills, lexicon,
+art, recipes, engine) and rerun until every row passes.
+
+**M21 Real macOS and Linux.** A workflow replays recorded plans (privacy-clean fixtures
+from M20) on macOS and Ubuntu runners with the tools installed, and runs `tmt verify`
+with their real validators (kitty, ghostty, alacritty, tmux, zellij, fish, starship).
+No AI key needed. Check: green on both.
+
+Done = every M20 row passes and M21 is green.
+
 ## 6. Risks
 
 - **Plugin mechanics on Windows** (M0). Fallback: call `node` with the full path.
