@@ -53,7 +53,10 @@ into the brief's "Must keep".
 Every terminal is different, and nothing in this repo is a look to copy. What tells you
 what "better" means for this user is real work by people who care: 4,000+ r/unixporn
 rices with screenshots and dotfiles. Do this for every request, not only vague ones; a
-precise request ("gruvbox, minimal, kitty") still needs examples to set the bar.
+precise request ("gruvbox, minimal, kitty") still needs examples to set the bar. A named
+scheme fixes the colors, not the padding, prompt, bars or layout; "I trust you" or
+"approved in advance" hands you the choices, which raises the bar rather than removing
+this step. Skip it only when the user says so.
 
 Follow the `inspire` skill ([../inspire/SKILL.md](../inspire/SKILL.md)), or hand it to the
 `inspiration-scout` subagent to keep screenshots out of your context:
