@@ -338,3 +338,20 @@ test('plan reports which design steps the run folder shows', () => {
   fs.writeFileSync(path.join(dir, 'preview.png'), 'png');
   assert.deepStrictEqual(run.plan().steps, { brief: true, parts: true, look: true, preview: true });
 });
+
+test('a staged check with an unfilled {file} placeholder is refused', () => {
+  freshHome();
+  run.newRun();
+  assert.throws(() => run.stageCheck(['ghostty', '+validate-config', '--config-file={file}']), /\{file\}/);
+});
+
+test('in a simulated home, verify runs checks with HOME set to that home', () => {
+  const h = freshHome();
+  run.newRun();
+  run.stageFile('write', '~/x.txt', src('x', 'x'));
+  run.stageCheck([process.execPath, '-e', 'process.exit(process.env.HOME === process.env.TMT_HOME ? 0 : 7)']);
+  run.approve(run.plan().hash);
+  run.apply();
+  const v = run.verify();
+  assert.ok(v.checks.some((c) => c.name.startsWith(process.execPath) && c.status === 0), JSON.stringify(v.checks) + h);
+});

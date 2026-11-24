@@ -121,6 +121,7 @@ function stageFont(name) {
 function stageCheck(argv) {
   const st = requireOpen();
   if (!Array.isArray(argv) || !argv.length) throw new GateError('a check needs a command');
+  if (argv.some((a) => String(a).includes('{file}'))) throw new GateError('the check has an unfilled {file}: name the file, or leave it out (verify already runs the catalog validator for each config it knows)');
   // verify runs from wherever the agent is then; pin relative file arguments to where they are now.
   st.checks.push(argv.map((a, n) => (n > 0 && !path.isAbsolute(a) && !a.startsWith('-') && !a.startsWith('~')
     && /[\\/.]/.test(a) && fs.existsSync(a) ? path.resolve(a) : a)));
@@ -377,7 +378,10 @@ function verify({ exec = sys.exec } = {}) {
       return missing.length ? { name: c.name, status: 1, output: `not installed or not on PATH: ${missing.join(', ')}` } : { name: c.name, status: 0 };
     }
     if (!sys.resolveCmd(c.argv[0]) && !fs.existsSync(c.argv[0])) return { name: c.name, status: 0, skipped: `${c.argv[0]} not installed` };
-    const r = exec(c.argv[0], c.argv.slice(1), { timeout: 60000 });
+    // In a simulated home, the tools must read that home (zellij layouts, includes, themes).
+    // Not USERPROFILE: Windows tools (delta) then fail to find their known folders.
+    const env = paths.fake() ? { ...process.env, HOME: paths.home(), XDG_CONFIG_HOME: path.join(paths.home(), '.config') } : undefined;
+    const r = exec(c.argv[0], c.argv.slice(1), { timeout: 60000, env });
     return { name: c.name, status: r.status, output: (r.stdout + r.stderr).trim().slice(0, 2000) };
   });
   const ok = results.every((r) => r.status === 0);
