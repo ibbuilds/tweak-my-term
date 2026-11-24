@@ -178,3 +178,6 @@ times before/after, and anything that couldn't be done with the closest alternat
 - Never print secrets from existing configs (tokens in rc files, env exports).
 - No shell access (can't run `tmt`)? Say so, change nothing, and give the exact `tmt`
   commands. If you also offer hand edits, put "copy the file first" (backup) as step 1.
+- A trial window (e.g. `wt -w new ...` with the planned panes, to see that they start) is
+  fine before approval; it changes no config. Close it when done (stop the processes it
+  started) and say you did, so nothing is left running on the user's desktop.

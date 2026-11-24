@@ -33,8 +33,17 @@ function needle(abs) {
   return GENERIC.has(base.toLowerCase()) ? `${parent}/${base}` : base;
 }
 
+// The text a heredoc or PowerShell here-string carries is data, not a target: drop it so a
+// note that mentions ~/.bashrc isn't read as a write to it. The command line that names
+// the destination (`cat > file <<EOF`) stays and is still checked.
+function stripInlineText(cmd) {
+  return cmd
+    .replace(/<<-?\s*(['"]?)(\w+)\1[^\n]*\n[\s\S]*?\n\s*\2\s*(?=\n|$)/g, (m) => m.slice(0, m.indexOf('\n')))
+    .replace(/@(['"])\r?\n[\s\S]*?\r?\n\1@/g, '@\'\'@');
+}
+
 function commandHits(cmd, entries) {
-  const c = cmd.replace(/\\/g, '/').replace(HARMLESS_REDIRECT, ' ');
+  const c = stripInlineText(cmd).replace(/\\/g, '/').replace(HARMLESS_REDIRECT, ' ');
   if (!WRITE_CMD.test(c)) return null;
   const lower = c.toLowerCase();
   for (const e of entries) {

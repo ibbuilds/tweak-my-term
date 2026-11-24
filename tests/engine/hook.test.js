@@ -46,6 +46,18 @@ test('denies PowerShell Set-Content on $PROFILE', () => {
   assert.strictEqual(out.hookSpecificOutput.permissionDecision, 'deny');
 });
 
+test('text that only mentions a guarded file inside a heredoc or here-string is not a write to it', () => {
+  const bash = `cat > /tmp/run/brief.md <<'EOF'\nKeep demo/demo.conf and demo.conf as they are.\nEOF\necho done`;
+  assert.strictEqual(handle('pre-tool-use', { tool_name: 'Bash', tool_input: { command: bash } }), null);
+  const ps = "Set-Content notes.md @'\nleave demo.conf alone\n'@";
+  assert.strictEqual(handle('pre-tool-use', { tool_name: 'PowerShell', tool_input: { command: ps } }), null);
+});
+
+test('a heredoc written into a guarded file is still denied', () => {
+  const cmd = `cat > ${target.replace(/\\/g, '/')} <<'EOF'\nx\nEOF`;
+  assert.strictEqual(handle('pre-tool-use', { tool_name: 'Bash', tool_input: { command: cmd } }).hookSpecificOutput.permissionDecision, 'deny');
+});
+
 test('lets plain tmt commands through', () => {
   assert.strictEqual(handle('pre-tool-use', { tool_name: 'Bash', tool_input: { command: 'tmt stage write ~/.config/demo/demo.conf /tmp/x > /dev/null' } }), null);
 });
