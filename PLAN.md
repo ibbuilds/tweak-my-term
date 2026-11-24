@@ -289,6 +289,52 @@ Check: green locally; CI runs once you allow a push.
 - macOS and Linux: engine and kit tests green in CI. Recipes stay "docs-verified" until
   someone runs them on a real machine.
 
+## 5b. Roadmap to "usable" (from the 2026-11-23 audit)
+
+The audit found: no end-to-end run on a real request; "improve what I have" is not a mode
+(capture only copies files); inspiration knows metadata, not pictures (layout guessed from
+tool lists was wrong on a sampled shot; "complex" matched nothing; every run re-reads whole
+desktops); dashboard ingredients (clock, pipes, visualizer) missing from the catalog;
+capture copied shell history and the fonts folder; behavior evals never ran (sandbox EPERM).
+
+**M9 Capture hygiene.** Capture and detect list config files only: no history files,
+databases, secrets or font folders (defense in depth: a deny-list in capture too);
+detect dedupes paths. Check: tests on a fake home with a `.bash_history` and a fonts dir.
+
+**M10 Current look + audit ("keep what works, improve the rest").** `tmt capture` also
+writes `current.json`: what the active terminal shows today (scheme colors, font, size,
+opacity, background image, padding, cursor, prompt tool, panes/startup layout,
+multiplexer, fetch on start), read from Windows Terminal, WezTerm, kitty, Alacritty,
+Ghostty, foot configs and the shell rc files. `tmt audit` judges it against the design
+guide's objective rules (contrast, color count, Nerd Font present, padding, prompt,
+layout, startup time) and writes `audit.md`: keep / improve / missing, each with a reason.
+The setup skill runs it whenever a setup exists; the brief's "Must keep" comes from it.
+Check: fixtures per terminal; audit flags known-bad and keeps known-good.
+
+**M11 Visual inspiration index.** Each screenshot is looked at once and its terminal
+facts stored as data (no images): terminal boxes (normalized x,y,w,h), panes, what runs
+in each (fetch, monitor, editor, clock, visualizer, file manager, art...), layout,
+complexity 1-5, terminal-is-the-point, transparency/image background, prompt style,
+mood. `catalog/inspiration/annotations.json`, schema-checked, produced by
+`tools/annotate.js` (prepare batches → vision annotators → validate + merge).
+`tmt inspire` uses it: verified layout over guessed, `--complexity`, `--has`,
+words like "complex/busy/dashboard/minimal" map to it, and `--save --crop` saves the
+terminal crops instead of whole desktops. Check: tests on fixture annotations; a spot
+check of boxes against screenshots; "complex" returns dashboards.
+
+**M12 Dashboard ingredients.** Catalog entries for the eye-candy TUIs seen in complex
+rices (clock, pipes, audio visualizer, bonsai/matrix-style art), cross-OS, free
+licenses, plus a dashboard recipe per terminal (startup panes running them).
+Check: catalog check; capabilities rebuilt.
+
+**M13 Prove it.** Evals run outside the sandbox failure; new evals: "improve my setup,
+keep my colors", "make it more complex". A full dogfood run on this machine's real
+configs in a copied fake home: request → audit → inspire → preview → plan → apply →
+verify → measure → restore. Check: run reaches `done`, restore byte-identical, preview
+has no console errors.
+
+**M14 Release.** History rewrite (author's go-ahead), push, CI green on three OSes.
+
 ## 6. Risks
 
 - **Plugin mechanics on Windows** (M0). Fallback: call `node` with the full path.
