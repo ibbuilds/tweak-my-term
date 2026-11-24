@@ -13,17 +13,18 @@ existing fits, and say so.
    the request changes it.
 2. **The chosen rice's dotfiles** (the `repo` link of the inspiration pick): read the
    repo's files for that part (e.g. `.config/kitty/kitty.conf`, `starship.toml`,
-   `tmux.conf`, `btop` theme, fastfetch config, wallpaper). Fetch single files with
-   `curl -fsSL https://raw.githubusercontent.com/<owner>/<repo>/<branch>/<path>` or a
-   shallow clone into the run folder (`git clone --depth 1`), never into the user's
-   config. Adapt, don't paste: their paths, fonts, OS and terminal differ from the user's.
+   `tmux.conf`, `btop` theme, fastfetch config, wallpaper). `tmt parts rice <repo>` lists
+   them per tool with the wallpapers and license; `--get <path...>` saves them into the run
+   folder (or `git clone --depth 1` into the run folder), never into the user's config. Adapt, don't paste: their paths, fonts, OS and terminal differ from the user's.
    Check the repo license; with none, take ideas and values (colors, sizes, layout), not
    whole files. Credit the repo in `brief.md` and the look's `source` fields.
 3. **Official ports of a named scheme**: when the palette is a known scheme (Catppuccin,
    Gruvbox, Tokyo Night, Rose Pine, Nord, Dracula, Everforest, Kanagawa...), its
    maintainers publish hand-tuned files per app (`github.com/catppuccin/<app>`,
    `github.com/dracula/<app>`, `folke/tokyonight.nvim` extras, `rose-pine/<app>`...). Use
-   those for every tool they cover. Palettes themselves: `catalog/palettes/sources.json`
+   those for every tool they cover: `tmt parts port <scheme> <app> [--flavor f] --get`
+   finds and saves them (other schemes fall back to the iTerm2-Color-Schemes export for
+   that terminal). Palettes themselves: `catalog/palettes/sources.json`
    (1,000+ schemes, flat formats).
 4. **Catalog recipes** (`tmt catalog cap <capability>`, `tmt catalog show <tool>`): the
    per-OS, per-terminal config with `{palette.*}` tokens. Fill the tokens from look.json.

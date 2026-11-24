@@ -1,0 +1,11 @@
+{
+  "$comment": "Where the maintainers of named color schemes publish hand-tuned files per app. `repo` and `dir` may contain {app}; `tmt parts port` tries the app id, then with _ for -, then with no -. Any scheme not listed falls back to `any` (iTerm2-Color-Schemes, 1,000+ schemes exported per terminal). Checked against the GitHub trees on 2026-11-23.",
+  "schemes": {
+    "catppuccin": { "repo": "catppuccin/{app}", "flavors": ["latte", "frappe", "macchiato", "mocha"], "index": "https://catppuccin.com/ports" },
+    "dracula": { "repo": "dracula/{app}", "index": "https://draculatheme.com" },
+    "rose-pine": { "repo": "rose-pine/{app}", "flavors": ["main", "moon", "dawn"], "index": "https://rosepinetheme.com/themes" },
+    "tokyonight": { "repo": "folke/tokyonight.nvim", "dir": "extras/{app}", "flavors": ["night", "storm", "moon", "day"] },
+    "kanagawa": { "repo": "rebelot/kanagawa.nvim", "dir": "extras/{app}", "flavors": ["wave", "dragon", "lotus"] }
+  },
+  "any": { "repo": "mbadolato/iTerm2-Color-Schemes", "dir": "{app}", "license": "MIT repo; per-scheme licenses in licenses.yml" }
+}

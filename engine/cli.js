@@ -43,6 +43,8 @@ Design kit
   tmt art <command> ...                    palette, scheme, contrast, treat, scene, ascii, preview, swatch (tmt art help)
   tmt inspire <query...> [--layout kind] [--has clock,...] [--complexity 4+] [--limit N] [--save n|all dir [--crop]]
                                            search 4,000+ r/unixporn rices; varied results, screenshots to review
+  tmt parts port <scheme> <app> [--flavor f] [--get]   the scheme's official file for that app
+  tmt parts rice <repo> [--tool t] [--get path...]     a rice's dotfiles by tool, wallpapers, license
   tmt shot [--title text] [--delay s]      screenshot the terminal window into the run
   tmt catalog list | show <id> | cap <capability> | paths
   tmt look check <look.json>
@@ -192,6 +194,7 @@ async function main() {
     }
     case 'art': return require('../kit/cli').art(process.argv.slice(3));
     case 'inspire': return require('../kit/cli').inspire(process.argv.slice(3));
+    case 'parts': return require('../kit/parts').main(process.argv.slice(3));
     case 'hook': return undefined; // hooks call engine/hook.js directly
     default: throw new run.GateError(`unknown command "${cmd}". Run tmt help.`);
   }

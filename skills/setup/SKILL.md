@@ -111,7 +111,13 @@ Read [references/parts.md](references/parts.md) and [references/fit.md](referenc
 Assemble, don't invent: for each part (palette, font, background, prompt, terminal,
 layout, each themed tool) take the existing source in this order: what the user has, the
 chosen rice's dotfiles, the official port of a named scheme, the catalog recipe, and
-only then your own. Write the parts and their sources in `brief.md`. For each part, find the tool
+only then your own. Run these before writing any config yourself:
+- the chosen rice (inspiration pick with a repo): `tmt parts rice <repo>` lists its files per
+  tool, wallpapers and license; `tmt parts rice <repo> --get <path...>` saves them into the run
+  folder. Adapt them (paths, fonts, OS); without a license take values, not whole files.
+- a named scheme: `tmt parts port <scheme> <app> [--flavor f] --get` for every app in the look
+  (terminal, prompt, multiplexer, btop, editor...). Any of 1,000+ schemes works ("Gruvbox Dark Hard").
+Write the parts and their sources in `brief.md`. For each part, find the tool
 that does it on the user's OS: `tmt catalog cap <capability>` and `tmt catalog show <id>`.
 Prefer what is already installed. If something can't be done on their terminal (e.g. GIF
 background, shaders, blur), say so and give the closest alternative, or propose a
