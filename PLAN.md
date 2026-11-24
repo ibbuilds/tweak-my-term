@@ -343,12 +343,12 @@ copied fake home ran capture → audit → stage → plan → approve → apply 
 re-audit → restore, byte-identical; it found and fixed a gap (verify now fails when a
 startup pane runs a missing program). Preview of a 3-pane look checked in headless
 Edge: panes, focus accent and palette render; no page console errors, no network
-requests. Two new evals written; not yet run (see M14). M14 prep: manual `evals`
-workflow (Linux, bubblewrap sandbox); history rewritten on a local branch without the
-author's dotfiles and derived art (same final tree, every historical blob passes the
-privacy rules); push waits for the author's go-ahead.
-Next: M14, then annotate further down the list as needed (`tools/annotate.js prepare
---top N` skips annotated ids).
+requests. M14: history rewritten without the author's dotfiles and derived art (same
+final tree, every historical blob passes the privacy rules) and pushed; CI green on
+Windows, macOS and Linux, Node 20 and 24. Manual `evals` workflow (Linux, bubblewrap
+sandbox) added; it needs an `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` secret.
+Next: run the evals and fix what they find; annotate further down the list as needed
+(`tools/annotate.js prepare --top N` skips annotated ids).
 
 ## 6. Risks
 
