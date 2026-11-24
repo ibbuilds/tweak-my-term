@@ -123,9 +123,33 @@ function toolOf(p, tools) {
   return null;
 }
 
+/** The repo's file list from a shallow, blobless git clone; null when git is missing or the clone fails. */
+function gitTree(url) {
+  const sys = require('../engine/sys');
+  if (!sys.resolveCmd('git')) return null;
+  const dir = fs.mkdtempSync(path.join(require('os').tmpdir(), 'tmt-rice-'));
+  try {
+    const env = { ...process.env, GIT_TERMINAL_PROMPT: '0' };
+    const c = sys.exec('git', ['clone', '--quiet', '--depth', '1', '--filter=blob:none', '--no-checkout', url, dir], { env, timeout: 120000 });
+    if (c.status !== 0) return null;
+    const l = sys.exec('git', ['-C', dir, 'ls-tree', '-r', '-t', '--full-tree', 'HEAD'], { env });
+    if (l.status !== 0) return null;
+    return l.stdout.split('\n').filter(Boolean).map((line) => {
+      const [meta, p] = line.split('\t');
+      const [, type, sha] = meta.split(' ');
+      return { path: p, type, sha };
+    });
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+}
+
 async function rice(repo, opts = {}) {
   const r = parseRepo(repo);
-  const t = await tree(r, 'HEAD', { ...opts, recursive: true });
+  let t;
+  try { t = await tree(r, 'HEAD', { ...opts, recursive: true }); } catch (e) {
+    // Rate-limited (60 an hour without a token): list the repo with git instead, no file contents.
+    if (!/GitHub API (403|429)/.test(e.message)) throw e;
+    t = (opts.gitImpl || gitTree)(`https://github.com/${slug(r)}.git`);
+  }
   if (!t) throw new Error(`Repo not found or private: https://github.com/${slug(r)}`);
   const files = t.filter((e) => e.type === 'blob').map((e) => e.path);
   const tools = opts.tools || catalogTools();

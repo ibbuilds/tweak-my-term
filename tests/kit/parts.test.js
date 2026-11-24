@@ -117,3 +117,13 @@ test('repo listings are cached, so a second lookup makes no request', async () =
   await P.port('catppuccin', 'kitty', { fetchImpl: gh.fetchImpl, cacheDir });
   assert.strictEqual(gh.calls.length, n);
 });
+
+test('rice lists the repo with git when the GitHub API is rate-limited', async () => {
+  const fetchImpl = async () => ({ ok: false, status: 403, json: async () => ({}), headers: { get: () => null } });
+  const asked = [];
+  const gitImpl = (url) => { asked.push(url); return [{ path: '.config/kitty/kitty.conf', type: 'blob' }, { path: '.config/kitty', type: 'tree' }, { path: 'walls/bg.png', type: 'blob' }]; };
+  const r = await P.rice('someone/dots', { fetchImpl, gitImpl, cacheDir: mkTmp('parts-git-') });
+  assert.deepStrictEqual(asked, ['https://github.com/someone/dots.git']);
+  assert.deepStrictEqual(r.tools.kitty, ['.config/kitty/kitty.conf']);
+  assert.deepStrictEqual(r.wallpapers, ['walls/bg.png']);
+});
