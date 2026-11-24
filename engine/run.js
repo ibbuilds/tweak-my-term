@@ -197,7 +197,29 @@ function plan({ os: osName } = {}) {
   st.approved = null;
   fs.writeFileSync(path.join(dir, 'plan.diff'), files.map((f) => `=== ${f.change.toUpperCase()} ${f.display} (${f.kind})\n${f.diff}`).join('\n'));
   save(st);
-  return { id: st.id, hash, files, installs, fonts: fontsNeeded, checks: st.checks, steps: designSteps(dir) };
+  return { id: st.id, hash, files, installs, fonts: fontsNeeded, checks: st.checks, steps: designSteps(dir), uncovered: uncovered(dir, files, osName || st.os) };
+}
+
+/**
+ * A look is the whole terminal: the user's shells and terminals (from the run's detect.json)
+ * that no staged file touches. null when detect.json is missing, so coverage is unknown.
+ */
+function uncovered(dir, files, osName) {
+  let d;
+  try { d = JSON.parse(fs.readFileSync(path.join(dir, 'detect.json'), 'utf8')); } catch { return null; }
+  const kinds = new Set(['shell', 'terminal']);
+  const catalog = require('./catalog');
+  const ofKind = new Set(catalog.tools().filter((t) => kinds.has(t.category)).map((t) => t.id));
+  const on = (o) => Object.entries(o || {}).filter(([, v]) => v && v.installed).map(([k]) => k);
+  const mine = [...new Set([...on(d.tools), ...on(d.terminals), ...(d.configs || []).flatMap((c) => c.tools || [c.tool])])].filter((id) => ofKind.has(id));
+  const norm = (p) => (process.platform === 'win32' ? path.resolve(p).toLowerCase() : path.resolve(p));
+  const touched = files.map((f) => norm(f.abs));
+  const known = catalog.configPaths(osName);
+  return mine.filter((id) => {
+    const cfg = known.filter((c) => c.tool === id).map((c) => norm(c.abs));
+    if (!cfg.length) return false; // nothing the catalog knows to style here
+    return !touched.some((t) => cfg.some((c) => t === c || t.startsWith(c + path.sep)));
+  });
 }
 
 /** Which setup-skill design steps left their file in the run folder (skipped steps show). */

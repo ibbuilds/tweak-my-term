@@ -150,6 +150,18 @@ tmt stage shell      <bash|zsh|fish|powershell|pwsh|nu>   # shells to time
 tmt stage check      -- <cmd> [args]   # extra validation
 ```
 
+A look is the whole terminal, never only a background or a color scheme. Cover every
+shell and terminal in `detect.json`:
+- each terminal: color scheme, font, cursor, padding, background, window/tab theme; in
+  Windows Terminal put them in `profiles.defaults` so every profile (PowerShell, cmd, Git
+  Bash, dev shells) gets them;
+- each shell: prompt, banner/fetch, line-editor colors and tool colors (`LS_COLORS`, eza,
+  grep, fzf, bat, git pager, lazygit);
+- an existing setup (a custom prompt, a banner): override it from a block at the end of the
+  rc file and quiet its banner (an env var in the terminal profile), so `tmt restore` brings
+  it back unchanged.
+`tmt plan` lists what is "Not restyled"; fix that before asking for approval.
+
 Targets use `~` and tokens (`{wt-settings}`, `{ps-profile}`, `{xdg-config}` ...). Keep
 the user's existing settings: use `block` and `merge-json` over `write` for files the user
 already has. Respect `tmt measure --before` budget: no slow plugins or framework loaders

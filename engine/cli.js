@@ -84,6 +84,9 @@ function planText(p) {
     lines.push('', `Design steps: ${Object.keys(names).map((k) => `${names[k]} ${p.steps[k] ? 'yes' : 'NO'}`).join(', ')}`);
     if (missing.length) lines.push(`Missing: ${missing.map((k) => names[k]).join(', ')}. Do those setup steps before asking for approval, or tell the user why they were skipped.`);
   }
+  if (p.uncovered === null) lines.push('Coverage: unknown (no detect.json in the run): run `tmt detect` so the plan can check every shell and terminal is restyled.');
+  else if (p.uncovered && p.uncovered.length) lines.push(`Not restyled: ${p.uncovered.join(', ')}. A look covers the whole terminal: stage their prompt, colors and banner too, or tell the user why they are left out.`);
+  else if (p.uncovered) lines.push('Coverage: every detected shell and terminal is restyled.');
   lines.push('', '--- diffs ---');
   for (const f of p.files) if (f.diff) lines.push(`=== ${f.change.toUpperCase()} ${f.display}`, f.diff);
   lines.push(`Plan hash: ${p.hash}`, `Approve with: tmt approve ${p.hash.slice(0, 12)}`);

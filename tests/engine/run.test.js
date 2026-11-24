@@ -339,6 +339,34 @@ test('plan reports which design steps the run folder shows', () => {
   assert.deepStrictEqual(run.plan().steps, { brief: true, parts: true, look: true, preview: true });
 });
 
+test('plan lists the user\'s shells and terminals that the staged files leave untouched', () => {
+  freshHome();
+  const prevOs = process.env.TMT_OS;
+  process.env.TMT_OS = 'linux';
+  try {
+    const st = run.newRun();
+    const dir = run.runDir(st.id);
+    // detect.json from `tmt detect`: bash and zsh installed, kitty has a config
+    fs.writeFileSync(path.join(dir, 'detect.json'), JSON.stringify({
+      tools: { bash: { installed: true }, zsh: { installed: true }, eza: { installed: true } },
+      terminals: { kitty: { installed: false } },
+      configs: [{ tool: 'kitty', tools: ['kitty'], path: '~/.config/kitty/kitty.conf' }],
+    }));
+    run.stageFile('block', '~/.bashrc', src('b', 'PS1=x'));
+    assert.deepStrictEqual(run.plan().uncovered, ['zsh', 'kitty']);
+    run.stageFile('write', '~/.zshrc', src('z', 'PROMPT=x'));
+    run.stageFile('write', '~/.config/kitty/kitty.conf', src('k', 'font_size 12'));
+    assert.deepStrictEqual(run.plan().uncovered, []);
+  } finally { if (prevOs === undefined) delete process.env.TMT_OS; else process.env.TMT_OS = prevOs; }
+});
+
+test('plan without detect.json cannot tell coverage', () => {
+  freshHome();
+  run.newRun();
+  run.stageFile('write', '~/x.txt', src('x', 'x'));
+  assert.strictEqual(run.plan().uncovered, null);
+});
+
 test('a staged check with an unfilled {file} placeholder is refused', () => {
   freshHome();
   run.newRun();
