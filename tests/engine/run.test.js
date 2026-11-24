@@ -344,7 +344,10 @@ test('plan reports which design steps the run folder shows', () => {
     '- https://github.com/u/dots take: prompt pills',
     '- https://reddit.com/r/unixporn/b take: tab bar colors',
     'Parts:', '- palette: Catppuccin port', ''].join('\n'));
-  assert.strictEqual(run.plan().steps.references, true);
+  assert.strictEqual(run.plan().steps.references, false, 'links alone: the screenshots were never looked at');
+  fs.mkdirSync(path.join(dir, 'refs'));
+  for (const n of ['1.png', '2.jpg', '3.webp']) fs.writeFileSync(path.join(dir, 'refs', n), 'img');
+  assert.strictEqual(run.plan().steps.references, true, 'three saved screenshots in refs/ to look at');
   fs.writeFileSync(path.join(dir, 'brief.md'), [
     '# Brief', 'References:',
     '- https://reddit.com/r/unixporn/a',
@@ -430,6 +433,11 @@ test('plan lists, per detected shell and terminal, every element the look has no
     const all = require('../../catalog/elements.json');
     const every = {};
     for (const t of ['bash', 'kitty']) for (const e of Object.keys(all[t === 'bash' ? 'shell' : 'terminal'])) every[`${t}.${e}`] = 'keep';
+    fs.writeFileSync(path.join(dir, 'look.json'), JSON.stringify({ name: 'v', elements: every }));
+    const kept = run.plan().undecided;
+    assert.ok(kept.kitty.includes('tab-icon') && kept.kitty.includes('window-icon') && kept.bash.includes('prompt'), 'the look restyles icons and prompt; "keep" is not a choice for them');
+    assert.ok(!kept.kitty.includes('keybindings') && !kept.bash.includes('aliases'), 'options may stay as they are');
+    for (const t of ['bash', 'kitty']) for (const e of all.restyle[t === 'bash' ? 'shell' : 'terminal']) every[`${t}.${e}`] = { choice: 'new', why: 'need' };
     fs.writeFileSync(path.join(dir, 'look.json'), JSON.stringify({ name: 'v', elements: every }));
     assert.deepStrictEqual(run.plan().undecided, {});
   } finally { if (prevOs === undefined) delete process.env.TMT_OS; else process.env.TMT_OS = prevOs; }

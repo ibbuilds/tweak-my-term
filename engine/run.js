@@ -226,11 +226,12 @@ function undecided(dir) {
   if (!mine) return null;
   const all = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'catalog', 'elements.json'), 'utf8'));
   const el = look.elements || {};
-  const ok = (v) => v === 'keep' || (v && typeof v === 'object' && String(v.choice || '').trim() && String(v.why || '').trim());
+  const restyle = all.restyle || {};
+  const ok = (v, cat, e) => (v === 'keep' && !(restyle[cat] || []).includes(e)) || (v && typeof v === 'object' && String(v.choice || '').trim() && String(v.why || '').trim());
   const out = {};
   for (const t of mine) {
     const omit = new Set(t.elementsOmit || []);
-    const left = Object.keys(all[t.category] || {}).filter((e) => !omit.has(e) && !ok(el[`${t.id}.${e}`]));
+    const left = Object.keys(all[t.category] || {}).filter((e) => !omit.has(e) && !ok(el[`${t.id}.${e}`], t.category, e));
     if (left.length) out[t.id] = left;
   }
   return out;
@@ -265,7 +266,7 @@ function designSteps(dir) {
   const has = (f) => fs.existsSync(path.join(dir, f));
   let brief = '';
   try { brief = fs.readFileSync(path.join(dir, 'brief.md'), 'utf8'); } catch { /* no brief */ }
-  return { brief: Boolean(brief), references: references(brief), parts: /^\**Parts\**:/im.test(brief), look: has('look.json'), preview: has('preview.png') };
+  return { brief: Boolean(brief), references: references(brief) && savedRefs(dir) >= 3, parts: /^\**Parts\**:/im.test(brief), look: has('look.json'), preview: has('preview.png') };
 }
 
 // Curated inspiration: a "References:" section in brief.md with 3+ links, each saying what it gives ("take: ...").
@@ -279,6 +280,11 @@ function references(brief) {
     if (/https?:\/\//.test(l)) refs.push(l);
   }
   return refs.length >= 3 && refs.every((l) => /\btake:\s*\S/i.test(l));
+}
+
+// The references were looked at, not just linked: 3+ screenshots saved in the run's refs/ (tmt inspire --save).
+function savedRefs(dir) {
+  try { return fs.readdirSync(path.join(dir, 'refs')).filter((f) => /\.(png|jpe?g|webp|gif)$/i.test(f)).length; } catch { return 0; }
 }
 
 function approve(hash) {

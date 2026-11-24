@@ -1,5 +1,9 @@
 {
-  "$comment": "Every element of a terminal and of a shell that a look must decide, as look.json elements[\"<tool>.<element>\"] = { \"choice\": what it will be, \"why\": the user need from brief.md it serves }, or \"keep\" (the user's current one stays). A choice of \"none\" also needs a why. A tool.json lists elementsOmit for elements the tool cannot change.",
+  "$comment": "Every element of a terminal and of a shell that a look must decide, as look.json elements[\"<tool>.<element>\"] = { \"choice\": what it will be, \"why\": the user need from brief.md it serves }, or \"keep\" (the user's current one stays). A choice of \"none\" also needs a why. A tool.json lists elementsOmit for elements the tool cannot change. restyle lists the elements a look always restyles: \"keep\" is not a choice for them (\"none\" with a why still is).",
+  "restyle": {
+    "terminal": ["color-scheme", "font", "cursor", "selection", "padding", "background", "window-frame", "window-icon", "tab-row", "tab-style", "tab-icon", "unfocused", "pane-dividers", "startup-layout", "responsiveness"],
+    "shell": ["prompt", "window-title", "banner", "syntax-colors", "ls-colors", "responsiveness"]
+  },
   "terminal": {
     "color-scheme": "16 ANSI colors, foreground, background, bold and dim",
     "font": "font family, fallback for icons (Nerd Font symbols), weight",

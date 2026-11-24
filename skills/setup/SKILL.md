@@ -78,7 +78,9 @@ The references decide more than colors: which layout (panes, a fetch or clock be
 shell, tabs), which tools (fetch, multiplexer, file manager, monitors), the prompt, the
 window chrome and icons. Look at each terminal element in the screenshots and take the
 ones that fit the user's needs. Write them into `brief.md` as a `References:` section, one
-line each: `- <link> take: <what you use from it>`. `tmt plan` blocks until there are 3+;
+line each: `- <link> take: <what you use from it>`. Save each one's screenshot into the run
+(`tmt inspire ... --save <n> <run>/refs`) and Read it: judge the image, not the search text.
+`tmt plan` blocks until there are 3+ links and 3+ images in `refs/`;
 an element's `why` can cite them ("ref 2: clock pane").
 
 ## 3. Visual anchor → `anchor.png`
@@ -172,7 +174,11 @@ shell and terminal in `detect.json`:
 Decide every element in catalog/elements.json for each detected shell and terminal (tab and
 window icons, titles, scrollbar, selection, completion menu, pager, responsiveness ...) as
 look.json `elements["<tool>.<element>"] = { "choice": ..., "why": <the user need> }`, or
-"keep". The why ties each choice to the brief: ask the user when a need is unknown instead
+"keep". "keep" is not allowed for what the look restyles (catalog/elements.json `restyle`:
+scheme, font, cursor, background, frame, tab row and style, tab and window icons, unfocused,
+pane dividers, startup layout, prompt, title, banner, responsiveness): the user's old icons
+or banner clash with a new look. Draw icons with `tmt art icon` (one motif per shell profile,
+an `.ico` for the app shortcut). The why ties each choice to the brief: ask the user when a need is unknown instead
 of guessing. Also decide `prompt`, `onStart`, `tools`, `layout` and `window` ("none" is a
 decision). Prompts keep the user's other hooks (append to `PROMPT_COMMAND`, don't replace
 it) and read git state without a subprocess per prompt on Windows. `tmt plan` lists what is

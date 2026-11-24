@@ -79,14 +79,14 @@ function planText(p) {
   for (const f of p.fonts) lines.push(`  font      ${f.name}${f.present ? ' (already installed, skipped)' : ' (per-user Nerd Font)'}`);
   for (const c of p.checks) lines.push(`  check     ${c.join(' ')}`);
   if (p.steps) {
-    const names = { brief: 'brief.md', references: 'References in brief.md (3+ curated examples: link + take: what you use from it)', parts: 'Parts in brief.md', look: 'look.json', preview: 'preview.png (read by you)' };
+    const names = { brief: 'brief.md', references: 'References in brief.md (3+ curated examples: link + take: what you use from it) and their screenshots in refs/ (3+, read by you)', parts: 'Parts in brief.md', look: 'look.json', preview: 'preview.png (read by you)' };
     const missing = Object.keys(names).filter((k) => !p.steps[k]);
     lines.push('', `Design steps: ${Object.keys(names).map((k) => `${names[k]} ${p.steps[k] ? 'yes' : 'NO'}`).join(', ')}`);
     if (missing.length) lines.push(`Missing: ${missing.map((k) => names[k]).join(', ')}. Do those setup steps before asking for approval, or tell the user why they were skipped.`);
   }
   if (p.lookGaps && p.lookGaps.length) lines.push(`Look leaves undecided: ${p.lookGaps.join(', ')} (prompt, start banner, tool colors, pane layout, window/tab theme). Decide each in look.json and stage it, or set it to none.`);
   if (p.undecided && Object.keys(p.undecided).length) {
-    lines.push('Elements undecided (look.json elements["<tool>.<element>"] = { choice, why } or "keep"; see catalog/elements.json):');
+    lines.push('Elements undecided (look.json elements["<tool>.<element>"] = { choice, why }, or "keep" where not in restyle; see catalog/elements.json):');
     for (const [t, list] of Object.entries(p.undecided)) lines.push(`  ${t}: ${list.join(', ')}`);
   } else if (p.undecided) lines.push('Elements: every element of every detected shell and terminal is decided, each with the need it serves.');
   if (p.uncovered === null) lines.push('Coverage: unknown (no detect.json in the run): run `tmt detect` so the plan can check every shell and terminal is restyled.');
