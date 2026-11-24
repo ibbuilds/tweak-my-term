@@ -1,0 +1,32 @@
+{
+  "os": "windows",
+  "home": "windows-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "~/.config/vaporwave-optic/starship.toml",
+      "file": "files/000-starship.toml"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/vaporwave-optic/art/bg.png",
+      "file": "files/001-bg.png"
+    },
+    {
+      "kind": "block",
+      "target": "{ps-profile}",
+      "file": "files/002-ps.ps1"
+    },
+    {
+      "kind": "block",
+      "target": "~/.bashrc",
+      "file": "files/003-bash.sh"
+    },
+    {
+      "kind": "merge-json",
+      "target": "{wt-settings}",
+      "file": "files/004-wt.json"
+    }
+  ],
+  "checks": []
+}

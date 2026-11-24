@@ -1,0 +1,27 @@
+{
+  "os": "linux",
+  "home": "linux-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "{xdg-config}/kitty/kitty.conf",
+      "file": "files/000-kitty.conf"
+    },
+    {
+      "kind": "write",
+      "target": "{xdg-config}/kitty/library-green.conf",
+      "file": "files/001-library-green.conf"
+    },
+    {
+      "kind": "write",
+      "target": "{xdg-config}/kitty/library.session",
+      "file": "files/002-library.session"
+    },
+    {
+      "kind": "block",
+      "target": "~/.bashrc",
+      "file": "files/003-bashblock.sh"
+    }
+  ],
+  "checks": []
+}

@@ -1,0 +1,30 @@
+# nord-calm: two-line prompt, path + git on top, accent chevron below
+format = """
+[╭─](bright-black)$directory$git_branch$git_status$cmd_duration
+[╰─](bright-black)$character"""
+add_newline = true
+command_timeout = 500
+scan_timeout = 30
+
+[character]
+success_symbol = "[❯](cyan)"
+error_symbol = "[❯](red)"
+
+[directory]
+style = "bold blue"
+truncation_length = 3
+truncation_symbol = "…/"
+read_only = " 󰌾"
+
+[git_branch]
+symbol = " "
+format = "[$symbol$branch]($style) "
+style = "purple"
+
+[git_status]
+format = '([$all_status$ahead_behind]($style) )'
+style = "yellow"
+
+[cmd_duration]
+min_time = 2000
+format = "[took $duration](bright-black)"

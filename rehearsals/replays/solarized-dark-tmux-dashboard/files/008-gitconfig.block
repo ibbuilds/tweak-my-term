@@ -1,0 +1,24 @@
+[core]
+    pager = delta
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    dark = true
+    syntax-theme = Solarized (dark)
+    line-numbers = true
+    file-style = bold "#839496"
+    file-decoration-style = "#DC322F" ul
+    hunk-header-style = file line-number syntax
+    hunk-header-decoration-style = "#586E75" box
+    hunk-header-file-style = "#586E75"
+    hunk-header-line-number-style = "#B58900"
+    minus-style = syntax "#212C35"
+    minus-emph-style = syntax "#4D2D34"
+    minus-non-emph-style = syntax "#212C35"
+    plus-style = syntax "#143C2E"
+    plus-emph-style = syntax "#2F5223"
+    plus-non-emph-style = syntax "#143C2E"
+    line-numbers-minus-style = "#DC322F"
+    line-numbers-plus-style = "#859900"
+    line-numbers-zero-style = "#586E75"
+    commit-decoration-style = "#DC322F" box

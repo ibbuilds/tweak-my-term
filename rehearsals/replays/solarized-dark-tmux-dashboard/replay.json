@@ -1,0 +1,58 @@
+{
+  "os": "macos",
+  "home": "macos-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "{mac-app-support}/iTerm2/DynamicProfiles/tweak-my-term.json",
+      "file": "files/000-iterm-profile.json"
+    },
+    {
+      "kind": "write",
+      "target": "~/.tmux.conf",
+      "file": "files/001-tmux.conf"
+    },
+    {
+      "kind": "write",
+      "target": "~/.local/bin/dash",
+      "file": "files/002-dash"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/btop/themes/tmt-solarized.theme",
+      "file": "files/003-btop.theme"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/btop/btop.conf",
+      "file": "files/004-btop.conf"
+    },
+    {
+      "kind": "write",
+      "target": "~/.config/starship.toml",
+      "file": "files/005-starship.toml"
+    },
+    {
+      "kind": "write",
+      "target": "{mac-app-support}/lazygit/config.yml",
+      "file": "files/006-lazygit.yml"
+    },
+    {
+      "kind": "block",
+      "target": "~/.zshrc",
+      "file": "files/007-zshrc.block"
+    },
+    {
+      "kind": "block",
+      "target": "~/.gitconfig",
+      "file": "files/008-gitconfig.block"
+    }
+  ],
+  "checks": [
+    [
+      "plutil",
+      "-lint",
+      "~/Library/Application Support/iTerm2/DynamicProfiles/tweak-my-term.json"
+    ]
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schemes": [
+    {
+      "name": "vaporwave-optic",
+      "background": "#130D23",
+      "foreground": "#E7E0F8",
+      "cursorColor": "#FF71CE",
+      "selectionBackground": "#552B54",
+      "black": "#3A344D",
+      "red": "#D98E87",
+      "green": "#7FB481",
+      "yellow": "#BBA25E",
+      "blue": "#8BA1EA",
+      "purple": "#F06ACF",
+      "cyan": "#53B6BB",
+      "white": "#D3CDE4",
+      "brightBlack": "#656274",
+      "brightRed": "#FDACA4",
+      "brightGreen": "#9CD59D",
+      "brightYellow": "#DDC279",
+      "brightBlue": "#AEC2FF",
+      "brightPurple": "#FF9FE3",
+      "brightCyan": "#6FD7DD",
+      "brightWhite": "#F6F3FF"
+    }
+  ],
+  "profiles": {
+    "defaults": {
+      "colorScheme": "vaporwave-optic",
+      "font": {
+        "face": "JetBrainsMono Nerd Font",
+        "size": 12,
+        "weight": "normal"
+      },
+      "padding": "8, 8, 8, 8",
+      "cursorShape": "bar",
+      "cursorColor": "#FF71CE",
+      "backgroundImage": "%USERPROFILE%/.config/vaporwave-optic/art/bg.png",
+      "backgroundImageAlignment": "bottomRight",
+      "backgroundImageOpacity": 0.9,
+      "backgroundImageStretchMode": "uniformToFill",
+      "unfocusedAppearance": {
+        "cursorShape": "emptyBox"
+      }
+    }
+  }
+}

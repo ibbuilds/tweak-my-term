@@ -1,0 +1,9 @@
+new_os_window
+os_window_size 140c 40c
+new_tab main
+layout splits
+cd ~
+launch --title shell
+launch --location=vsplit --bias=40 --title catalog sh -c 'fastfetch; exec bash'
+launch --location=hsplit --title monitor btop
+focus_window 0

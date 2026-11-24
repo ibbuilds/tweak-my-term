@@ -1,0 +1,39 @@
+# Amber CRT (tweak-my-term)
+font-family = "DepartureMono Nerd Font"
+font-size = 16
+adjust-cell-height = 20%
+
+background = #000000
+foreground = #E8702A
+cursor-color = #FFA040
+selection-background = #5A2A0C
+palette = 0=#000000
+palette = 1=#D4452A
+palette = 2=#C99A2E
+palette = 3=#F0A030
+palette = 4=#A5602E
+palette = 5=#C0603C
+palette = 6=#D9862E
+palette = 7=#E8702A
+palette = 8=#7A4020
+palette = 9=#FF6A3D
+palette = 10=#E8B84A
+palette = 11=#FFC060
+palette = 12=#D08848
+palette = 13=#E08060
+palette = 14=#F0A860
+palette = 15=#FFD9A8
+
+cursor-style = block
+cursor-style-blink = false
+
+window-padding-x = 32,32
+window-padding-y = 24,24
+window-padding-balance = true
+window-padding-color = extend
+
+window-decoration = none
+window-show-tab-bar = never
+
+custom-shader = ~/.config/ghostty/shaders/crt-amber.glsl
+custom-shader-animation = false

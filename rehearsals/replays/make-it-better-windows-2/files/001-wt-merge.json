@@ -1,0 +1,17 @@
+{
+  "profiles": { "defaults": {
+    "colorScheme": "nord-calm",
+    "font": { "face": "JetBrainsMono Nerd Font", "size": 12, "weight": "normal" },
+    "padding": "12, 16, 12, 16",
+    "lineHeight": 1.2,
+    "cursorShape": "bar"
+  } },
+  "schemes": [ {
+    "name": "nord-calm",
+    "background": "#2E3440", "foreground": "#D8DEE9", "cursorColor": "#88C0D0", "selectionBackground": "#434C5E",
+    "black": "#3B4252", "red": "#BF616A", "green": "#A3BE8C", "yellow": "#EBCB8B",
+    "blue": "#81A1C1", "purple": "#B48EAD", "cyan": "#88C0D0", "white": "#E5E9F0",
+    "brightBlack": "#596377", "brightRed": "#D08770", "brightGreen": "#A3BE8C", "brightYellow": "#EBCB8B",
+    "brightBlue": "#81A1C1", "brightPurple": "#B48EAD", "brightCyan": "#8FBCBB", "brightWhite": "#ECEFF4"
+  } ]
+}

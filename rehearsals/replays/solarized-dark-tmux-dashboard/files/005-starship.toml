@@ -1,0 +1,31 @@
+palette = "solarized"
+add_newline = true
+format = "$directory$git_branch$git_status$cmd_duration$character"
+
+[palettes.solarized]
+fg = "#839496"
+accent = "#268BD2"
+red = "#DC322F"
+green = "#859900"
+yellow = "#B58900"
+blue = "#268BD2"
+purple = "#D33682"
+cyan = "#2AA198"
+
+[directory]
+style = "bold fg:accent"
+truncation_length = 3
+
+[git_branch]
+style = "bold purple"
+
+[git_status]
+style = "yellow"
+
+[cmd_duration]
+style = "yellow"
+min_time = 2000
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"

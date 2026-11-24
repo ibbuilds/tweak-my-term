@@ -1,0 +1,38 @@
+{
+  "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+  "alwaysShowTabs": false,
+  "showTabsInTitlebar": false,
+  "startOnUserLogin": true,
+  "profiles": {
+    "defaults": {
+      "colorScheme": "Gruvbox Material Hard",
+      "font": { "face": "JetBrains Mono", "size": 12 },
+      "padding": "8",
+      "cursorShape": "bar"
+    },
+    "list": [
+      { "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}", "name": "PowerShell", "commandline": "pwsh.exe -NoLogo", "startingDirectory": "%USERPROFILE%", "hidden": false }
+    ]
+  },
+  "schemes": [
+    {
+      "name": "Gruvbox Material Hard",
+      "background": "#1D2021", "foreground": "#D4BE98", "cursorColor": "#D4BE98",
+      "selectionBackground": "#3C3836",
+      "black": "#32302F", "red": "#EA6962", "green": "#A9B665", "yellow": "#D8A657",
+      "blue": "#7DAEA3", "purple": "#D3869B", "cyan": "#89B482", "white": "#D4BE98",
+      "brightBlack": "#928374", "brightRed": "#EA6962", "brightGreen": "#A9B665", "brightYellow": "#D8A657",
+      "brightBlue": "#7DAEA3", "brightPurple": "#D3869B", "brightCyan": "#89B482", "brightWhite": "#DDC7A1"
+    }
+  ],
+  "actions": [
+    { "command": { "action": "quakeMode" }, "id": "User.quake" },
+    { "command": "unbound", "id": "User.noSplitDup" }
+  ],
+  "keybindings": [
+    { "id": "User.quake", "keys": "win+sc(41)" },
+    { "id": "User.noSplitDup", "keys": "alt+shift+d" },
+    { "id": null, "keys": "alt+shift+minus" },
+    { "id": null, "keys": "alt+shift+plus" }
+  ]
+}

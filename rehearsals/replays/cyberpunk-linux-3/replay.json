@@ -1,0 +1,32 @@
+{
+  "os": "linux",
+  "home": "linux-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "{xdg-config}/alacritty/neon-grid.toml",
+      "file": "files/000-neon-grid.toml"
+    },
+    {
+      "kind": "block",
+      "target": "{xdg-config}/alacritty/alacritty.toml",
+      "file": "files/001-alacritty-import.txt"
+    },
+    {
+      "kind": "write",
+      "target": "{xdg-config}/neon-grid/dashboard.sh",
+      "file": "files/002-dashboard.sh"
+    },
+    {
+      "kind": "write",
+      "target": "{xdg-config}/tmux/tmux.conf",
+      "file": "files/003-tmux.conf"
+    },
+    {
+      "kind": "block",
+      "target": "~/.bashrc",
+      "file": "files/004-bashrc-block.sh"
+    }
+  ],
+  "checks": []
+}

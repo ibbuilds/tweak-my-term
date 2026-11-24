@@ -1,0 +1,11 @@
+#!/bin/sh
+# Dashboard: coding pane left (65%), btop top-right, git status bottom-right.
+S=dash
+DIR="${1:-$PWD}"
+if ! tmux has-session -t "$S" 2>/dev/null; then
+  tmux new-session -d -s "$S" -c "$DIR"
+  tmux split-window -h -l 35% -t "$S":1.1 -c "$DIR" 'btop'
+  tmux split-window -v -l 45% -t "$S":1.2 -c "$DIR" 'while true; do clear; git status -sb 2>&1; sleep 3; done'
+  tmux select-pane -t "$S":1.1
+fi
+exec tmux attach -t "$S"

@@ -1,0 +1,17 @@
+{
+  "os": "windows",
+  "home": "windows-image",
+  "files": [
+    {
+      "kind": "merge-json",
+      "target": "{wt-settings}",
+      "file": "files/000-wt.json"
+    },
+    {
+      "kind": "block",
+      "target": "~/Documents/PowerShell/Microsoft.PowerShell_profile.ps1",
+      "file": "files/001-profile7.ps1"
+    }
+  ],
+  "checks": []
+}

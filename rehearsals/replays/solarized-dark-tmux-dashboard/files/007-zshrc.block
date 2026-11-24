@@ -1,0 +1,9 @@
+# Solarized Dark (tweak-my-term)
+export BAT_THEME="Solarized (dark)"
+export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+  --color=bg:#002B36,bg+:#073642,fg:#839496,fg+:#FDF6E3 \
+  --color=hl:#B58900,hl+:#B58900,info:#586E75,border:#586E75 \
+  --color=prompt:#DC322F,pointer:#DC322F,marker:#859900,spinner:#2AA198 \
+  --color=header:#586E75,gutter:#002B36,label:#586E75,query:#839496"
+alias dash="sh $HOME/.local/bin/dash"
+eval "$(starship init zsh)"

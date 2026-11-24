@@ -1,0 +1,12 @@
+{
+  "os": "linux",
+  "home": "linux-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "{xdg-config}/alacritty/alacritty.toml",
+      "file": "files/000-alacritty.toml"
+    }
+  ],
+  "checks": []
+}

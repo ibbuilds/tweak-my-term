@@ -1,0 +1,46 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+palette = "vaporwave"
+add_newline = true
+format = """
+[╭─](bold lavender)$directory$git_branch$git_status$fill$cmd_duration$time
+[╰─](bold lavender)$character"""
+
+[palettes.vaporwave]
+bg = "#130D23"
+pink = "#FF71CE"
+cyan = "#6FD7DD"
+lavender = "#B967FF"
+peach = "#FDACA4"
+
+[fill]
+symbol = " "
+
+[directory]
+format = "[](fg:pink)[ $path ]($style)[](fg:pink) "
+style = "bold bg:pink fg:bg"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[git_branch]
+symbol = " "
+format = "[](fg:lavender)[ $symbol$branch ]($style)[](fg:lavender) "
+style = "bold bg:lavender fg:bg"
+
+[git_status]
+format = '[($all_status$ahead_behind )]($style)'
+style = "bold cyan"
+
+[cmd_duration]
+min_time = 500
+format = "[](fg:cyan)[ 󱦟 $duration ]($style)[](fg:cyan)"
+style = "bold bg:cyan fg:bg"
+
+[time]
+disabled = false
+format = " [ $time]($style)"
+time_format = "%H:%M"
+style = "dimmed lavender"
+
+[character]
+success_symbol = "[❯](bold pink)"
+error_symbol = "[❯](bold peach)"

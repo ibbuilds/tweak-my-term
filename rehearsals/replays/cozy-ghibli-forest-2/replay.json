@@ -1,0 +1,17 @@
+{
+  "os": "linux",
+  "home": "linux-basic",
+  "files": [
+    {
+      "kind": "write",
+      "target": "~/.config/alacritty/alacritty.toml",
+      "file": "files/000-alacritty.toml"
+    },
+    {
+      "kind": "block",
+      "target": "~/.bashrc",
+      "file": "files/001-prompt.sh"
+    }
+  ],
+  "checks": []
+}

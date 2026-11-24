@@ -1,0 +1,49 @@
+# Rainy neon (Blade Runner) - tweak-my-term run 20261124-040957-a316
+[window]
+opacity = 0.92
+padding = { x = 16, y = 12 }
+
+[font]
+size = 11
+
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+style = "Regular"
+
+[font.offset]
+y = 2
+
+[cursor.style]
+shape = "Block"
+
+[colors.primary]
+background = "#07161B"
+foreground = "#C9DDD9"
+
+[colors.cursor]
+text = "#07161B"
+cursor = "#FF8A2B"
+
+[colors.selection]
+text = "#C9DDD9"
+background = "#12404A"
+
+[colors.normal]
+black = "#1D3F48"
+red = "#E5533D"
+green = "#4FB8A0"
+yellow = "#F2A93B"
+blue = "#3C93A8"
+magenta = "#C46B8E"
+cyan = "#35C7C2"
+white = "#B5CBC8"
+
+[colors.bright]
+black = "#5B7C82"
+red = "#FF7A5C"
+green = "#7FDCC4"
+yellow = "#FFC15E"
+blue = "#63B9CF"
+magenta = "#E08CAD"
+cyan = "#6FE8E2"
+white = "#EEF7F5"
