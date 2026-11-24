@@ -71,8 +71,15 @@ Follow the `inspire` skill ([../inspire/SKILL.md](../inspire/SKILL.md)), or hand
 - judge them with [references/design.md](references/design.md).
 
 Vague request or "show me options": show 3-6 that differ from each other and let the
-user pick, mix, or reject. Precise request: pick 2-3 matching examples yourself, say what
-you're taking from each, and keep going. Write what you took into `brief.md`.
+user pick, mix, or reject. Precise request: pick 3+ matching examples yourself, say what
+you're taking from each, and keep going.
+
+The references decide more than colors: which layout (panes, a fetch or clock beside the
+shell, tabs), which tools (fetch, multiplexer, file manager, monitors), the prompt, the
+window chrome and icons. Look at each terminal element in the screenshots and take the
+ones that fit the user's needs. Write them into `brief.md` as a `References:` section, one
+line each: `- <link> take: <what you use from it>`. `tmt plan` blocks until there are 3+;
+an element's `why` can cite them ("ref 2: clock pane").
 
 ## 3. Visual anchor → `anchor.png`
 

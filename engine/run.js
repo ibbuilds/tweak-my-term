@@ -265,7 +265,20 @@ function designSteps(dir) {
   const has = (f) => fs.existsSync(path.join(dir, f));
   let brief = '';
   try { brief = fs.readFileSync(path.join(dir, 'brief.md'), 'utf8'); } catch { /* no brief */ }
-  return { brief: Boolean(brief), parts: /^\**Parts\**:/im.test(brief), look: has('look.json'), preview: has('preview.png') };
+  return { brief: Boolean(brief), references: references(brief), parts: /^\**Parts\**:/im.test(brief), look: has('look.json'), preview: has('preview.png') };
+}
+
+// Curated inspiration: a "References:" section in brief.md with 3+ links, each saying what it gives ("take: ...").
+function references(brief) {
+  const lines = brief.split(/\r?\n/);
+  const start = lines.findIndex((l) => /^\**References\**:/i.test(l));
+  if (start < 0) return false;
+  const refs = [];
+  for (const l of lines.slice(start + 1)) {
+    if (/^#|^\**[A-Z][A-Za-z ]*\**:/.test(l)) break; // next section
+    if (/https?:\/\//.test(l)) refs.push(l);
+  }
+  return refs.length >= 3 && refs.every((l) => /\btake:\s*\S/i.test(l));
 }
 
 function approve(hash) {

@@ -331,12 +331,27 @@ test('plan reports which design steps the run folder shows', () => {
   freshHome();
   const st = run.newRun();
   run.stageFile('write', '~/x.txt', src('x', 'x'));
-  assert.deepStrictEqual(run.plan().steps, { brief: false, parts: false, look: false, preview: false });
+  assert.deepStrictEqual(run.plan().steps, { brief: false, references: false, parts: false, look: false, preview: false });
   const dir = run.runDir(st.id);
   fs.writeFileSync(path.join(dir, 'brief.md'), '# Brief\nParts:\n- palette: Catppuccin port\n');
   fs.writeFileSync(path.join(dir, 'look.json'), '{}');
   fs.writeFileSync(path.join(dir, 'preview.png'), 'png');
-  assert.deepStrictEqual(run.plan().steps, { brief: true, parts: true, look: true, preview: true });
+  assert.deepStrictEqual(run.plan().steps, { brief: true, references: false, parts: true, look: true, preview: true });
+  // three curated references, each a link and what is taken from it
+  fs.writeFileSync(path.join(dir, 'brief.md'), [
+    '# Brief', 'References:',
+    '- https://reddit.com/r/unixporn/a take: side pane with fetch',
+    '- https://github.com/u/dots take: prompt pills',
+    '- https://reddit.com/r/unixporn/b take: tab bar colors',
+    'Parts:', '- palette: Catppuccin port', ''].join('\n'));
+  assert.strictEqual(run.plan().steps.references, true);
+  fs.writeFileSync(path.join(dir, 'brief.md'), [
+    '# Brief', 'References:',
+    '- https://reddit.com/r/unixporn/a',
+    '- https://github.com/u/dots take: prompt',
+    '- https://x.org take: colors',
+    'Parts:', '- p', ''].join('\n'));
+  assert.strictEqual(run.plan().steps.references, false, 'a link without what it gives does not count');
 });
 
 test('plan lists the user\'s shells and terminals that the staged files leave untouched', () => {
