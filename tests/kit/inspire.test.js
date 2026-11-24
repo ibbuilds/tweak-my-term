@@ -332,7 +332,7 @@ test('cli: flags --os --limit --terminal and text output', () => {
   assert.strictEqual(lines[2], '   tools: kitty, zsh, waybar, starship, neovim');
   assert.strictEqual(lines[3], '   screenshot: https://example.invalid/img/fx0001.png');
   assert.strictEqual(lines[4], '   reddit: https://www.reddit.com/r/unixporn/comments/fx0001/fx0001_slug/');
-  assert.strictEqual(lines[5], '   repo: https://github.com/example-user-01/dotfiles');
+  assert.strictEqual(lines[5], '   repo: https://github.com/example-user-01/dotfiles  (its files per tool: tmt parts rice https://github.com/example-user-01/dotfiles)');
   assert.match(lines[6], /^   why: matches /);
   assert.ok(t.stdout.trimEnd().endsWith('Data: awesome-dotfiles (r/unixporn), links to original posts.'));
 });

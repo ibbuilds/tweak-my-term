@@ -782,7 +782,7 @@ function formatResults(r) {
     lines.push(`   tools: ${x.tools.length ? x.tools.join(', ') : 'n/a'}`);
     lines.push(`   screenshot: ${x.image || 'n/a'}`);
     lines.push(`   reddit: ${x.url || 'n/a'}`);
-    lines.push(`   repo: ${x.repo || 'n/a'}`);
+    lines.push(`   repo: ${x.repo ? `${x.repo}  (its files per tool: tmt parts rice ${x.repo})` : 'n/a'}`);
     lines.push(`   why: ${x.why}`);
     if (x.seen) {
       const t = x.seen.terminals;

@@ -337,7 +337,7 @@ function cmdPreview(pos, flags, json) {
     const p = str(flags, 'png');
     fs.mkdirSync(path.dirname(path.resolve(p)), { recursive: true });
     const r = preview.screenshot(out, p);
-    if (r.ok) { data.png = r.out; shotNote = `\nWrote ${p} (the page as an image: look at it before showing the user)`; } else { data.pngError = r.error; shotNote = `\nNo image: ${r.error}`; }
+    if (r.ok) { data.png = r.out; shotNote = `\nWrote ${path.resolve(p)}\nNext: Read that image yourself now (it is the page as the user will see it) and fix contrast, clipped text, empty panes or an off-mood background before showing the user.`; } else { data.pngError = r.error; shotNote = `\nNo image: ${r.error}`; }
   }
   return emit(json, data, `Wrote ${out} (${data.bytes} bytes)${data.swatch ? `\nWrote ${flags.swatch}` : ''}${shotNote}\nOpen it in a browser and approve the look before anything is applied.`);
 }
