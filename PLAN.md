@@ -388,20 +388,25 @@ as choices with a recommended default (AskUserQuestion when the host has it), an
 3-6 differing inspiration picks for vague moods. Check: rehearsals of vague requests ask
 1-3 relevant questions; precise ones ask none.
 
-**M18 Art that matches the mood.** The anchor for a mood with no user image is generated
-(`tmt art scene`) or painted by the agent against the raster API. Add what moods need:
-presets for the lexicon's common subjects (vaporwave sun + grid + palms, lofi room,
-paper texture, forest, CRT glow...) and primitives (perspective grid, banded sun, glow,
-silhouettes, grain). Check: each preset renders in tests; a vision grade of each against
-its mood word.
+**M18 Connect the dots, don't reinvent.** Everything a look needs already exists:
+real rices with their dotfiles, official theme ports for each tool (catppuccin, gruvbox,
+tokyonight, rose-pine... publish kitty/WT/alacritty/btop/starship files), wallpapers the
+user owns or picks from free-license collections, and the tools themselves. The agent's
+job is to find the right parts and fit them together on the user's OS. Add: a "parts"
+step in the skill (for each part of the look: which existing source supplies it), the
+catalog's links to official theme ports per tool, and reading the chosen rice's dotfiles
+repo to reuse its configs (adapted, credited). Generated art stays as the fallback when
+nothing fits. Check: rehearsals show reused sources in the plan (theme ports, rice
+configs) instead of hand-written approximations.
 
 **M19 Look at the real result.** Apply a rehearsal plan to this machine's real Windows
 Terminal (backed up; restore afterwards), `tmt shot`, compare to anchor and preview, fix
 the gap, restore byte-identical. Check: screenshot graded; restore verified.
 
-**M20 Mood matrix until it's good.** Six different requests (vaporwave, cozy paper light,
-cyberpunk dashboard, minimal floating, amber CRT, user image restyle) across the three
-OSes, through M15 with stand-in users. Grade each: questions asked (relevant, ≤3),
+**M20 Any request until it's good.** Requests are not a fixed list: a generator writes
+varied ones (moods, images, rices, layouts, tools, vague and precise, all three OSes,
+odd words), each with a stand-in user who has hidden wishes; plus the six hand-written
+scenarios in `rehearsals/`. Run them through M15. Grade each: questions asked (relevant, ≤3),
 options shown, anchor on-mood, palette contrast, preview checked, layout as asked,
 themed tools, plan applies and verifies, restore clean. Fix the repo (skills, lexicon,
 art, recipes, engine) and rerun until every row passes.
@@ -411,7 +416,7 @@ from M20) on macOS and Ubuntu runners with the tools installed, and runs `tmt ve
 with their real validators (kitty, ghostty, alacritty, tmux, zellij, fish, starship).
 No AI key needed. Check: green on both.
 
-Done = every M20 row passes and M21 is green.
+Done = every M20 rehearsal passes the grade and M21 is green.
 
 ## 6. Risks
 

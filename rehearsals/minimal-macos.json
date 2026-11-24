@@ -1,0 +1,10 @@
+{
+  "id": "minimal-macos",
+  "os": "macos",
+  "home": "macos-basic",
+  "request": "Use the tweak-my-term plugin. I want my terminal minimal and calm, something better than this default look.",
+  "persona": {
+    "who": "A backend developer on a Mac with kitty and zsh.",
+    "wants": "Dark, low-contrast muted colors, lots of padding, slight transparency, a tiny prompt, and a simple split: main shell plus a small pane for logs. No eye candy."
+  }
+}

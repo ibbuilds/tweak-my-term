@@ -1,0 +1,10 @@
+{
+  "id": "vaporwave-windows",
+  "os": "windows",
+  "home": "windows-basic",
+  "request": "Use the tweak-my-term plugin. I want a whole new terminal, something really different from what I have now: vaporwave, aesthetically pleasing, optical looking.",
+  "persona": {
+    "who": "A developer on Windows who uses Windows Terminal with Git Bash every day, sometimes PowerShell. Not a theming expert.",
+    "wants": "Dark vaporwave: pink, purple and cyan, a retro sunset with a grid as the background but text must stay readable. Likes a two-line prompt with git info. Would like a side pane with a system fetch and a clock next to the main shell. Fine with installing free tools and a Nerd Font. Keep the existing aliases."
+  }
+}

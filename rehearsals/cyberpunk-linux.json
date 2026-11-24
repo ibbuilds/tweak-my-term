@@ -1,0 +1,10 @@
+{
+  "id": "cyberpunk-linux",
+  "os": "linux",
+  "home": "linux-basic",
+  "request": "Use the tweak-my-term plugin. Turn my terminal into one of those busy cyberpunk dashboards from r/unixporn.",
+  "persona": {
+    "who": "A Linux user on Ubuntu with alacritty and bash, likes tmux.",
+    "wants": "Neon cyberpunk on near-black, many panes: editor or shell big, system monitor, a clock, an audio visualizer and some matrix-style eye candy. Uses tmux. Installs are fine. Keep the aliases."
+  }
+}

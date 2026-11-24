@@ -1,0 +1,10 @@
+{
+  "id": "crt-linux",
+  "os": "linux",
+  "home": "linux-basic",
+  "request": "Use the tweak-my-term plugin. Show me some retro looks and build the one I pick.",
+  "persona": {
+    "who": "A Linux user, alacritty and bash, open to switching terminal if needed.",
+    "wants": "Picks the amber CRT monitor style when shown options: amber on black, scanlines or glow if possible, a pixel or blocky font. Single window. Installing a different free terminal is ok if it is needed for the effect."
+  }
+}

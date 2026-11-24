@@ -1,0 +1,10 @@
+{
+  "id": "image-windows",
+  "os": "windows",
+  "home": "windows-image",
+  "request": "Use the tweak-my-term plugin. Make my terminal match my wallpaper, ~/Pictures/mountains.png.",
+  "persona": {
+    "who": "A Windows developer, Windows Terminal with PowerShell mostly.",
+    "wants": "Colors taken from the picture, the picture itself as a subtle background, a clean prompt. Single window is fine. No installs except a font."
+  }
+}

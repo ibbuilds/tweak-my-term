@@ -1,0 +1,10 @@
+{
+  "id": "paper-macos",
+  "os": "macos",
+  "home": "macos-basic",
+  "request": "Use the tweak-my-term plugin. Make my terminal feel cozy, like writing on paper.",
+  "persona": {
+    "who": "A writer who codes a little on a Mac, uses kitty with zsh.",
+    "wants": "Light, warm cream paper look, serif-ish or very readable mono font, one calm window, no background image, a minimal one-line prompt. No dashboards. Installing a font is fine."
+  }
+}
