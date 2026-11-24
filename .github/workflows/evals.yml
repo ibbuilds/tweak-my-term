@@ -52,11 +52,15 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Run evals
         env:
+          # One of the two: an API key, or a subscription token from `claude setup-token`.
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           CASE: ${{ inputs.case }}
           RUNS: ${{ inputs.runs }}
           MAX_COST: ${{ inputs.max_cost_usd }}
         run: |
+          [ -n "$ANTHROPIC_API_KEY" ] || unset ANTHROPIC_API_KEY
+          [ -n "$CLAUDE_CODE_OAUTH_TOKEN" ] || unset CLAUDE_CODE_OAUTH_TOKEN
           claude --version
           args=(. --trust-plugin --ablation none --allow-tools Bash --runs "$RUNS"
                 --model claude-sonnet-5-5 --judge-model claude-haiku-5-5

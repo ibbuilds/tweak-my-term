@@ -173,6 +173,22 @@ test('html: a pane arrangement draws one box per pane, sized and nested as speci
   assert.match(page, /Layout<\/dt><dd>row 60\/40: nvim \| column: shell, btop; gap 12px<\/dd>/);
 });
 
+test('html: a fetch pane shows the look\'s own OS, shell, terminal and font', () => {
+  const look = { ...withLayout({ arrangement: { split: 'row', panes: [{ run: 'shell', focus: true }, { run: 'fastfetch' }] } }) };
+  const page = V.html({ look });
+  const body = /data-run="fastfetch"><pre[^>]*>([\s\S]*?)<\/pre>/.exec(page)[1].replace(/<[^>]+>/g, '');
+  assert.match(body, /os\s+Windows/);
+  assert.match(body, /shell\s+bash/);
+  assert.match(body, /term\s+windows-terminal/);
+  assert.match(body, /font\s+JetBrains Mono/);
+  assert.ok(!/wezterm|Linux/.test(body), 'no hard-coded system');
+});
+
+test('html: text in a pane wraps at the pane edge instead of being cut off', () => {
+  const page = V.html({ look: withLayout(THREE) });
+  assert.match(page, /pre\.pt\{[^}]*white-space:pre-wrap/);
+});
+
 test('html: without an arrangement the preview is one window, as before', () => {
   const page = V.html({ look: LOOK });
   assert.ok(!/class="pane/.test(page));

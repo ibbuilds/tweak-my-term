@@ -163,7 +163,7 @@ function describeArrangement(node, depth = 0) {
 }
 
 const SHELLS_RUN = /^(shell|sh|bash|zsh|fish|pwsh|powershell|nu|nushell|cmd|terminal)?$/i;
-function paneBody(run, prompt) {
+function paneBody(run, prompt, sys = {}) {
   const r = String(run || '').toLowerCase();
   const L = [];
   if (SHELLS_RUN.test(r)) {
@@ -201,18 +201,27 @@ function paneBody(run, prompt) {
     L.push('package.json');
     L.push('<span class="a2 b">build.sh</span>');
   } else if (/fetch|neofetch|fastfetch/.test(r)) {
-    for (const [k, v] of [['os', 'Linux'], ['shell', 'zsh'], ['term', 'wezterm'], ['font', 'JetBrains Mono']]) L.push(`<span class="a8">${k.padEnd(6)}</span><span class="a4">${v}</span>`);
+    for (const [k, v] of [['os', sys.os], ['shell', sys.shell], ['term', sys.term], ['font', sys.font]]) if (v) L.push(`<span class="a8">${k.padEnd(6)}</span><span class="a4">${esc(v)}</span>`);
   } else {
     L.push(`<span class="a8">${esc(run)}</span>`);
   }
   return L.join('\n');
 }
 
-function panesHtml(node, prompt, gap, depth = 0) {
+// What a fetch pane would print for this look: its first target OS, default shell,
+// terminal and font. Nothing invented when the look doesn't say.
+const OS_NAMES = { windows: 'Windows', macos: 'macOS', linux: 'Linux' };
+function systemInfo(look) {
+  const [osKey, target] = Object.entries(look.targets || {})[0] || [];
+  const shell = (look.shells || []).find((x) => x.default) || (look.shells || [])[0];
+  return { os: OS_NAMES[osKey], shell: shell && shell.id, term: target && target.terminal, font: look.font && look.font.family };
+}
+
+function panesHtml(node, prompt, gap, sys, depth = 0) {
   if (!node.panes) {
-    return `<div class="pane${node.focus ? ' focus' : ''}" data-run="${esc(node.run || 'shell')}"><pre class="term pt" aria-label="${esc(node.run || 'shell')} pane">${paneBody(node.run, prompt)}</pre></div>`;
+    return `<div class="pane${node.focus ? ' focus' : ''}" data-run="${esc(node.run || 'shell')}"><pre class="term pt" aria-label="${esc(node.run || 'shell')} pane">${paneBody(node.run, prompt, sys)}</pre></div>`;
   }
-  const cells = node.panes.map((p, i) => `<div class="cell" style="flex:${node.sizes ? node.sizes[i] : 1} 1 0">${panesHtml(p, prompt, gap, depth + 1)}</div>`);
+  const cells = node.panes.map((p, i) => `<div class="cell" style="flex:${node.sizes ? node.sizes[i] : 1} 1 0">${panesHtml(p, prompt, gap, sys, depth + 1)}</div>`);
   return `<div class="split ${node.split}" style="gap:${gap}px">\n${cells.join('\n')}\n</div>`;
 }
 
@@ -309,7 +318,7 @@ ${ansiCss}.b{font-weight:bold}
 .pane{flex:1 1 0;min-width:0;overflow:hidden;${screenBg};border:1px solid ${C.mix(pal.background, pal.foreground, 0.14)};border-radius:${gap ? 8 : 0}px}
 .pane.focus{border-color:var(--accent)}
 .pane:not(.focus) pre{opacity:.72}
-pre.pt{overflow:hidden;font-size:clamp(10px,2.4vw,${fontPx}px)}
+pre.pt{overflow:hidden;white-space:pre-wrap;overflow-wrap:anywhere;font-size:clamp(10px,2.4vw,${fontPx}px)}
 .pl{display:inline-block;background:var(--sb);color:var(--st);padding:0 .9em 0 .6em;clip-path:polygon(0 0,calc(100% - .5em) 0,100% 50%,calc(100% - .5em) 100%,0 100%)}
 .pl.n{padding-left:1.1em;margin-left:-.45em;clip-path:polygon(0 0,calc(100% - .5em) 0,100% 50%,calc(100% - .5em) 100%,0 100%,.5em 50%)}
 .pill{display:inline-block;background:var(--sb);color:var(--st);border-radius:999px;padding:0 .7em}
@@ -334,7 +343,7 @@ ${desc}${mood}
 <section aria-label="Terminal preview">
 <div class="win" style="${vars}">
 <div class="bar">${title}${tabBar}</div>
-<div class="screen">${bgLayer}${lay.arrangement ? `<div class="layout">${panesHtml(lay.arrangement, pr, gap)}</div>` : `<pre class="term" aria-label="Sample terminal session">${session(pr)}</pre>`}</div>
+<div class="screen">${bgLayer}${lay.arrangement ? `<div class="layout">${panesHtml(lay.arrangement, pr, gap, systemInfo(look))}</div>` : `<pre class="term" aria-label="Sample terminal session">${session(pr)}</pre>`}</div>
 </div>
 </section>
 <section aria-label="Palette">
