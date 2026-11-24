@@ -6,6 +6,7 @@ const path = require('path');
 const image = require('./image');
 const png = require('./png');
 const scene = require('./scene');
+const icon = require('./icon');
 const treat = require('./treat');
 const ascii = require('./ascii');
 const preview = require('./preview');
@@ -32,6 +33,8 @@ const HELP = `tmt art: build the visual anchor, the background and the palette
   tmt art ascii <image> [--cols 40] [--charset blocks|ascii|braille|halfblock] [--color none|ansi16|truecolor]
         [--palette look.json] [--out file]
       ASCII/ANSI art (fastfetch logo files, banners)
+  tmt art icon <out.png|out.ico> --palette look.json [--motif ${icon.MOTIFS.join('|')}] [--size 256] [--accent #hex]
+      a tab, profile or app icon from the palette (.ico holds 16-256 px for Windows shortcuts)
   tmt art preview <look.json> [--out preview.html] [--swatch swatch.png] [--png preview.png]
       mock terminal page with the real palette, font, background and prompt, for approval; --png renders it with a local Chromium-family browser
 
@@ -45,6 +48,7 @@ const ALLOWED = {
   contrast: ['image', 'opacity'],
   ascii: ['cols', 'charset', 'color', 'palette', 'out', 'invert'],
   preview: ['out', 'swatch', 'png'],
+  icon: ['motif', 'palette', 'size', 'accent'],
 };
 const BOOLEAN = new Set(['json', 'invert', 'help']);
 
@@ -185,6 +189,23 @@ function cmdScene(pos, flags, json) {
   image.save(img, pos[0]);
   const data = { file: path.resolve(pos[0]), width, height, preset: presetName, seed, bytes: fs.statSync(pos[0]).size, ms: Date.now() - t0 };
   return emit(json, data, `Painted ${presetName} ${width}x${height} (seed ${seed}) in ${data.ms} ms -> ${pos[0]} (${data.bytes} bytes)`);
+}
+
+function cmdIcon(pos, flags, json) {
+  need(pos, 1, 'tmt art icon <out.png|out.ico> --palette look.json [--motif name] [--size 256] [--accent #hex]');
+  if (flags.palette === undefined) throw new Error('--palette look.json is required');
+  const pal = loadPalette(str(flags, 'palette'));
+  const motif = str(flags, 'motif') || 'prompt';
+  const accent = str(flags, 'accent');
+  const out = pos[0];
+  if (/.ico$/i.test(out)) {
+    fs.writeFileSync(out, icon.toIco([16, 24, 32, 48, 64, 256].map((size) => icon.icon({ motif, palette: pal, size, accent }))));
+  } else {
+    const size = num(flags, 'size', 16, 1024) ?? 256;
+    image.save(icon.icon({ motif, palette: pal, size, accent }), out);
+  }
+  const data = { file: path.resolve(out), motif, bytes: fs.statSync(out).size };
+  return emit(json, data, `Drew ${motif} icon -> ${out} (${data.bytes} bytes)`);
 }
 
 function cmdTreat(pos, flags, json) {
@@ -342,7 +363,7 @@ function cmdPreview(pos, flags, json) {
   return emit(json, data, `Wrote ${out} (${data.bytes} bytes)${data.swatch ? `\nWrote ${flags.swatch}` : ''}${shotNote}\nOpen it in a browser and approve the look before anything is applied.`);
 }
 
-const COMMANDS = { scene: cmdScene, treat: cmdTreat, palette: cmdPalette, scheme: cmdScheme, contrast: cmdContrast, ascii: cmdAscii, preview: cmdPreview };
+const COMMANDS = { scene: cmdScene, treat: cmdTreat, palette: cmdPalette, scheme: cmdScheme, contrast: cmdContrast, ascii: cmdAscii, preview: cmdPreview, icon: cmdIcon };
 
 function main(argv = []) {
   const { flags, pos } = parseArgs(argv);

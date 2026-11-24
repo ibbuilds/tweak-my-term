@@ -243,3 +243,16 @@ test('treat --for-text reports the strategy and the composition notes; --zone fu
   assert.match(text, /shaded locally/);
   assert.strictEqual(j('treat', 'moon.png', 'm3.png', '--for-text', FIXTURE, '--zone', 'full').forText.zone, 'full');
 });
+
+test('art icon writes a PNG for a tab and an ICO for the app', () => {
+  const look = write('icon-look.json', JSON.stringify({ name: 'v', font: { family: 'x' }, palette: { background: '#140C26', foreground: '#F3E9FF', ansi: { black: '#3A2D5C', red: '#FF5C8A', green: '#05FFA1', yellow: '#FFFB96', blue: '#7AA2FF', magenta: '#FF71CE', cyan: '#01CDFE', white: '#D9CCF0' } } }));
+  const r = art('icon', 'bash.png', '--motif', 'prompt', '--palette', look, '--size', '64');
+  assert.strictEqual(r.status, 0, r.stderr);
+  const img = decode('bash.png');
+  assert.strictEqual(img.width, 64);
+  const r2 = art('icon', 'app.ico', '--motif', 'sun', '--palette', look);
+  assert.strictEqual(r2.status, 0, r2.stderr);
+  const ico = fs.readFileSync(path.join(tmp, 'app.ico'));
+  assert.ok(ico.readUInt16LE(4) >= 3, 'several sizes in the ICO');
+  assert.match(art('icon', 'x.png', '--motif', 'nope', '--palette', look).stderr, /motif must be one of/);
+});
